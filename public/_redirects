@@ -1,0 +1,4 @@
+# Pages Functions handle /api/* and take precedence over this rule.
+# Everything else is client-side routing, so deep links must serve the app
+# shell instead of 404ing.
+/*    /index.html   200

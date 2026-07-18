@@ -1,0 +1,173 @@
+/* Design tokens copied verbatim from the Divi Desktop 6.9 wallet so the
+   explorer and the app read as one product. If the wallet's palette changes,
+   change it here too — these are intentionally duplicated rather than shared,
+   since the two ship independently. */
+
+:root {
+  --background: 240 6% 10%;
+  --foreground: 0 0% 95%;
+  --card: 240 5% 15%;
+  --primary: 280 80% 60%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 320 70% 55%;
+  --muted: 240 5% 20%;
+  --muted-foreground: 0 0% 70%;
+  --border: 240 4% 25%;
+  --success: 142 76% 36%;
+  --warning: 45 93% 47%;
+  --destructive: 0 84% 60%;
+  --info: 207 90% 54%;
+
+  --font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --panel-radius: 12px;
+  --panel-blur: 24px;
+  --glow-color: 280 80% 60%;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: hsl(var(--primary)); text-decoration: none; }
+a:hover { color: hsl(var(--accent)); }
+
+/* The wallet's signature frosted panel. */
+.panel {
+  background: hsl(var(--background) / 0.85);
+  backdrop-filter: blur(var(--panel-blur));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--panel-radius);
+  padding: 18px 20px;
+}
+
+.mono { font-family: var(--font-mono); }
+
+/* Long hashes must never blow out the layout on a phone. */
+.hash {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  word-break: break-all;
+}
+
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 18px 64px;
+}
+
+/* ---- header ---- */
+.hdr { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+.hdr-brand {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
+}
+.hdr-brand span { color: hsl(var(--primary)); }
+
+.search {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  gap: 8px;
+}
+.search input {
+  flex: 1;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: hsl(var(--foreground));
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.search input:focus {
+  outline: none;
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15);
+}
+.search button {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.search button:hover { background: hsl(var(--accent)); }
+
+/* ---- chain stat strip ---- */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
+.stat { text-align: center; }
+.stat-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 5px;
+}
+.stat-value { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 600; }
+
+/* ---- tables ---- */
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left;
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  font-weight: 600;
+  padding: 0 10px 9px 0;
+  border-bottom: 1px solid hsl(var(--border));
+}
+td {
+  padding: 10px 10px 10px 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+  font-size: 0.88rem;
+}
+tr:last-child td { border-bottom: 0; }
+
+/* Wide tables scroll inside themselves rather than pushing the page sideways. */
+.table-scroll { overflow-x: auto; }
+
+/* ---- proof-of-stake badge ---- */
+.badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.badge-pos { background: hsl(var(--primary) / 0.2); color: hsl(var(--primary)); }
+.badge-lottery { background: hsl(var(--warning) / 0.2); color: hsl(var(--warning)); }
+
+/* ---- detail rows ---- */
+.kv { display: grid; grid-template-columns: 190px 1fr; gap: 10px 16px; }
+.kv dt { color: hsl(var(--muted-foreground)); font-size: 0.8rem; }
+.kv dd { margin: 0; font-size: 0.88rem; }
+@media (max-width: 620px) {
+  .kv { grid-template-columns: 1fr; gap: 3px; }
+  .kv dd { margin-bottom: 10px; }
+}
+
+.muted { color: hsl(var(--muted-foreground)); }
+.err { color: hsl(var(--destructive)); }
+.ok { color: hsl(var(--success)); }

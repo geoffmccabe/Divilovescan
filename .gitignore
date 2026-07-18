@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.wrangler/
+*.local
+
+# Never commit node credentials — these live in Cloudflare secrets only.
+.env
+.env.*
+.dev.vars
