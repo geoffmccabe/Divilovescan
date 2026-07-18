@@ -4,6 +4,7 @@ import { Home } from "./pages/Home";
 import { BlockPage } from "./pages/Block";
 import { TxPage } from "./pages/Tx";
 import { AddressPage } from "./pages/Address";
+import { APP_VERSION } from "./version";
 
 /**
  * Works out what the user pasted and sends them to the right page. Divi
@@ -70,6 +71,8 @@ export function App() {
         <Route path="/tx/:txid" element={<TxPage />} />
         <Route path="/address/:address" element={<AddressPage />} />
       </Routes>
+
+      <div className="version">{APP_VERSION}</div>
     </div>
   );
 }
