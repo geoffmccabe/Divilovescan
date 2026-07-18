@@ -86,6 +86,8 @@ export const getBlockCount = () => rpc<number>("getblockcount");
 export const getBlockHash = (height: number) => rpc<string>("getblockhash", [height]);
 export const getBlockRaw = (hash: string) => rpc<any>("getblock", [hash]);
 export const getTx = (txid: string) => rpc<RawTx>("getrawtransaction", [txid, 1]);
+/** The transaction exactly as it exists on the chain, with no interpretation. */
+export const getTxHex = (txid: string) => rpc<string>("getrawtransaction", [txid, 0]);
 
 /**
  * Divi is a Proof-of-Stake chain, so nearly every block is won by a staker

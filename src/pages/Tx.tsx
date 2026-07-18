@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getTx, type RawTx } from "../api";
+import { getTx, getTxHex, type RawTx } from "../api";
 import { fmtDivi, fmtTime } from "../format";
+import { TxInspector } from "../TxInspector";
 
 export function TxPage() {
   const { txid = "" } = useParams();
   const [tx, setTx] = useState<RawTx | null>(null);
+  const [raw, setRaw] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
     setTx(null);
+    setRaw(null);
     setErr(null);
     getTx(txid)
       .then((t) => alive && setTx(t))
@@ -20,6 +23,12 @@ export function TxPage() {
           "No transaction found with that id. Note that a node only serves arbitrary transactions when transaction indexing is enabled.",
         ),
       );
+    // Fetched separately so a failure here still leaves the readable view intact.
+    getTxHex(txid)
+      .then((h) => alive && setRaw(h))
+      .catch(() => {
+        /* inspector simply won't render */
+      });
     return () => {
       alive = false;
     };
@@ -119,6 +128,20 @@ export function TxPage() {
           </table>
         </div>
       </section>
+
+      {raw && (
+        <section className="panel" style={{ marginTop: 16 }}>
+          <h2 className="section-title">Transaction Inspector</h2>
+          <TxInspector rawHex={raw} />
+
+          {/* The unmodified transaction, exactly as it exists on the chain —
+              deliberately with no highlighting or interpretation at all. */}
+          <details className="collapse">
+            <summary>Raw transaction</summary>
+            <pre className="rawhex">{raw}</pre>
+          </details>
+        </section>
+      )}
     </>
   );
 }

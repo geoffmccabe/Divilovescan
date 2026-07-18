@@ -227,6 +227,112 @@ tr:last-child td { border-bottom: 0; }
 
 .nowrap { white-space: nowrap; }
 
+/* ---- transaction inspector ---- */
+.insp-hint { font-size: 0.8rem; margin: 0 0 10px; }
+
+.insp-hex {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 2;
+  word-break: break-all;
+  background: hsl(0 0% 0% / 0.35);
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.insp-span {
+  cursor: help;
+  padding: 3px 0;
+  border-radius: 3px;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+/* Faint banding so field boundaries are visible before you hover anything. */
+.insp-alt { background: hsl(var(--primary) / 0.07); }
+.insp-span:focus-visible { outline: 2px solid hsl(var(--primary)); }
+
+.insp-active,
+.insp-span:hover {
+  color: #ffd400;
+  font-weight: 700;
+  background: hsl(48 100% 50% / 0.14);
+  animation: insp-pulse 1s ease-in-out infinite;
+}
+
+@keyframes insp-pulse {
+  0%, 100% { text-shadow: 0 0 0 rgba(255, 212, 0, 0); }
+  50% { text-shadow: 0 0 10px rgba(255, 212, 0, 0.9); }
+}
+
+/* Bytes the parser could not account for — should never appear. */
+.insp-unknown { color: hsl(var(--destructive)); text-decoration: underline wavy; }
+
+.insp-modal {
+  position: fixed;
+  z-index: 50;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  pointer-events: none;
+  box-shadow: 0 12px 40px hsl(0 0% 0% / 0.55);
+  border-color: hsl(var(--primary) / 0.5);
+}
+.insp-modal-hex {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #ffd400;
+  word-break: break-all;
+  margin-bottom: 7px;
+}
+.insp-modal-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 2px; }
+.insp-modal-value {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: hsl(var(--success));
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+.insp-modal-text { font-size: 0.82rem; line-height: 1.5; margin: 0; }
+.insp-modal-divi {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin: 9px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid hsl(var(--border));
+  color: hsl(var(--primary));
+}
+
+/* ---- collapsible ---- */
+.collapse { margin-top: 16px; }
+.collapse > summary {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  padding: 4px 0;
+  list-style: none;
+}
+.collapse > summary::-webkit-details-marker { display: none; }
+.collapse > summary::before { content: "▸ "; color: hsl(var(--primary)); }
+.collapse[open] > summary::before { content: "▾ "; }
+.collapse > summary:hover { color: hsl(var(--primary)); }
+
+.rawhex {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  word-break: break-all;
+  white-space: pre-wrap;
+  background: hsl(0 0% 0% / 0.35);
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  padding: 14px;
+  margin: 10px 0 0;
+  color: hsl(var(--muted-foreground));
+}
+
 /* ---- detail rows ---- */
 .kv { display: grid; grid-template-columns: 190px 1fr; gap: 10px 16px; }
 .kv dt { color: hsl(var(--muted-foreground)); font-size: 0.8rem; }
