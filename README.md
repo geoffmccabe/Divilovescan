@@ -66,7 +66,18 @@ allow-list, so dev and production cannot drift.
 ## Deployment
 
 Cloudflare Pages, build command `npm run build`, output directory `dist`.
-Required secrets: `DIVI_RPC_URL`, `DIVI_RPC_USER`, `DIVI_RPC_PASS`.
+
+Required secrets:
+
+| Secret | Meaning |
+|---|---|
+| `SCAN_ORIGIN` | Tunnel hostname of the read-only proxy on the node |
+| `SCAN_SHARED_SECRET` | Proves a request came from this Worker |
+
+The node's RPC credentials are deliberately **not** among them — they stay in
+`/etc/divi-scan.env` on the node itself. Compromising the Cloudflare side
+therefore cannot yield wallet access; the worst case is read-only chain data
+that is public anyway.
 
 ## Status
 

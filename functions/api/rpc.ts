@@ -11,9 +11,10 @@
 //     no matter how busy the explorer gets.
 
 interface Env {
-  DIVI_RPC_URL: string;
-  DIVI_RPC_USER: string;
-  DIVI_RPC_PASS: string;
+  /** Tunnel hostname of the hardened read-only proxy running on the node. */
+  SCAN_ORIGIN: string;
+  /** Proves to that proxy that a request came from this Worker. */
+  SCAN_SHARED_SECRET: string;
 }
 
 // Read-only chain queries. NOTHING that touches the wallet, keys, peers, or
@@ -71,15 +72,18 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const hit = await cache.match(key);
   if (hit) return hit;
 
+  // Note we send the shared secret, NOT the node's RPC credentials — those
+  // never leave the node, so compromising this Worker cannot yield wallet
+  // access. The proxy on the other end enforces the same allow-list again.
   let upstream: Response;
   try {
-    upstream = await fetch(ctx.env.DIVI_RPC_URL, {
+    upstream = await fetch(ctx.env.SCAN_ORIGIN, {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: "Basic " + btoa(`${ctx.env.DIVI_RPC_USER}:${ctx.env.DIVI_RPC_PASS}`),
+        "X-Scan-Secret": ctx.env.SCAN_SHARED_SECRET,
       },
-      body: JSON.stringify({ jsonrpc: "1.0", id: "scan", method, params }),
+      body: JSON.stringify({ method, params }),
       // The node is normally sub-second; a hung call must not hold a Worker open.
       signal: AbortSignal.timeout(20000),
     });
@@ -87,15 +91,21 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     return json({ error: "The Divi node is not responding right now." }, 503);
   }
 
+  // The proxy speaks a simplified shape: {result} or {error: "message"}.
+  const payload = (await upstream.json().catch(() => null)) as
+    | { result?: unknown; error?: string }
+    | null;
+
+  if (!payload) {
+    return json({ error: "The Divi node returned an unreadable response." }, 502);
+  }
+  if (payload.error) {
+    // Pass the message through — these are user-meaningful things like
+    // "No information available for address", not internal details.
+    return json({ error: payload.error }, upstream.status === 403 ? 403 : 404);
+  }
   if (!upstream.ok) {
     return json({ error: "The Divi node rejected that query." }, 502);
-  }
-
-  const payload = (await upstream.json()) as { result?: unknown; error?: { message?: string } };
-  if (payload.error) {
-    // Pass the node's own message through — these are user-meaningful things
-    // like "No information available for address", not internal details.
-    return json({ error: payload.error.message ?? "Query failed." }, 404);
   }
 
   const res = json({ result: payload.result }, 200, cacheSeconds(method, params));
