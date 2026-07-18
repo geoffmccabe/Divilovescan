@@ -158,6 +158,74 @@ tr:last-child td { border-bottom: 0; }
 }
 .badge-pos { background: hsl(var(--primary) / 0.2); color: hsl(var(--primary)); }
 .badge-lottery { background: hsl(var(--warning) / 0.2); color: hsl(var(--warning)); }
+.badge-treasury { background: hsl(var(--info) / 0.2); color: hsl(var(--info)); }
+.badge-pow { background: hsl(var(--muted-foreground) / 0.2); color: hsl(var(--muted-foreground)); }
+
+/* ---- list header, paging and jump controls ---- */
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.list-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.jump { display: flex; gap: 6px; }
+.jump input {
+  width: 150px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 7px;
+  padding: 6px 10px;
+  color: hsl(var(--foreground));
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.jump input:focus { outline: none; border-color: hsl(var(--primary)); }
+.jump button, .linkbtn {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 7px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.jump button:hover, .linkbtn:not(:disabled):hover {
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary));
+}
+.linkbtn:disabled { opacity: 0.4; cursor: default; }
+
+.sizer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+.sizer select {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 7px;
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 0.82rem;
+}
+
+.nowrap { white-space: nowrap; }
 
 /* ---- detail rows ---- */
 .kv { display: grid; grid-template-columns: 190px 1fr; gap: 10px 16px; }

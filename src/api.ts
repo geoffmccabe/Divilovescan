@@ -48,6 +48,39 @@ export interface BlockSummary {
   stakeReward: number | null;
 }
 
+// --- block list ---
+
+export interface BlockRow {
+  height: number;
+  hash: string;
+  time: number;
+  txCount: number;
+  size: number | null;
+}
+
+/**
+ * A page of the block list, assembled on the node rather than here. Asking the
+ * browser for 1000 blocks one at a time would be thousands of round trips; this
+ * is a single request.
+ */
+export const blockRange = (start: number, count: number) =>
+  rpc<BlockRow[]>("scan_blockrange", [start, count]);
+
+// Divi's proof-of-work ended at block 100 — every block since is a stake, so
+// "is this a stake block?" is not a useful thing to display. What IS useful is
+// the weekly superblocks, whose heights are fixed by consensus:
+//   lottery  — height % 10080 == 0   (nLotteryBlockCycle)
+//   treasury — height % 10081 == 0   (nTreasuryPaymentsCycle)
+// Both are still stake blocks; they simply carry extra payout outputs.
+export const LAST_POW_BLOCK = 100;
+export const LOTTERY_CYCLE = 10080;
+export const TREASURY_CYCLE = 10081;
+export const SUPERBLOCK_START = 101;
+
+export const isLotteryBlock = (h: number) => h >= SUPERBLOCK_START && h % LOTTERY_CYCLE === 0;
+export const isTreasuryBlock = (h: number) => h >= SUPERBLOCK_START && h % TREASURY_CYCLE === 0;
+export const isProofOfWork = (h: number) => h <= LAST_POW_BLOCK;
+
 export const getChainInfo = () => rpc<ChainInfo>("getblockchaininfo");
 export const getBlockCount = () => rpc<number>("getblockcount");
 export const getBlockHash = (height: number) => rpc<string>("getblockhash", [height]);

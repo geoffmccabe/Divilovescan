@@ -1,35 +1,86 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getChainInfo, getRecentBlocks, type BlockSummary, type ChainInfo } from "../api";
-import { fmtDivi, shortHash, timeAgo } from "../format";
+import {
+  blockRange,
+  getBlockCount,
+  getChainInfo,
+  getBlockHash,
+  getBlockRaw,
+  isLotteryBlock,
+  isTreasuryBlock,
+  isProofOfWork,
+  type BlockRow,
+  type ChainInfo,
+} from "../api";
+import { timeAgo, fmtTime } from "../format";
+
+const PAGE_SIZES = [10, 100, 1000];
 
 export function Home() {
   const [info, setInfo] = useState<ChainInfo | null>(null);
-  const [blocks, setBlocks] = useState<BlockSummary[] | null>(null);
+  const [supply, setSupply] = useState<number | null>(null);
+  const [tip, setTip] = useState<number | null>(null);
+  const [rows, setRows] = useState<BlockRow[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
+  const [size, setSize] = useState(100);
+  // null = follow the chain tip; a number pins the list to that height.
+  const [from, setFrom] = useState<number | null>(null);
+  const [jump, setJump] = useState("");
+
+  // Chain summary. Total supply isn't in getblockchaininfo — every block header
+  // carries the money supply as of that block, so the tip gives it for free.
   useEffect(() => {
     let alive = true;
     const load = async () => {
       try {
-        const [i, b] = await Promise.all([getChainInfo(), getRecentBlocks(12)]);
+        const i = await getChainInfo();
         if (!alive) return;
         setInfo(i);
-        setBlocks(b);
-        setErr(null);
-      } catch (e) {
-        // Keep whatever is already on screen; only report if we have nothing.
-        if (alive && !blocks) setErr((e as Error).message);
+        setTip(i.blocks);
+        const b = await getBlockRaw(await getBlockHash(i.blocks));
+        if (alive && typeof b?.moneysupply === "number") setSupply(b.moneysupply);
+      } catch {
+        /* the block list reports errors; don't double up */
       }
     };
     load();
-    const id = setInterval(load, 30000);
+    const id = setInterval(load, 60000);
     return () => {
       alive = false;
       clearInterval(id);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const start = from ?? (await getBlockCount());
+        const r = await blockRange(start, size);
+        if (!alive) return;
+        setRows(r);
+        setErr(null);
+      } catch (e) {
+        if (alive) setErr((e as Error).message);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [from, size]);
+
+  const top = rows?.[0]?.height ?? null;
+  const bottom = rows?.[rows.length - 1]?.height ?? null;
+
+  const doJump = (e: React.FormEvent) => {
+    e.preventDefault();
+    const h = parseInt(jump.trim(), 10);
+    if (!Number.isFinite(h) || h < 0) return;
+    setRows(null);
+    setFrom(h);
+    setJump("");
+  };
 
   return (
     <>
@@ -41,58 +92,126 @@ export function Home() {
         <div className="panel stat">
           <div className="stat-label">Difficulty</div>
           <div className="stat-value">
-            {info ? info.difficulty.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "—"}
+            {info ? info.difficulty.toLocaleString(undefined, { maximumFractionDigits: 0 }) : "—"}
           </div>
         </div>
         <div className="panel stat">
           <div className="stat-label">Coin Supply</div>
-          <div className="stat-value">{info?.moneysupply ? fmtDivi(info.moneysupply) : "—"}</div>
+          <div className="stat-value">
+            {supply != null ? Math.round(supply).toLocaleString() : "—"}
+          </div>
         </div>
       </section>
 
       <section className="panel">
-        <h2 className="section-title">Latest Blocks</h2>
-        {err && !blocks && <p className="err">{err}</p>}
-        {!err && !blocks && <p className="muted">Loading blocks…</p>}
-        {blocks && (
-          <div className="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Height</th>
-                  <th>Age</th>
-                  <th>Txs</th>
-                  <th>Type</th>
-                  <th>Stake Reward</th>
-                  <th>Won By</th>
-                </tr>
-              </thead>
-              <tbody>
-                {blocks.map((b) => (
-                  <tr key={b.hash}>
-                    <td>
-                      <Link to={`/block/${b.height}`} className="mono">
-                        {b.height.toLocaleString()}
-                      </Link>
-                    </td>
-                    <td className="muted">{timeAgo(b.time)}</td>
-                    <td>{b.txCount}</td>
-                    <td>{b.isPoS ? <span className="badge badge-pos">STAKE</span> : <span className="muted">—</span>}</td>
-                    <td className="mono">{b.stakeReward != null ? fmtDivi(b.stakeReward) : "—"}</td>
-                    <td>
-                      {b.stakeWinner ? (
-                        <Link to={`/address/${b.stakeWinner}`} className="mono">
-                          {shortHash(b.stakeWinner, 8, 6)}
-                        </Link>
-                      ) : (
-                        <span className="muted">—</span>
-                      )}
-                    </td>
-                  </tr>
+        <div className="list-head">
+          <h2 className="section-title" style={{ margin: 0 }}>
+            {from == null ? "Latest Blocks" : `Blocks from ${from.toLocaleString()}`}
+          </h2>
+          <div className="list-controls">
+            <form onSubmit={doJump} className="jump">
+              <input
+                value={jump}
+                onChange={(e) => setJump(e.target.value)}
+                placeholder="Jump to block…"
+                inputMode="numeric"
+                aria-label="Jump to block height"
+              />
+              <button type="submit">Go</button>
+            </form>
+            <label className="sizer">
+              Show
+              <select
+                value={size}
+                onChange={(e) => {
+                  setRows(null);
+                  setSize(Number(e.target.value));
+                }}
+              >
+                {PAGE_SIZES.map((n) => (
+                  <option key={n} value={n}>
+                    {n.toLocaleString()}
+                  </option>
                 ))}
-              </tbody>
-            </table>
+              </select>
+            </label>
+            {from != null && (
+              <button className="linkbtn" onClick={() => { setRows(null); setFrom(null); }}>
+                Back to tip
+              </button>
+            )}
           </div>
+        </div>
+
+        {err && !rows && <p className="err">{err}</p>}
+        {!err && !rows && <p className="muted">Loading blocks…</p>}
+
+        {rows && (
+          <>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Height</th>
+                    <th>Age</th>
+                    <th>Time</th>
+                    <th>Txs</th>
+                    <th>Size</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((b) => (
+                    <tr key={b.hash}>
+                      <td>
+                        <Link to={`/block/${b.height}`} className="mono">
+                          {b.height.toLocaleString()}
+                        </Link>
+                      </td>
+                      <td className="muted">{timeAgo(b.time)}</td>
+                      <td className="muted nowrap">{fmtTime(b.time)}</td>
+                      <td>{b.txCount}</td>
+                      <td className="muted">{b.size != null ? `${b.size.toLocaleString()} B` : "—"}</td>
+                      <td>
+                        {/* Every block past 100 is a stake, so that isn't worth
+                            showing. The weekly superblocks are. */}
+                        {isProofOfWork(b.height) ? (
+                          <span className="badge badge-pow">POW</span>
+                        ) : isLotteryBlock(b.height) ? (
+                          <span className="badge badge-lottery">LOTTERY</span>
+                        ) : isTreasuryBlock(b.height) ? (
+                          <span className="badge badge-treasury">TREASURY</span>
+                        ) : (
+                          <span className="muted">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="pager">
+              <button
+                className="linkbtn"
+                disabled={tip != null && top != null && top >= tip}
+                onClick={() => { setRows(null); setFrom((top ?? 0) + size); }}
+              >
+                ← Newer
+              </button>
+              <span className="muted">
+                {top != null && bottom != null &&
+                  `${bottom.toLocaleString()} – ${top.toLocaleString()}`}
+              </span>
+              <button
+                className="linkbtn"
+                disabled={bottom != null && bottom <= 0}
+                onClick={() => { setRows(null); setFrom((bottom ?? 0) - 1); }}
+              >
+                Older →
+              </button>
+            </div>
+          </>
         )}
       </section>
     </>

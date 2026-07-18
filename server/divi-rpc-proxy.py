@@ -31,6 +31,7 @@ import socketserver
 import sys
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler
 
 # Read-only chain queries ONLY. Adding anything here that touches the wallet
@@ -48,6 +49,16 @@ ALLOWED = {
     "getspentinfo",
     "getlotteryblockwinners",
 }
+
+# Synthetic methods handled here rather than forwarded. A block list of 1000
+# rows would otherwise be ~2000 separate round trips from the browser; batching
+# it here turns that into one request and keeps the fan-out on the loopback
+# interface next to the node.
+BATCH_METHODS = {"scan_blockrange"}
+
+# Bounded so a crafted request cannot ask for the whole chain in one go.
+MAX_RANGE = 1000
+RANGE_WORKERS = 8
 
 RPC_URL = os.environ.get("DIVI_RPC_URL", "http://127.0.0.1:51473/")
 RPC_USER = os.environ.get("DIVI_RPC_USER", "")
@@ -106,34 +117,80 @@ class Handler(BaseHTTPRequestHandler):
         except Exception:
             return self._send(400, {"error": "Malformed request."})
 
+        if method in BATCH_METHODS:
+            try:
+                return self._send(200, {"result": block_range(*params)})
+            except ValueError:
+                return self._send(400, {"error": "Malformed request."})
+            except Exception:
+                return self._send(503, {"error": "The Divi node is not responding right now."})
+
         if method not in ALLOWED:
             return self._send(403, {"error": "Unsupported query."})
 
-        payload = json.dumps({"jsonrpc": "1.0", "id": "scan", "method": method, "params": params})
-        auth = base64.b64encode(f"{RPC_USER}:{RPC_PASS}".encode()).decode()
-        rq = urllib.request.Request(
-            RPC_URL,
-            data=payload.encode(),
-            headers={"content-type": "application/json", "authorization": f"Basic {auth}"},
-        )
-
         try:
-            with urllib.request.urlopen(rq, timeout=RPC_TIMEOUT) as r:
-                out = json.load(r)
-        except urllib.error.HTTPError as e:
-            # The node answers RPC-level errors with a 500 and a JSON body; pass
-            # the message through, since these are user-meaningful.
-            try:
-                out = json.load(e)
-            except Exception:
-                return self._send(502, {"error": "The Divi node rejected that query."})
-        except Exception:
-            return self._send(503, {"error": "The Divi node is not responding right now."})
+            self._send(200, {"result": rpc(method, params)})
+        except RpcError as e:
+            self._send(e.status, {"error": str(e)})
 
-        if out.get("error"):
-            msg = (out["error"] or {}).get("message", "Query failed.")
-            return self._send(404, {"error": msg})
-        self._send(200, {"result": out.get("result")})
+
+class RpcError(Exception):
+    def __init__(self, message, status=404):
+        super().__init__(message)
+        self.status = status
+
+
+def rpc(method, params):
+    """One JSON-RPC round trip to the node. Raises RpcError on any failure."""
+    payload = json.dumps({"jsonrpc": "1.0", "id": "scan", "method": method, "params": params})
+    auth = base64.b64encode(f"{RPC_USER}:{RPC_PASS}".encode()).decode()
+    rq = urllib.request.Request(
+        RPC_URL,
+        data=payload.encode(),
+        headers={"content-type": "application/json", "authorization": f"Basic {auth}"},
+    )
+    try:
+        with urllib.request.urlopen(rq, timeout=RPC_TIMEOUT) as r:
+            out = json.load(r)
+    except urllib.error.HTTPError as e:
+        # The node answers RPC-level errors with a 500 and a JSON body; pass the
+        # message through, since these are user-meaningful.
+        try:
+            out = json.load(e)
+        except Exception:
+            raise RpcError("The Divi node rejected that query.", 502)
+    except Exception:
+        raise RpcError("The Divi node is not responding right now.", 503)
+
+    if out.get("error"):
+        raise RpcError((out["error"] or {}).get("message", "Query failed."), 404)
+    return out.get("result")
+
+
+def block_range(start, count):
+    """Compact summaries for `count` blocks ending at height `start`, newest first.
+
+    Only the fields a list view actually shows — deliberately not the coinstake
+    analysis, which would multiply the round trips and is only needed on a
+    block's own page.
+    """
+    start = int(start)
+    count = max(1, min(int(count), MAX_RANGE))
+    heights = [h for h in range(start, start - count, -1) if h >= 0]
+
+    def one(h):
+        b = rpc("getblock", [rpc("getblockhash", [h])])
+        return {
+            "height": b["height"],
+            "hash": b["hash"],
+            "time": b["time"],
+            "txCount": len(b.get("tx") or []),
+            "size": b.get("size"),
+        }
+
+    with ThreadPoolExecutor(max_workers=RANGE_WORKERS) as pool:
+        blocks = list(pool.map(one, heights))
+    return blocks
 
 
 class Server(socketserver.ThreadingTCPServer):

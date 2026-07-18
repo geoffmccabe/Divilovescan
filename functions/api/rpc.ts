@@ -32,6 +32,8 @@ const ALLOWED = new Set([
   "getaddressdeltas",
   "getspentinfo",
   "getlotteryblockwinners",
+  // Batched block list, assembled next to the node — see server/divi-rpc-proxy.py.
+  "scan_blockrange",
 ]);
 
 // Confirmed chain data is immutable, so it can cache effectively forever. Tip
@@ -42,6 +44,9 @@ function cacheSeconds(method: string, params: unknown[]): number {
   if (method === "getblock" || method === "getrawtransaction") return 31536000;
   // Height→hash is immutable once buried, but a recent height could still reorg.
   if (method === "getblockhash") return 60;
+  // A block range anchored below the tip is settled history and caches hard; a
+  // range that includes recent blocks must expire quickly or the list looks stuck.
+  if (method === "scan_blockrange") return 30;
   return 15;
 }
 
