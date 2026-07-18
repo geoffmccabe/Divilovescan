@@ -79,6 +79,15 @@ The node's RPC credentials are deliberately **not** among them — they stay in
 therefore cannot yield wallet access; the worst case is read-only chain data
 that is public anyway.
 
+`SCAN_ORIGIN` is `https://node.divi.love`, a Cloudflare Tunnel published from the
+node. The tunnel reaches only `http://localhost:5174` (the read-only proxy) — the
+Divi RPC port is never routed, so the tunnel cannot expose it even by
+misconfiguration.
+
+> Cloudflare Pages applies environment variables at **build** time: after adding or
+> changing a secret you must redeploy, or the Function sees an undefined value and
+> every query fails as though the node were unreachable.
+
 ## Status
 
 Blocks, transactions and search work against a live node today. **Address pages require
