@@ -8,12 +8,16 @@ export function TxPage() {
   const { txid = "" } = useParams();
   const [tx, setTx] = useState<RawTx | null>(null);
   const [raw, setRaw] = useState<string | null>(null);
+  // Kept and shown rather than swallowed: a silent failure here made the whole
+  // inspector vanish with no clue why.
+  const [rawErr, setRawErr] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
     setTx(null);
     setRaw(null);
+    setRawErr(null);
     setErr(null);
     getTx(txid)
       .then((t) => alive && setTx(t))
@@ -25,10 +29,8 @@ export function TxPage() {
       );
     // Fetched separately so a failure here still leaves the readable view intact.
     getTxHex(txid)
-      .then((h) => alive && setRaw(h))
-      .catch(() => {
-        /* inspector simply won't render */
-      });
+      .then((h) => alive && setRaw(typeof h === "string" ? h : String(h ?? "")))
+      .catch((e) => alive && setRawErr((e as Error).message || "Could not load the raw transaction."));
     return () => {
       alive = false;
     };
@@ -129,19 +131,26 @@ export function TxPage() {
         </div>
       </section>
 
-      {raw && (
-        <section className="panel" style={{ marginTop: 16 }}>
-          <h2 className="section-title">Transaction Inspector</h2>
-          <TxInspector rawHex={raw} />
+      {/* Always rendered, so a failure is visible instead of the panel silently
+          disappearing. */}
+      <section className="panel" style={{ marginTop: 16 }}>
+        <h2 className="section-title">Transaction Inspector</h2>
 
-          {/* The unmodified transaction, exactly as it exists on the chain —
-              deliberately with no highlighting or interpretation at all. */}
-          <details className="collapse">
-            <summary>Raw transaction</summary>
-            <pre className="rawhex">{raw}</pre>
-          </details>
-        </section>
-      )}
+        {raw ? (
+          <TxInspector rawHex={raw} />
+        ) : rawErr ? (
+          <p className="err">Couldn't load the raw transaction: {rawErr}</p>
+        ) : (
+          <p className="muted">Loading the raw transaction…</p>
+        )}
+
+        {/* The unmodified transaction, exactly as it exists on the chain —
+            deliberately with no highlighting or interpretation at all. */}
+        <details className="collapse">
+          <summary>Raw transaction</summary>
+          <pre className="rawhex">{raw ?? rawErr ?? "Loading…"}</pre>
+        </details>
+      </section>
     </>
   );
 }
