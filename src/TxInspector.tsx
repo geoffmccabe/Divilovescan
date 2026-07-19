@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { parseRawTx, trailing, type Span } from "./rawtx";
 
 // The Transaction Inspector: the raw transaction rendered byte-for-byte, with
@@ -55,13 +56,21 @@ export function TxInspector({ rawHex }: { rawHex: string }) {
         {leftover && <span className="insp-span insp-unknown">{leftover}</span>}
       </div>
 
-      {shown && (
+      {/* Rendered into <body> rather than in place. An ancestor panel uses
+          backdrop-filter for the frosted-glass look, and that makes it the
+          containing block for position:fixed descendants — so a popup left here
+          would be positioned against the panel instead of the viewport and land
+          far down the page, invisible. The portal escapes that. */}
+      {shown &&
+        createPortal(
         <div
           className="insp-modal panel"
           style={{
             // Anchored near the cursor but clamped so it can never sit off-screen.
             left: Math.min(Math.max(pos.x - 150, 12), Math.max(12, window.innerWidth - 372)),
-            top: Math.min(pos.y + 22, window.innerHeight - 240),
+            top:
+              // Flip above the cursor when there isn't room below it.
+              pos.y + 260 > window.innerHeight ? Math.max(12, pos.y - 250) : pos.y + 22,
           }}
           role="tooltip"
         >
@@ -78,7 +87,8 @@ export function TxInspector({ rawHex }: { rawHex: string }) {
               <strong>Divi:</strong> {shown.diviNote}
             </p>
           )}
-        </div>
+        </div>,
+        document.body,
       )}
 
       {leftover && (
