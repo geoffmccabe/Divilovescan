@@ -61,7 +61,35 @@ ALLOWED = {
 # volume. getchaintips walks the fork set and stalls block processing for
 # ~18 seconds; unthrottled, a public endpoint would let anyone halt the node.
 # These are answered from a server-side cache and refreshed at most this often.
-SLOW_METHODS = {"getchaintips": 600, "getpeerinfo": 20, "getinfo": 10}
+SLOW_METHODS = {"getpeerinfo": 20, "getinfo": 10}
+
+# getchaintips is in a class of its own: it walks the entire fork set and stalls
+# the node's RPC threads for ~18 seconds. Even once per request-burst that is
+# enough to make the node unresponsive - which it demonstrably did. So it is
+# NEVER called from a web request. A separate scheduled job refreshes this file
+# and the proxy only ever reads it.
+CHAINTIPS_FILE = "/var/lib/divi-scan/chaintips.json"
+
+# getinfo mixes node facts with WALLET facts — balance, wallet version, key pool
+# and unlock state all come back in the same object. Only these fields ever
+# leave this process. A whitelist, not a blacklist: a future Divi release adding
+# another wallet field must not silently start publishing it.
+GETINFO_PUBLIC = {
+    "version", "protocolversion", "blocks", "timeoffset", "connections",
+    "difficulty", "testnet", "relayfee", "errors", "moneysupply",
+}
+
+
+def scrub(method, result):
+    """Strip anything from a response that isn't ours to publish."""
+    if method == "getinfo" and isinstance(result, dict):
+        return {k: v for k, v in result.items() if k in GETINFO_PUBLIC}
+    if method == "getpeerinfo" and isinstance(result, list):
+        # Peer addresses are public P2P data, but there is no reason to publish
+        # our own byte counters and internal connection bookkeeping.
+        keep = {"addr", "subver", "inbound", "pingtime", "conntime", "startingheight"}
+        return [{k: v for k, v in (p or {}).items() if k in keep} for p in result]
+    return result
 _slow_cache = {}
 _slow_lock = threading.Lock()
 
@@ -145,6 +173,16 @@ class Handler(BaseHTTPRequestHandler):
         if method not in ALLOWED:
             return self._send(403, {"error": "Unsupported query."})
 
+        if method == "getchaintips":
+            try:
+                with open(CHAINTIPS_FILE) as f:
+                    snap = json.load(f)
+                return self._send(200, {"result": snap.get("tips", [])})
+            except Exception:
+                return self._send(
+                    503, {"error": "Fork data hasn't been collected yet. It refreshes hourly."}
+                )
+
         if method in SLOW_METHODS:
             try:
                 return self._send(200, {"result": cached_slow(method, params)})
@@ -204,7 +242,7 @@ def cached_slow(method, params):
         hit = _slow_cache.get(key)
         if hit and now - hit[0] < ttl:
             return hit[1]
-        value = rpc(method, params, timeout=SLOW_TIMEOUT)
+        value = scrub(method, rpc(method, params, timeout=SLOW_TIMEOUT))
         _slow_cache[key] = (now, value)
         return value
 
