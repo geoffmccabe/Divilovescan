@@ -252,3 +252,39 @@ export interface ScanAddress {
   stakesForTotal: number;
 }
 export const scanAddress = (address: string) => rpc<ScanAddress>("scan_address", [address]);
+
+// --- network map ---
+
+export interface Peer {
+  ip: string;
+  inbound: boolean;
+  pingMs: number;
+  connSecs: number;
+  bytesSent: number;
+  bytesRecv: number;
+  subver: string;
+  height: number;
+}
+export interface PeerSnapshot {
+  peers: Peer[];
+  /** Our own public address, as the majority of peers report seeing us. */
+  selfIp: string | null;
+}
+export const scanPeers = () => rpc<PeerSnapshot>("scan_peers");
+
+export interface Geo {
+  ip: string;
+  lat: number;
+  lon: number;
+  city: string;
+  country: string;
+  isp?: string;
+}
+/** Locations are cached server-side forever — an IP's city doesn't move. */
+export const scanGeo = (ips: string[]) => rpc<Geo[]>("scan_geo", [ips]);
+
+export interface Probe {
+  ip: string;
+  online: boolean;
+}
+export const scanProbe = (ips: string[]) => rpc<Probe[]>("scan_probe", [ips]);

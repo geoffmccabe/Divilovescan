@@ -31,7 +31,7 @@ from decimal import Decimal
 RPC_URL = os.environ.get("DIVI_RPC_URL", "http://127.0.0.1:51473/")
 RPC_USER = os.environ.get("DIVI_RPC_USER", "")
 RPC_PASS = os.environ.get("DIVI_RPC_PASS", "")
-DB_PATH = os.environ.get("SCAN_DB", "/root/divi-index.sqlite")
+DB_PATH = os.environ.get("SCAN_DB", "/var/lib/divi-scan/divi-index.sqlite")
 
 BATCH = 2000
 WORKERS = 12

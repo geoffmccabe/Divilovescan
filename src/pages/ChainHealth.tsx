@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getChainTips, type ChainTip } from "../api";
+import { ForkTree, type SeenFork } from "../ForkTree";
 
 // Chain Health — the same reading the Divi Desktop wallet gives, in a larger
 // panel. It reports on forks: short-lived competing blocks are normal on any
@@ -82,6 +83,13 @@ export function ChainHealthPage() {
   const forks = tips.filter((t) => t.status !== "active");
   const longest = forks.reduce((m, f) => Math.max(m, f.branchlen || 0), 0);
   const v = verdictFor(forks.length, longest);
+  // getchaintips carries no timestamps, so unlike the wallet (which accumulates
+  // its own history) this is a point-in-time snapshot of what the node knows.
+  const seen: SeenFork[] = forks.map((f) => ({
+    height: f.height,
+    status: f.status,
+    branchLen: f.branchlen || 0,
+  }));
 
   return (
     <>
@@ -104,6 +112,16 @@ export function ChainHealthPage() {
           Refreshed at most every 10 minutes. Asking the node for this stalls its block processing
           for around 18 seconds, so it is deliberately not live.
         </p>
+      </section>
+
+      <section className="panel" style={{ marginBottom: 16 }}>
+        <h2 className="section-title">Fork tree</h2>
+        <p className="wl-note">
+          The chain as one line left to right, with each stale block hanging below the block that
+          beat it. Long uneventful stretches collapse into a dashed connector labelled with how
+          many blocks were skipped, so forks far apart still sit side by side.
+        </p>
+        <ForkTree forks={seen} tip={active ? active.height : 0} />
       </section>
 
       <section className="panel">

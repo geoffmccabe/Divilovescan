@@ -28,6 +28,7 @@ import base64
 import json
 import os
 import socketserver
+import socket
 import sqlite3
 import threading
 import sys
@@ -103,6 +104,16 @@ BATCH_METHODS = {"scan_blockrange"}
 # Answered from the chain-scan database, not the node. These are things the node
 # fundamentally cannot do: rank every address, and see vault holdings at all.
 SCAN_METHODS = {"scan_richlist", "scan_summary", "scan_address"}
+
+# Network-map support. Peers come from the node; locations come from a public
+# geolocation service and are cached indefinitely (an IP's city does not move),
+# so the service is queried once per address rather than once per page view.
+NET_METHODS = {"scan_peers", "scan_geo", "scan_probe"}
+GEO_DB = os.environ.get("GEO_DB", "/var/lib/divi-scan/geo.sqlite")
+GEO_ENDPOINT = "http://ip-api.com/batch"
+PROBE_PORT = 51472
+PROBE_TIMEOUT = 2.0
+MAX_IPS = 200
 SCAN_DB = os.environ.get("SCAN_DB", "/var/lib/divi-scan/divi-index.sqlite")
 RICHLIST_MAX = 200
 
@@ -176,6 +187,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(400, {"error": "Malformed request."})
             except Exception:
                 return self._send(503, {"error": "The Divi node is not responding right now."})
+
+        if method in NET_METHODS:
+            try:
+                return self._send(200, {"result": net_query(method, params)})
+            except Exception:
+                return self._send(503, {"error": "Couldn't gather network data right now."})
 
         if method in SCAN_METHODS:
             try:
@@ -260,6 +277,113 @@ def cached_slow(method, params):
         value = scrub(method, rpc(method, params, timeout=SLOW_TIMEOUT))
         _slow_cache[key] = (now, value)
         return value
+
+
+def geo_db():
+    db = sqlite3.connect(GEO_DB, timeout=5)
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS geo (ip TEXT PRIMARY KEY, lat REAL, lon REAL,"
+        " city TEXT, country TEXT, isp TEXT, seen INTEGER)"
+    )
+    return db
+
+
+def strip_port(addr):
+    """'1.2.3.4:51472' -> '1.2.3.4'; leaves bracketed IPv6 intact."""
+    a = (addr or "").strip()
+    if a.startswith("["):
+        return a.split("]")[0].lstrip("[")
+    return a.rsplit(":", 1)[0] if a.count(":") == 1 else a
+
+
+def net_query(method, params):
+    if method == "scan_peers":
+        peers = cached_slow("getpeerinfo", [])
+        out = []
+        votes = {}
+        for p in peers or []:
+            ip = strip_port(p.get("addr"))
+            if not ip:
+                continue
+            out.append({
+                "ip": ip,
+                "inbound": bool(p.get("inbound")),
+                "subver": p.get("subver") or "",
+                "pingMs": round((p.get("pingtime") or 0) * 1000),
+                "connSecs": p.get("conntime") or 0,
+                "height": p.get("startingheight") or 0,
+                "bytesSent": p.get("bytessent") or 0,
+                "bytesRecv": p.get("bytesrecv") or 0,
+            })
+            # Peers report the address they see us as; the majority answer is
+            # our public address.
+            local = strip_port(p.get("addrlocal"))
+            if local:
+                votes[local] = votes.get(local, 0) + 1
+        self_ip = max(votes.items(), key=lambda kv: kv[1])[0] if votes else None
+        return {"peers": out, "selfIp": self_ip}
+
+    if method == "scan_geo":
+        ips = [str(i)[:64] for i in (params[0] if params else [])][:MAX_IPS]
+        db = geo_db()
+        try:
+            found, missing = {}, []
+            for ip in ips:
+                r = db.execute(
+                    "SELECT lat,lon,city,country,isp FROM geo WHERE ip=?", (ip,)
+                ).fetchone()
+                if r:
+                    found[ip] = {"ip": ip, "lat": r[0], "lon": r[1],
+                                 "city": r[2], "country": r[3], "isp": r[4]}
+                else:
+                    missing.append(ip)
+
+            # One batched lookup for whatever we haven't seen before.
+            for chunk in (missing[i:i + 100] for i in range(0, len(missing), 100)):
+                try:
+                    req = urllib.request.Request(
+                        GEO_ENDPOINT,
+                        data=json.dumps([{"query": ip, "fields": "status,lat,lon,city,country,isp,query"}
+                                         for ip in chunk]).encode(),
+                        headers={"content-type": "application/json"},
+                    )
+                    with urllib.request.urlopen(req, timeout=20) as r:
+                        rows = json.load(r)
+                except Exception:
+                    break  # leave them unlocated rather than failing the whole call
+                for row in rows or []:
+                    ip = row.get("query")
+                    if not ip or row.get("status") != "success":
+                        continue
+                    rec = {"ip": ip, "lat": row.get("lat"), "lon": row.get("lon"),
+                           "city": row.get("city"), "country": row.get("country"),
+                           "isp": row.get("isp")}
+                    found[ip] = rec
+                    db.execute(
+                        "INSERT OR REPLACE INTO geo(ip,lat,lon,city,country,isp,seen) "
+                        "VALUES(?,?,?,?,?,?,?)",
+                        (ip, rec["lat"], rec["lon"], rec["city"], rec["country"],
+                         rec["isp"], int(time.time())),
+                    )
+                db.commit()
+            return [found[i] for i in ips if i in found]
+        finally:
+            db.close()
+
+    if method == "scan_probe":
+        ips = [str(i)[:64] for i in (params[0] if params else [])][:MAX_IPS]
+
+        def alive(ip):
+            try:
+                with socket.create_connection((ip, PROBE_PORT), timeout=PROBE_TIMEOUT):
+                    return {"ip": ip, "online": True}
+            except Exception:
+                return {"ip": ip, "online": False}
+
+        with ThreadPoolExecutor(max_workers=24) as pool:
+            return list(pool.map(alive, ips))
+
+    raise ValueError("unknown network method")
 
 
 def scan_db():

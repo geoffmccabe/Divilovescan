@@ -1,20 +1,19 @@
-// Network Map — port of the wallet's map, showing peers, their locations and
-// the connections between them. "SCANNER / NODE" marks this explorer's own node
-// where the wallet shows "YOU".
+import { NetworkMap } from "../map/NetworkMap";
+
+// Network Map — a port of the wallet's map. Peers come from our node, their
+// locations from IP geolocation (cached server-side, since an address's city
+// doesn't move). Transactions have no location on a blockchain, so nothing here
+// pretends to show where a payment came from; it is network topology only.
 
 export function NetworkPage() {
   return (
-    <section className="panel">
+    <section className="panel netmap-panel">
       <h2 className="section-title">Network Map</h2>
       <p className="wl-note">
-        Divi nodes around the world, their connections, and where this explorer's node sits among
-        them.
+        Divi nodes this explorer is connected to, and the wider set it has seen recently. The gold
+        marker labelled SCANNER / NODE is this explorer's own node.
       </p>
-      <p className="muted" style={{ marginBottom: 0 }}>
-        Being ported from the wallet. The map itself is the largest single piece of that app, and
-        the live peer probing and location lookups behind it run in the wallet's own backend — both
-        need web equivalents before this can be faithful rather than a rough copy.
-      </p>
+      <NetworkMap />
     </section>
   );
 }

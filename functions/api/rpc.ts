@@ -45,6 +45,10 @@ const ALLOWED = new Set([
   "scan_summary",
   "scan_richlist",
   "scan_address",
+  // Network map. Peer data is short-lived; locations are cached on the node.
+  "scan_peers",
+  "scan_geo",
+  "scan_probe",
 ]);
 
 // Confirmed chain data is immutable, so it can cache effectively forever. Tip
@@ -64,6 +68,11 @@ function cacheSeconds(method: string, params: unknown[]): number {
   if (method === "getinfo") return 10;
   // The index is rebuilt periodically, not continuously, so a short cache costs
   // nothing in freshness and keeps repeated page views off the database.
+  // Peer connections churn, and a probe is a point-in-time liveness check, so
+  // these must not sit in a two-minute cache like the index queries do.
+  if (method === "scan_peers") return 20;
+  if (method === "scan_probe") return 30;
+  if (method === "scan_geo") return 86400;
   if (method.startsWith("scan_")) return 120;
   return 15;
 }
