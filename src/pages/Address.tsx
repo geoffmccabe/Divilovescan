@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getAddressBalance, getAddressTxids } from "../api";
+import { getAddressBalance, getAddressTxids, scanAddress, type ScanAddress } from "../api";
 import { fmtDivi, shortHash } from "../format";
 
 export function AddressPage() {
@@ -8,12 +8,16 @@ export function AddressPage() {
   const [balance, setBalance] = useState<{ balance: number; received: number } | null>(null);
   const [txids, setTxids] = useState<string[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  // Our own index — the only source that sees vault holdings.
+  const [scan, setScan] = useState<ScanAddress | null>(null);
 
   useEffect(() => {
     let alive = true;
     setBalance(null);
     setTxids(null);
+    setScan(null);
     setErr(null);
+    scanAddress(address).then((s) => alive && setScan(s)).catch(() => {});
     (async () => {
       try {
         const [b, t] = await Promise.all([getAddressBalance(address), getAddressTxids(address)]);
@@ -34,6 +38,8 @@ export function AddressPage() {
   // is indistinguishable from a genuinely unused address. Say so honestly
   // rather than claiming the address has no history.
   const indexLikelyOff = err?.includes("No information available");
+  // Our index is the authoritative view here — it's the only one that sees vaults.
+  const hasScan = !!scan && (scan.balance > 0 || scan.stakesForTotal > 0);
 
   return (
     <>
@@ -42,7 +48,7 @@ export function AddressPage() {
         <p className="hash" style={{ marginTop: 0 }}>
           {address}
         </p>
-        {balance && (
+        {balance && !hasScan && (
           <dl className="kv">
             <dt>Balance</dt>
             <dd className="mono">{fmtDivi(balance.balance / 1e8)} DIVI</dd>
@@ -50,7 +56,83 @@ export function AddressPage() {
             <dd className="mono">{fmtDivi(balance.received / 1e8)} DIVI</dd>
           </dl>
         )}
-        {indexLikelyOff && (
+        {hasScan && scan && (
+          <div className="addr-scan">
+            <dl className="kv">
+              <dt>Balance</dt>
+              <dd className="mono">
+                {fmtDivi(scan.balance / 1e8)} DIVI
+                {scan.vaulted > 0 && (
+                  <span className="muted"> — includes vaulted coins the node's own index omits</span>
+                )}
+              </dd>
+              {balance && balance.received > 0 && (
+                <>
+                  <dt>Total received</dt>
+                  <dd className="mono">{fmtDivi(balance.received / 1e8)} DIVI</dd>
+                </>
+              )}
+              {scan.vaulted > 0 && (
+                <>
+                  <dt>Held in a vault</dt>
+                  <dd className="mono">
+                    {fmtDivi(scan.vaulted / 1e8)} DIVI
+                    <span className="muted"> — staked by a delegate on this owner's behalf</span>
+                  </dd>
+                </>
+              )}
+              {scan.balance > scan.vaulted && (
+                <>
+                  <dt>Self-custodied</dt>
+                  <dd className="mono">{fmtDivi((scan.balance - scan.vaulted) / 1e8)} DIVI</dd>
+                </>
+              )}
+            </dl>
+
+            {scan.stakedBy.length > 0 && (
+              <div className="addr-deleg">
+                <div className="ts-hash-label">Staked on this owner's behalf by</div>
+                <p className="muted addr-deleg-note">
+                  These delegates may stake these coins but can never spend or take them — only
+                  this owner can.
+                </p>
+                {scan.stakedBy.map((d) => (
+                  <div key={d.address} className="addr-deleg-row">
+                    <Link to={`/address/${d.address}`} className="mono">
+                      {shortHash(d.address, 12, 8)}
+                    </Link>
+                    <span className="mono">{fmtDivi(d.amount / 1e8)} DIVI</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {scan.stakesForTotal > 0 && (
+              <div className="addr-deleg">
+                <div className="ts-hash-label">
+                  Stakes for others — {fmtDivi(scan.stakesForTotal / 1e8)} DIVI across{" "}
+                  {scan.stakesFor.length}
+                  {scan.stakesFor.length === 50 ? "+" : ""} owner
+                  {scan.stakesFor.length === 1 ? "" : "s"}
+                </div>
+                <p className="muted addr-deleg-note">
+                  This address is a staking delegate. These coins are not its own — it can stake
+                  them, but never spend them.
+                </p>
+                {scan.stakesFor.slice(0, 10).map((d) => (
+                  <div key={d.address} className="addr-deleg-row">
+                    <Link to={`/address/${d.address}`} className="mono">
+                      {shortHash(d.address, 12, 8)}
+                    </Link>
+                    <span className="mono">{fmtDivi(d.amount / 1e8)} DIVI</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {indexLikelyOff && !scan?.balance && (
           <p className="muted" style={{ marginBottom: 0 }}>
             No history available for this address. This means either the address has never been
             used, or the explorer's node is not currently running with address indexing enabled —

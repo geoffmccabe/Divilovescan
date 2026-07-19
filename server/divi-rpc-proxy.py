@@ -28,6 +28,7 @@ import base64
 import json
 import os
 import socketserver
+import sqlite3
 import threading
 import sys
 import time
@@ -99,6 +100,12 @@ _slow_lock = threading.Lock()
 # interface next to the node.
 BATCH_METHODS = {"scan_blockrange"}
 
+# Answered from the chain-scan database, not the node. These are things the node
+# fundamentally cannot do: rank every address, and see vault holdings at all.
+SCAN_METHODS = {"scan_richlist", "scan_summary", "scan_address"}
+SCAN_DB = os.environ.get("SCAN_DB", "/var/lib/divi-scan/divi-index.sqlite")
+RICHLIST_MAX = 200
+
 # Bounded so a crafted request cannot ask for the whole chain in one go.
 MAX_RANGE = 1000
 RANGE_WORKERS = 8
@@ -169,6 +176,14 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(400, {"error": "Malformed request."})
             except Exception:
                 return self._send(503, {"error": "The Divi node is not responding right now."})
+
+        if method in SCAN_METHODS:
+            try:
+                return self._send(200, {"result": scan_query(method, params)})
+            except FileNotFoundError:
+                return self._send(503, {"error": "The chain scan hasn't been built yet."})
+            except Exception:
+                return self._send(500, {"error": "Couldn't read the chain index."})
 
         if method not in ALLOWED:
             return self._send(403, {"error": "Unsupported query."})
@@ -245,6 +260,76 @@ def cached_slow(method, params):
         value = scrub(method, rpc(method, params, timeout=SLOW_TIMEOUT))
         _slow_cache[key] = (now, value)
         return value
+
+
+def scan_db():
+    if not os.path.exists(SCAN_DB):
+        raise FileNotFoundError(SCAN_DB)
+    # Read-only: this process must never be able to alter the index.
+    return sqlite3.connect(f"file:{SCAN_DB}?mode=ro", uri=True, timeout=5)
+
+
+def scan_query(method, params):
+    db = scan_db()
+    try:
+        meta = dict(db.execute("SELECT key,value FROM meta").fetchall())
+
+        if method == "scan_summary":
+            keys = ("height", "tx_total", "tx_nonstake", "sum_total", "sum_vaulted",
+                    "holders", "delegates", "delegators", "summary_built")
+            out = {k: int(meta.get(k, 0)) for k in keys}
+            out["addresses"] = db.execute("SELECT COUNT(*) FROM addr").fetchone()[0]
+            out["senders"] = db.execute("SELECT COUNT(*) FROM addr WHERE has_sent=1").fetchone()[0]
+            return out
+
+        if method == "scan_richlist":
+            limit = min(int(params[0]) if params else 100, RICHLIST_MAX)
+            offset = max(0, int(params[1]) if len(params) > 1 else 0)
+            rows = db.execute(
+                "SELECT address,balance,vaulted,utxos FROM balances "
+                "ORDER BY balance DESC LIMIT ? OFFSET ?",
+                (limit, offset),
+            ).fetchall()
+            return {
+                "total": int(meta.get("sum_total", 0)),
+                "holders": int(meta.get("holders", 0)),
+                "builtAt": int(meta.get("summary_built", 0)),
+                "rows": [
+                    {"address": a, "balance": b, "vaulted": v, "utxos": u, "rank": offset + i + 1}
+                    for i, (a, b, v, u) in enumerate(rows)
+                ],
+            }
+
+        if method == "scan_address":
+            addr = str(params[0])[:120]
+            row = db.execute(
+                "SELECT balance,vaulted,utxos FROM balances WHERE address=?", (addr,)
+            ).fetchone()
+            # Both directions of the delegation graph: who stakes FOR this
+            # address, and whose coins this address stakes.
+            staked_by = db.execute(
+                "SELECT staker,amount FROM delegation WHERE owner=? ORDER BY amount DESC LIMIT 50",
+                (addr,),
+            ).fetchall()
+            stakes_for = db.execute(
+                "SELECT owner,amount FROM delegation WHERE staker=? ORDER BY amount DESC LIMIT 50",
+                (addr,),
+            ).fetchall()
+            return {
+                "balance": row[0] if row else 0,
+                "vaulted": row[1] if row else 0,
+                "utxos": row[2] if row else 0,
+                "builtAt": int(meta.get("summary_built", 0)),
+                "stakedBy": [{"address": a, "amount": v} for a, v in staked_by],
+                "stakesFor": [{"address": a, "amount": v} for a, v in stakes_for],
+                "stakesForTotal": db.execute(
+                    "SELECT COALESCE(SUM(amount),0) FROM delegation WHERE staker=?", (addr,)
+                ).fetchone()[0],
+            }
+
+        raise ValueError("unknown scan method")
+    finally:
+        db.close()
 
 
 def block_range(start, count):

@@ -521,3 +521,14 @@ tr:last-child td { border-bottom: 0; }
   letter-spacing: 0.06em; color: hsl(var(--success));
 }
 .wl-note { font-size: 0.82rem; line-height: 1.5; color: hsl(var(--muted-foreground)); }
+
+/* ---- address: vault / delegation detail ---- */
+.addr-scan { margin-top: 12px; padding-top: 12px; border-top: 1px solid hsl(var(--border)); }
+.addr-deleg { margin-top: 14px; }
+.addr-deleg-note { font-size: 0.76rem; margin: 3px 0 8px; line-height: 1.45; }
+.addr-deleg-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 5px 0; border-bottom: 1px solid hsl(var(--border) / 0.4);
+  font-size: 0.82rem;
+}
+.addr-deleg-row:last-child { border-bottom: 0; }

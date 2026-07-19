@@ -5,6 +5,8 @@ import {
   getChainInfo,
   getNodeInfo,
   getPeerInfo,
+  scanSummary,
+  type ScanSummary,
   LOTTERY_CYCLE,
   TREASURY_CYCLE,
   type ChainInfo,
@@ -38,6 +40,7 @@ export function StatsPage() {
   const [spacing, setSpacing] = useState<number | null>(null);
   const [node, setNode] = useState<NodeInfo | null>(null);
   const [peers, setPeers] = useState<PeerInfo[] | null>(null);
+  const [scan, setScan] = useState<ScanSummary | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -64,6 +67,7 @@ export function StatsPage() {
       }
     })();
 
+    scanSummary().then((s) => alive && setScan(s)).catch(() => {});
     getNodeInfo().then((n) => alive && setNode(n)).catch(() => {});
     getPeerInfo().then((p) => alive && setPeers(p)).catch(() => {});
     return () => {
@@ -122,10 +126,52 @@ export function StatsPage() {
           />
           <Row label="Treasury cycle" value={`${TREASURY_CYCLE.toLocaleString()} blocks`} />
         </dl>
-        <p className="muted stat-pending">
-          Totals that need the whole chain — transactions sent, unique wallets, wallets that have
-          ever sent, and how much supply sits in vaults — appear here once the chain scan finishes.
+      </section>
+
+      <section className="panel" style={{ marginBottom: 16 }}>
+        <h2 className="section-title">Wallets and holdings</h2>
+        <p className="wl-note">
+          {/* Say plainly where these come from — the node genuinely cannot
+              answer them, and a reader deserves to know it's our own index. */}
+          From a full scan of the chain. The node can describe a single address but can never rank
+          them all, and it doesn't see vault holdings at all.
         </p>
+        {scan ? (
+          <dl className="kv stats-kv">
+            <Row
+              label="Addresses ever seen"
+              value={scan.addresses.toLocaleString()}
+              note="including those long since emptied"
+            />
+            <Row label="Addresses holding a balance" value={scan.holders.toLocaleString()} />
+            <Row label="Addresses that have ever sent" value={scan.senders.toLocaleString()} />
+            <Row label="Transactions (all)" value={scan.tx_total.toLocaleString()} />
+            <Row
+              label="Real payments"
+              value={scan.tx_nonstake.toLocaleString()}
+              note="staking and block rewards excluded"
+            />
+            <Row
+              label="Held in vaults"
+              value={`${fmtDivi(scan.sum_vaulted / 1e8)} DIVI`}
+              note={`${((scan.sum_vaulted / Math.max(1, scan.sum_total)) * 100).toFixed(1)}% of supply`}
+            />
+            <Row
+              label="Self-custodied"
+              value={`${fmtDivi((scan.sum_total - scan.sum_vaulted) / 1e8)} DIVI`}
+            />
+            <Row label="Owners delegating a vault" value={scan.delegators.toLocaleString()} />
+            <Row label="Delegates staking for others" value={scan.delegates.toLocaleString()} />
+          </dl>
+        ) : (
+          <p className="muted">Loading the chain index…</p>
+        )}
+        {scan?.summary_built ? (
+          <p className="muted stat-pending">
+            Snapshot at block {scan.height.toLocaleString()}, built{" "}
+            {new Date(scan.summary_built * 1000).toLocaleString()}.
+          </p>
+        ) : null}
       </section>
 
       <section className="panel">

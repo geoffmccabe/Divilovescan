@@ -202,3 +202,53 @@ export interface NodeInfo {
   testnet?: boolean;
 }
 export const getNodeInfo = () => rpc<NodeInfo>("getinfo");
+
+// --- chain-scan index (our own, because the node cannot answer these) ---
+
+export interface ScanSummary {
+  height: number;
+  tx_total: number;
+  tx_nonstake: number;
+  sum_total: number;
+  sum_vaulted: number;
+  holders: number;
+  delegates: number;
+  delegators: number;
+  addresses: number;
+  senders: number;
+  summary_built: number;
+}
+export const scanSummary = () => rpc<ScanSummary>("scan_summary");
+
+export interface RichRow {
+  rank: number;
+  address: string;
+  balance: number;
+  vaulted: number;
+  utxos: number;
+}
+export interface RichList {
+  total: number;
+  holders: number;
+  builtAt: number;
+  rows: RichRow[];
+}
+export const scanRichList = (limit = 100, offset = 0) =>
+  rpc<RichList>("scan_richlist", [limit, offset]);
+
+export interface Delegation {
+  address: string;
+  amount: number;
+}
+export interface ScanAddress {
+  balance: number;
+  vaulted: number;
+  utxos: number;
+  builtAt: number;
+  /** Delegates staking this address's coins on its behalf. */
+  stakedBy: Delegation[];
+  /** Owners whose coins this address stakes. */
+  stakesFor: Delegation[];
+  stakesForTotal: number;
+}
+export const scanAddress = (address: string) => rpc<ScanAddress>("scan_address", [address]);

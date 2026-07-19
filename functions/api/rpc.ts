@@ -40,6 +40,11 @@ const ALLOWED = new Set([
   "getchaintips",
   "getpeerinfo",
   "getinfo",
+  // Served from the chain-scan index, not the node — these are the questions
+  // the node cannot answer (ranking every address; seeing vault holdings).
+  "scan_summary",
+  "scan_richlist",
+  "scan_address",
 ]);
 
 // Confirmed chain data is immutable, so it can cache effectively forever. Tip
@@ -57,6 +62,9 @@ function cacheSeconds(method: string, params: unknown[]): number {
   if (method === "getchaintips") return 600;
   if (method === "getpeerinfo") return 20;
   if (method === "getinfo") return 10;
+  // The index is rebuilt periodically, not continuously, so a short cache costs
+  // nothing in freshness and keeps repeated page views off the database.
+  if (method.startsWith("scan_")) return 120;
   return 15;
 }
 
