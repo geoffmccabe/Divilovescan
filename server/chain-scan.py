@@ -93,10 +93,15 @@ def setup(db):
         PRAGMA synchronous=NORMAL;
         CREATE TABLE IF NOT EXISTS utxo (
             txid TEXT NOT NULL, n INTEGER NOT NULL,
-            address TEXT, value INTEGER NOT NULL,
+            address TEXT,            -- owner: whose coins these are
+            staker  TEXT,            -- vaults only: who may stake them, never spend
+            kind    TEXT,            -- script type, e.g. pubkeyhash / vault
+            value INTEGER NOT NULL,
             PRIMARY KEY (txid, n)
         ) WITHOUT ROWID;
         CREATE INDEX IF NOT EXISTS utxo_addr ON utxo(address);
+        -- Powers "who stakes for whom, and how much" — the delegation graph.
+        CREATE INDEX IF NOT EXISTS utxo_staker ON utxo(staker) WHERE staker IS NOT NULL;
         -- every address ever seen, and whether it has ever spent
         CREATE TABLE IF NOT EXISTS addr (
             address TEXT PRIMARY KEY,
@@ -119,15 +124,24 @@ def set_meta(db, key, value):
                "ON CONFLICT(key) DO UPDATE SET value=excluded.value", (key, str(value)))
 
 
-def address_of(spk):
-    """Owner address for an output, or None if it pays no address.
+def parties_of(spk):
+    """(owner, staker, kind) for an output.
 
-    Vaults list [owner, staker]; the owner holds the coins. Multisig lists
-    several — the first is taken, which is a simplification we accept rather
-    than inventing shared-ownership semantics.
+    A Divi vault names two parties: the owner, who may spend freely, and a
+    delegated staker, who may only stake the coins and can never take them. The
+    node lists the owner first (the free-spend branch of the script).
+
+    Both are kept: the owner is who the balance belongs to, but recording the
+    staker too is what lets us show who is staking on whose behalf, and how much
+    of the supply is delegated rather than self-custodied.
     """
     addrs = spk.get("addresses") or []
-    return addrs[0] if addrs else None
+    kind = spk.get("type")
+    if not addrs:
+        return None, None, kind
+    if kind == "vault" and len(addrs) > 1:
+        return addrs[0], addrs[1], kind
+    return addrs[0], None, kind
 
 
 def fetch_block(height):
@@ -158,6 +172,12 @@ def main():
     if cap:
         tip = min(tip, int(cap))
     start = int(get_meta(db, "height", -1)) + 1
+    # TEST ONLY: start partway in. Balances are meaningless then (spends of
+    # earlier outputs can't resolve), but it lets script handling be checked
+    # against recent blocks without scanning the whole chain first.
+    floor = os.environ.get("SCAN_MIN_HEIGHT")
+    if floor:
+        start = max(start, int(floor))
     if start > tip:
         print(f"already up to date at {tip}")
         return
@@ -205,11 +225,18 @@ def main():
                         val = int(Decimal(o.get("value") or 0) * SATS)
                         if val <= 0:
                             continue
-                        addr = address_of(o.get("scriptPubKey") or {})
+                        addr, staker, kind = parties_of(o.get("scriptPubKey") or {})
                         db.execute(
-                            "INSERT OR REPLACE INTO utxo(txid,n,address,value) VALUES(?,?,?,?)",
-                            (tx["txid"], o.get("n"), addr, val),
+                            "INSERT OR REPLACE INTO utxo(txid,n,address,staker,kind,value) "
+                            "VALUES(?,?,?,?,?,?)",
+                            (tx["txid"], o.get("n"), addr, staker, kind, val),
                         )
+                        if staker:
+                            db.execute(
+                                "INSERT INTO addr(address,first_height) VALUES(?,?) "
+                                "ON CONFLICT(address) DO NOTHING",
+                                (staker, h),
+                            )
                         if addr:
                             db.execute(
                                 "INSERT INTO addr(address,first_height) VALUES(?,?) "
