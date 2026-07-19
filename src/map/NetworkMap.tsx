@@ -61,6 +61,43 @@ const GREEN = (a: number) => `hsla(145, 80%, 50%, ${a})`;
 
 // Dark sunglasses drawn above the centre of a node's circle (the "face"), scaled
 // to it — the stake-winner marker. Drawn last so nothing covers it.
+// Lovenode marker. HSB 276,32,92 -> rgb(205,160,235).
+const LOVE_COLOR = "rgb(205, 160, 235)";
+
+// TEMPORARY: drawn on every node so the colour and scaling can be judged.
+// Replace with the real test once we can identify a Lovenode (a subver marker,
+// a published list, or similar) — the drawing below needs no changes then.
+const isLovenode = (_ip: string) => true;
+
+/**
+ * A heart centred on a node dot, sized to sit INSIDE it. `r` is the dot's
+ * radius, so the heart grows and shrinks with the cluster size it marks.
+ */
+function drawHeart(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
+  // Kept well within the circle: at 1.30x the radius the heart's bounding box
+  // has a half-diagonal of ~0.92r, so it never touches the edge.
+  const w = r * 1.3;
+  const h = r * 1.25;
+  const x = cx - w / 2;
+  const y = cy - h * 0.42; // optical centring — a heart reads low if centred by box
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(x + w / 2, y + h / 4);
+  ctx.quadraticCurveTo(x + w / 2, y, x + w / 4, y);
+  ctx.quadraticCurveTo(x, y, x, y + h / 4);
+  ctx.quadraticCurveTo(x, y + h / 2, x + w / 4, y + (h * 3) / 4);
+  ctx.lineTo(x + w / 2, y + h);
+  ctx.lineTo(x + (w * 3) / 4, y + (h * 3) / 4);
+  ctx.quadraticCurveTo(x + w, y + h / 2, x + w, y + h / 4);
+  ctx.quadraticCurveTo(x + w, y, x + (w * 3) / 4, y);
+  ctx.quadraticCurveTo(x + w / 2, y, x + w / 2, y + h / 4);
+  ctx.closePath();
+  ctx.fillStyle = LOVE_COLOR;
+  ctx.fill();
+  ctx.restore();
+}
+
 function drawGlasses(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
   const s = Math.max(6, r * 1.5); // glasses half-width
   const gy = cy - r * 0.35; // sit above centre
@@ -660,7 +697,10 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
 
       // peer dots, clustered by ~1° cell (size by count)
       if (s) {
-        const clusters = new Map<string, { x: number; y: number; n: number; inbound: number }>();
+        const clusters = new Map<
+          string,
+          { x: number; y: number; n: number; inbound: number; love: boolean }
+        >();
         for (const p of s.peers) {
           const pg = g[p.ip];
           if (!pg) continue;
@@ -668,9 +708,10 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           if (rev == null || rev > now) continue; // not revealed yet
           const k = clusterKey(pg.lat, pg.lon);
           const [x, y] = P(pg.lon, pg.lat);
-          const c = clusters.get(k) ?? { x, y, n: 0, inbound: 0 };
+          const c = clusters.get(k) ?? { x, y, n: 0, inbound: 0, love: false };
           c.n += 1;
           if (p.inbound) c.inbound += 1;
+          if (isLovenode(p.ip)) c.love = true;
           clusters.set(k, c);
         }
         for (const c of clusters.values()) {
@@ -685,6 +726,8 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           ctx.strokeStyle = col(0.25);
           ctx.lineWidth = 1;
           ctx.stroke();
+          // Drawn last so it sits on top of the dot it marks.
+          if (c.love) drawHeart(ctx, c.x, c.y, r);
         }
         // green "appear" burst for freshly-located peers
         for (const p of s.peers) {
