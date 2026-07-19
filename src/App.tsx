@@ -1,10 +1,26 @@
 import { useState } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route, Link, NavLink, useNavigate } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { BlockPage } from "./pages/Block";
 import { TxPage } from "./pages/Tx";
 import { AddressPage } from "./pages/Address";
+import { RichListPage } from "./pages/RichList";
+import { ChainHealthPage } from "./pages/ChainHealth";
+import { ChartsPage, ChartFullPage } from "./pages/Charts";
+import { NetworkPage } from "./pages/Network";
+import { StatsPage } from "./pages/Stats";
+import { StyleDrawer } from "./admin/StyleDrawer";
 import { APP_VERSION } from "./version";
+
+// Analysis sections. Each gets its own URL so they're linkable and survive a
+// refresh, rather than being hidden UI state.
+const TABS = [
+  { to: "/richlist", label: "Rich List" },
+  { to: "/chain-health", label: "Chain Health" },
+  { to: "/charts", label: "Charts" },
+  { to: "/network", label: "Network Map" },
+  { to: "/stats", label: "Stats" },
+];
 
 /**
  * Works out what the user pasted and sends them to the right page. Divi
@@ -65,13 +81,32 @@ export function App() {
         </p>
       )}
 
+      <nav className="tabs" role="navigation" aria-label="Analysis">
+        {TABS.map((t) => (
+          <NavLink
+            key={t.to}
+            to={t.to}
+            className={({ isActive }) => "tab" + (isActive ? " tab-on" : "")}
+          >
+            {t.label}
+          </NavLink>
+        ))}
+      </nav>
+
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/richlist" element={<RichListPage />} />
+        <Route path="/chain-health" element={<ChainHealthPage />} />
+        <Route path="/charts" element={<ChartsPage />} />
+        <Route path="/charts/:id" element={<ChartFullPage />} />
+        <Route path="/network" element={<NetworkPage />} />
+        <Route path="/stats" element={<StatsPage />} />
         <Route path="/block/:id" element={<BlockPage />} />
         <Route path="/tx/:txid" element={<TxPage />} />
         <Route path="/address/:address" element={<AddressPage />} />
       </Routes>
 
+      <StyleDrawer />
       <div className="version">{APP_VERSION}</div>
     </div>
   );

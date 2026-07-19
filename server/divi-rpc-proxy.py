@@ -28,7 +28,9 @@ import base64
 import json
 import os
 import socketserver
+import threading
 import sys
+import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -48,7 +50,20 @@ ALLOWED = {
     "getaddressdeltas",
     "getspentinfo",
     "getlotteryblockwinners",
+    # Node-level views. getpeerinfo exposes who we're connected to, which is
+    # public P2P information, but see the cache note below.
+    "getchaintips",
+    "getpeerinfo",
+    "getinfo",
 }
+
+# Methods that are EXPENSIVE on the node and must never be driven by request
+# volume. getchaintips walks the fork set and stalls block processing for
+# ~18 seconds; unthrottled, a public endpoint would let anyone halt the node.
+# These are answered from a server-side cache and refreshed at most this often.
+SLOW_METHODS = {"getchaintips": 600, "getpeerinfo": 20, "getinfo": 10}
+_slow_cache = {}
+_slow_lock = threading.Lock()
 
 # Synthetic methods handled here rather than forwarded. A block list of 1000
 # rows would otherwise be ~2000 separate round trips from the browser; batching
@@ -70,6 +85,8 @@ PORT = int(os.environ.get("PROXY_PORT", "5174"))
 # to be an attack.
 MAX_BODY = 8192
 RPC_TIMEOUT = 20
+# getchaintips genuinely takes ~18s, so the normal timeout would always beat it.
+SLOW_TIMEOUT = 90
 
 if not SHARED_SECRET:
     sys.exit("refusing to start: SCAN_SHARED_SECRET is not set")
@@ -128,6 +145,12 @@ class Handler(BaseHTTPRequestHandler):
         if method not in ALLOWED:
             return self._send(403, {"error": "Unsupported query."})
 
+        if method in SLOW_METHODS:
+            try:
+                return self._send(200, {"result": cached_slow(method, params)})
+            except RpcError as e:
+                return self._send(e.status, {"error": str(e)})
+
         try:
             self._send(200, {"result": rpc(method, params)})
         except RpcError as e:
@@ -140,7 +163,7 @@ class RpcError(Exception):
         self.status = status
 
 
-def rpc(method, params):
+def rpc(method, params, timeout=None):
     """One JSON-RPC round trip to the node. Raises RpcError on any failure."""
     payload = json.dumps({"jsonrpc": "1.0", "id": "scan", "method": method, "params": params})
     auth = base64.b64encode(f"{RPC_USER}:{RPC_PASS}".encode()).decode()
@@ -150,7 +173,7 @@ def rpc(method, params):
         headers={"content-type": "application/json", "authorization": f"Basic {auth}"},
     )
     try:
-        with urllib.request.urlopen(rq, timeout=RPC_TIMEOUT) as r:
+        with urllib.request.urlopen(rq, timeout=timeout or RPC_TIMEOUT) as r:
             out = json.load(r)
     except urllib.error.HTTPError as e:
         # The node answers RPC-level errors with a 500 and a JSON body; pass the
@@ -165,6 +188,25 @@ def rpc(method, params):
     if out.get("error"):
         raise RpcError((out["error"] or {}).get("message", "Query failed."), 404)
     return out.get("result")
+
+
+def cached_slow(method, params):
+    """Answer an expensive call from cache, refreshing at most once per TTL.
+
+    The lock matters: without it a burst of simultaneous requests would each
+    start their own 18-second getchaintips, which is precisely the stall this
+    exists to prevent.
+    """
+    ttl = SLOW_METHODS[method]
+    key = (method, json.dumps(params, sort_keys=True))
+    now = time.monotonic()
+    with _slow_lock:
+        hit = _slow_cache.get(key)
+        if hit and now - hit[0] < ttl:
+            return hit[1]
+        value = rpc(method, params, timeout=SLOW_TIMEOUT)
+        _slow_cache[key] = (now, value)
+        return value
 
 
 def block_range(start, count):

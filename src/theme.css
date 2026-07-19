@@ -1,30 +1,42 @@
-/* Design tokens copied verbatim from the Divi Desktop 6.9 wallet so the
-   explorer and the app read as one product. If the wallet's palette changes,
-   change it here too — these are intentionally duplicated rather than shared,
-   since the two ship independently. */
+/* These are DEFAULTS ONLY. At runtime the theme provider overwrites every
+   token-driven variable on :root, which is what lets a skin made in the Divi
+   Desktop wallet apply here unchanged - same token keys, same CSS variables.
+   Keep these in step with theme/tokens.ts defaults so the page looks right for
+   the instant before the provider runs. */
 
 :root {
+  /* --- skinnable: driven by theme/tokens.ts --- */
   --background: 240 6% 10%;
   --foreground: 0 0% 95%;
   --card: 240 5% 15%;
   --primary: 280 80% 60%;
-  --primary-foreground: 0 0% 100%;
   --accent: 320 70% 55%;
-  --muted: 240 5% 20%;
-  --muted-foreground: 0 0% 70%;
   --border: 240 4% 25%;
   --success: 142 76% 36%;
   --warning: 45 93% 47%;
   --destructive: 0 84% 60%;
-  --info: 207 90% 54%;
 
   --font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
+  --panel-bg: 240 6% 10%;
+  --panel-opacity: 0.85;
   --panel-radius: 12px;
   --panel-blur: 24px;
   --glow-color: 280 80% 60%;
+  --glow-strength: 22px;
+  --subpanel-bg: 0 0% 0%;
+  --subpanel-opacity: 1;
+  --subpanel-outline-width: 0px;
+  --subpanel-outline-color: 0 0% 50%;
+  --control-scheme: dark;
+
+  /* --- fixed: not skinnable in the wallet either, so not here --- */
+  --muted: 240 5% 20%;
+  --muted-foreground: 0 0% 70%;
+  --primary-foreground: 0 0% 100%;
+  --info: 207 90% 54%;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 * { box-sizing: border-box; }
@@ -42,10 +54,13 @@ a:hover { color: hsl(var(--accent)); }
 
 /* The wallet's signature frosted panel. */
 .panel {
-  background: hsl(var(--background) / 0.85);
+  background-color: hsl(var(--panel-bg) / var(--panel-opacity));
   backdrop-filter: blur(var(--panel-blur));
-  border: 1px solid hsl(var(--border));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  border: 1px solid hsl(var(--border) / 0.5);
   border-radius: var(--panel-radius);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35),
+    0 0 var(--glow-strength) hsl(var(--glow-color) / 0.4);
   padding: 18px 20px;
 }
 
@@ -374,3 +389,135 @@ tr:last-child td { border-bottom: 0; }
 .muted { color: hsl(var(--muted-foreground)); }
 .err { color: hsl(var(--destructive)); }
 .ok { color: hsl(var(--success)); }
+
+/* ---- analysis tabs ---- */
+.tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  border-bottom: 1px solid hsl(var(--border));
+  margin-bottom: 20px;
+}
+.tab {
+  padding: 9px 15px; margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.86rem; font-weight: 500;
+}
+.tab:hover { color: hsl(var(--foreground)); }
+.tab-on {
+  color: hsl(var(--primary));
+  border-bottom-color: hsl(var(--primary));
+  font-weight: 600;
+}
+
+/* ---- chain health ---- */
+.ch-stats { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 12px; }
+.ch-stat { flex: 1 1 110px; min-width: 110px; }
+.ch-stat-value { font-size: 1.3rem; font-weight: 700; font-family: var(--font-mono); }
+.ch-stat-label {
+  font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground)); margin-top: 3px;
+}
+.ch-verdict { font-size: 0.86rem; line-height: 1.5; }
+.ch-note { font-size: 0.74rem; margin-bottom: 0; }
+
+/* ---- stats ---- */
+.stats-kv dt { white-space: nowrap; }
+.stat-note { font-size: 0.78rem; }
+.stat-pending { font-size: 0.8rem; margin-bottom: 0; padding-top: 10px; border-top: 1px solid hsl(var(--border)); }
+
+/* ---- charts ---- */
+.chart-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 900px) { .chart-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .chart-grid { grid-template-columns: 1fr; } }
+
+.chart-card {
+  display: flex; flex-direction: column; gap: 9px;
+  padding: 14px;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--panel-radius);
+  background: hsl(var(--subpanel-bg) / var(--subpanel-opacity));
+  color: inherit;
+}
+.chart-card:hover { border-color: hsl(var(--primary)); color: inherit; }
+.chart-card-title { font-weight: 600; font-size: 0.92rem; color: hsl(var(--foreground)); }
+.chart-card-blurb { font-size: 0.76rem; line-height: 1.45; color: hsl(var(--muted-foreground)); }
+
+.chart-pending {
+  height: 110px; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  background: hsl(var(--background) / 0.5);
+  border: 1px dashed hsl(var(--border));
+  font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+.chart-pending-tall { height: 340px; margin-top: 14px; }
+
+/* ---- skin editor ---- */
+.style-gear {
+  position: fixed; right: 18px; bottom: 18px; z-index: 120;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+  border: 0; font-size: 1.1rem; cursor: pointer; opacity: 0.75;
+  box-shadow: 0 6px 20px hsl(0 0% 0% / 0.4);
+}
+.style-gear:hover { opacity: 1; }
+
+.style-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 130;
+  width: min(360px, 100vw);
+  display: flex; flex-direction: column;
+  background: hsl(var(--card));
+  border-left: 1px solid hsl(var(--border));
+  box-shadow: -12px 0 40px hsl(0 0% 0% / 0.5);
+}
+.style-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid hsl(var(--border));
+  font-weight: 600;
+}
+.style-drawer-body { overflow-y: auto; padding: 14px 16px; }
+
+.style-group { margin-bottom: 20px; }
+.style-group h3 {
+  margin: 0 0 9px; font-size: 0.68rem; letter-spacing: 0.09em;
+  text-transform: uppercase; color: hsl(var(--muted-foreground));
+}
+.style-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 7px; font-size: 0.82rem;
+}
+.style-val { font-style: normal; color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: 0.76rem; }
+.style-color { width: 44px; height: 26px; border: 1px solid hsl(var(--border)); border-radius: 5px; background: none; padding: 0; cursor: pointer; }
+.style-range { width: 140px; }
+.style-select, .style-name {
+  background: hsl(var(--background)); color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border)); border-radius: 6px; padding: 4px 7px; font-size: 0.8rem;
+}
+.style-save { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.style-name { flex: 1; min-width: 120px; }
+.style-btn {
+  background: hsl(var(--muted)); color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border)); border-radius: 6px;
+  padding: 5px 11px; font-size: 0.8rem; cursor: pointer;
+}
+.style-btn:hover { border-color: hsl(var(--primary)); }
+.style-btn-primary { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-color: transparent; }
+.style-btn:disabled { opacity: 0.45; cursor: default; }
+.style-saved { list-style: none; margin: 0 0 9px; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.style-saved li { display: flex; gap: 5px; }
+.style-apply {
+  flex: 1; text-align: left; background: hsl(var(--background));
+  border: 1px solid hsl(var(--border)); border-radius: 6px;
+  padding: 6px 10px; color: hsl(var(--foreground)); font-size: 0.82rem; cursor: pointer;
+}
+.style-apply:hover { border-color: hsl(var(--primary)); }
+.style-del { background: none; border: 0; color: hsl(var(--muted-foreground)); cursor: pointer; padding: 0 6px; }
+.style-note { font-size: 0.74rem; color: hsl(var(--muted-foreground)); line-height: 1.45; margin: 6px 0 0; }
+.skin-badge {
+  margin-left: 8px; font-size: 0.62rem; text-transform: uppercase;
+  letter-spacing: 0.06em; color: hsl(var(--success));
+}
+.wl-note { font-size: 0.82rem; line-height: 1.5; color: hsl(var(--muted-foreground)); }

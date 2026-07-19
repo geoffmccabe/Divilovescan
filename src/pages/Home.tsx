@@ -86,7 +86,7 @@ export function Home() {
     <>
       <section className="stats">
         <div className="panel stat">
-          <div className="stat-label">Block Height</div>
+          <div className="stat-label">Blocks</div>
           <div className="stat-value">{info ? info.blocks.toLocaleString() : "—"}</div>
         </div>
         <div className="panel stat">
@@ -96,7 +96,7 @@ export function Home() {
           </div>
         </div>
         <div className="panel stat">
-          <div className="stat-label">Coin Supply</div>
+          <div className="stat-label">DIVI Coin Supply</div>
           <div className="stat-value">
             {supply != null ? Math.round(supply).toLocaleString() : "—"}
           </div>

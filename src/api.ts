@@ -169,3 +169,36 @@ export const getAddressBalance = (address: string) =>
   rpc<AddressBalance>("getaddressbalance", [{ addresses: [address] }]);
 export const getAddressTxids = (address: string) =>
   rpc<string[]>("getaddresstxids", [{ addresses: [address] }]);
+
+// --- node-level views (server-side cached: getchaintips stalls the node ~18s) ---
+
+export interface ChainTip {
+  height: number;
+  hash: string;
+  branchlen: number;
+  status: string;
+}
+export const getChainTips = () => rpc<ChainTip[]>("getchaintips");
+
+export interface PeerInfo {
+  addr: string;
+  subver?: string;
+  inbound?: boolean;
+  pingtime?: number;
+  conntime?: number;
+  startingheight?: number;
+  bytessent?: number;
+  bytesrecv?: number;
+}
+export const getPeerInfo = () => rpc<PeerInfo[]>("getpeerinfo");
+
+export interface NodeInfo {
+  version?: number;
+  protocolversion?: number;
+  blocks?: number;
+  connections?: number;
+  difficulty?: number;
+  moneysupply?: number;
+  testnet?: boolean;
+}
+export const getNodeInfo = () => rpc<NodeInfo>("getinfo");
