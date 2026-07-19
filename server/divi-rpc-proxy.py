@@ -279,6 +279,20 @@ def cached_slow(method, params):
         return value
 
 
+_raw_peers = {"at": 0.0, "value": None}
+
+
+def cached_raw_peers():
+    """Unscrubbed getpeerinfo, cached briefly. Never returned to a caller as-is."""
+    now = time.monotonic()
+    with _slow_lock:
+        if _raw_peers["value"] is not None and now - _raw_peers["at"] < 20:
+            return _raw_peers["value"]
+        value = rpc("getpeerinfo", [], timeout=SLOW_TIMEOUT)
+        _raw_peers.update(at=now, value=value)
+        return value
+
+
 def geo_db():
     db = sqlite3.connect(GEO_DB, timeout=5)
     db.execute(
@@ -298,7 +312,11 @@ def strip_port(addr):
 
 def net_query(method, params):
     if method == "scan_peers":
-        peers = cached_slow("getpeerinfo", [])
+        # Raw, NOT the scrubbed public copy: the scrubber strips addrlocal and
+        # the byte counters, and addrlocal is the only way to learn our own
+        # public address. It is derived here and published as a single value;
+        # per-peer addrlocal never leaves this process.
+        peers = cached_raw_peers()
         out = []
         votes = {}
         for p in peers or []:
