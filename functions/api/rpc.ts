@@ -34,6 +34,12 @@ const ALLOWED = new Set([
   "getlotteryblockwinners",
   // Batched block list, assembled next to the node — see server/divi-rpc-proxy.py.
   "scan_blockrange",
+  // Node-level views. These are additionally rate-limited on the node itself:
+  // getchaintips stalls block processing for ~18s, so the proxy answers it from
+  // a server-side cache rather than letting request volume reach the node.
+  "getchaintips",
+  "getpeerinfo",
+  "getinfo",
 ]);
 
 // Confirmed chain data is immutable, so it can cache effectively forever. Tip
@@ -47,6 +53,10 @@ function cacheSeconds(method: string, params: unknown[]): number {
   // A block range anchored below the tip is settled history and caches hard; a
   // range that includes recent blocks must expire quickly or the list looks stuck.
   if (method === "scan_blockrange") return 30;
+  // Mirrors the node-side refresh interval; no point holding a shorter copy.
+  if (method === "getchaintips") return 600;
+  if (method === "getpeerinfo") return 20;
+  if (method === "getinfo") return 10;
   return 15;
 }
 
