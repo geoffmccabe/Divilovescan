@@ -84,6 +84,10 @@ export function BlockPage() {
 
       <section className="panel">
         <h2 className="section-title">Transactions ({txids.length})</h2>
+        <p className="drill-hint">
+          <strong>Click a transaction</strong> to open it, where the Transaction Inspector explains
+          every byte of it.
+        </p>
         <div className="table-scroll">
           <table>
             <tbody>

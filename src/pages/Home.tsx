@@ -161,7 +161,15 @@ export function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((b) => (
+                  {rows.map((b, i) => {
+                    // Rows run newest-first, so the NEXT row is this block's
+                    // parent. Divi only requires a block to be later than the
+                    // median of the previous 11 blocks, not later than its own
+                    // parent, so timestamps legitimately run backwards
+                    // sometimes. Flag it rather than hide or "correct" it.
+                    const parent = rows[i + 1];
+                    const backwards = parent != null && b.time < parent.time;
+                    return (
                     <tr key={b.hash}>
                       <td>
                         <Link to={`/block/${b.height}`} className="mono">
@@ -169,7 +177,21 @@ export function Home() {
                         </Link>
                       </td>
                       <td className="muted">{timeAgo(b.time)}</td>
-                      <td className="muted nowrap">{fmtTime(b.time)}</td>
+                      <td className="muted nowrap">
+                        {fmtTime(b.time)}
+                        {backwards && (
+                          <span
+                            className="tsflag"
+                            title={
+                              `This block's timestamp is ${parent.time - b.time}s earlier than the ` +
+                              `block before it. That is valid on Divi: a block only has to be later ` +
+                              `than the median of the previous 11 blocks, not later than its parent.`
+                            }
+                          >
+                            ↩
+                          </span>
+                        )}
+                      </td>
                       <td>{b.txCount}</td>
                       <td className="muted">{b.size != null ? `${b.size.toLocaleString()} B` : "—"}</td>
                       <td>
@@ -186,10 +208,16 @@ export function Home() {
                         )}
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
+            <p className="muted tsnote">
+              <span className="tsflag">↩</span> marks a block whose timestamp is earlier than the
+              block before it. This is normal on Divi — consensus only requires a block to be later
+              than the median of the previous 11 blocks, not later than its immediate parent.
+            </p>
 
             <div className="pager">
               <button

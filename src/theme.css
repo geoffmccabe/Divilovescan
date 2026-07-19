@@ -354,6 +354,23 @@ tr:last-child td { border-bottom: 0; }
   user-select: text;
 }
 
+/* Marks a block whose timestamp runs earlier than its parent — valid on Divi. */
+.tsflag {
+  color: hsl(var(--warning));
+  margin-left: 5px;
+  cursor: help;
+  font-weight: 700;
+}
+.tsnote { font-size: 0.76rem; line-height: 1.5; margin: 12px 0 0; }
+
+/* Nudge toward the transaction pages, which is where the Inspector lives. */
+.drill-hint {
+  font-size: 0.78rem;
+  margin: 0 0 10px;
+  color: hsl(var(--muted-foreground));
+}
+.drill-hint strong { color: hsl(var(--primary)); }
+
 .muted { color: hsl(var(--muted-foreground)); }
 .err { color: hsl(var(--destructive)); }
 .ok { color: hsl(var(--success)); }
