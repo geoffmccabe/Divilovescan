@@ -587,3 +587,16 @@ tr:last-child td { border-bottom: 0; }
 }
 .nm-count-peers { color: hsl(var(--primary)); }
 .nm-count-known { color: hsl(210 85% 62%); }
+
+/* Gas fee: the value a transaction destroys. Shown as a final output row so the
+   difference between inputs and outputs is accounted for rather than vanishing.
+   Brighter pink than the primary purple so it reads as its own kind of thing. */
+.tx-fee-row td { border-top: 1px solid hsl(var(--border)); }
+.tx-fee-label {
+  color: hsl(320 85% 68%);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+.tx-fee-note { font-size: 0.72rem; }
+.tx-fee-amount { color: hsl(320 85% 68%); }

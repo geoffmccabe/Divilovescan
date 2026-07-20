@@ -11,6 +11,10 @@ export function TxPage() {
   // Kept and shown rather than swallowed: a silent failure here made the whole
   // inspector vanish with no clue why.
   const [rawErr, setRawErr] = useState<string | null>(null);
+  // Sum of the inputs, resolved by looking up each previous output. Needed
+  // because a transaction never states its own fee — it is only implied by what
+  // went in versus what came out.
+  const [inputTotal, setInputTotal] = useState<number | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,15 +22,42 @@ export function TxPage() {
     setTx(null);
     setRaw(null);
     setRawErr(null);
+    setInputTotal(null);
     setErr(null);
     getTx(txid)
-      .then((t) => alive && setTx(t))
-      .catch(() =>
-        alive &&
-        setErr(
-          "No transaction found with that id. Note that a node only serves arbitrary transactions when transaction indexing is enabled.",
-        ),
+      .then(async (t) => {
+        if (!alive) return;
+        setTx(t);
+
+        // Resolve input values so the fee can be shown. Divi DESTROYS fees
+        // rather than paying them to the staker, so without this the difference
+        // between inputs and outputs just disappears from the page unexplained.
+        const ins = t.vin.filter((v) => v.txid !== undefined);
+        if (!ins.length) return; // generated coins: nothing was spent
+        const vals = await Promise.all(
+          ins.map(async (v) => {
+            try {
+              const prev = await getTx(v.txid!);
+              return prev.vout[v.vout ?? 0]?.value ?? 0;
+            } catch {
+              return null; // one failure must not fake a fee
+            }
+          }),
+        );
+        // If ANY input couldn't be resolved the total would be understated and
+        // the "fee" would be wrong, so report nothing rather than a wrong number.
+        if (alive && vals.every((v) => v !== null)) {
+          setInputTotal((vals as number[]).reduce((a, b) => a + b, 0));
+        }
+      })
+      .catch(
+        () =>
+          alive &&
+          setErr(
+            "No transaction found with that id. Note that a node only serves arbitrary transactions when transaction indexing is enabled.",
+          ),
       );
+
     // Fetched separately so a failure here still leaves the readable view intact.
     getTxHex(txid)
       .then((h) => alive && setRaw(typeof h === "string" ? h : String(h ?? "")))
@@ -43,6 +74,12 @@ export function TxPage() {
   // A coinstake is marked by its first output being empty.
   const isCoinstake = tx.vout.length > 0 && tx.vout[0].value === 0;
   const totalOut = tx.vout.reduce((s, o) => s + (o.value || 0), 0);
+  // Only an ordinary spend has a fee. A coinbase or coinstake CREATES coins, so
+  // inputs minus outputs is negative there and means nothing.
+  const fee =
+    inputTotal != null && !isCoinbase && !isCoinstake
+      ? Math.max(0, inputTotal - totalOut)
+      : null;
 
   return (
     <>
@@ -126,6 +163,17 @@ export function TxPage() {
                   </tr>
                 );
               })}
+              {fee != null && fee > 0 && (
+                <tr className="tx-fee-row">
+                  <td>
+                    <span className="tx-fee-label">GAS FEE</span>
+                    <span className="muted tx-fee-note"> destroyed, not paid to anyone</span>
+                  </td>
+                  <td className="mono tx-fee-amount" style={{ textAlign: "right" }}>
+                    {fmtDivi(fee)}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
