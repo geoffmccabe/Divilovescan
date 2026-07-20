@@ -108,7 +108,9 @@ SCAN_METHODS = {"scan_richlist", "scan_summary", "scan_address", "scan_series"}
 # Network-map support. Peers come from the node; locations come from a public
 # geolocation service and are cached indefinitely (an IP's city does not move),
 # so the service is queried once per address rather than once per page view.
-NET_METHODS = {"scan_peers", "scan_geo", "scan_probe"}
+NET_METHODS = {"scan_peers", "scan_geo", "scan_probe", "scan_known"}
+# How long a node stays in the "network we've seen" picture after we last saw it.
+KNOWN_TTL = 30 * 24 * 3600
 GEO_DB = os.environ.get("GEO_DB", "/var/lib/divi-scan/geo.sqlite")
 GEO_ENDPOINT = "http://ip-api.com/batch"
 PROBE_PORT = 51472
@@ -299,7 +301,32 @@ def geo_db():
         "CREATE TABLE IF NOT EXISTS geo (ip TEXT PRIMARY KEY, lat REAL, lon REAL,"
         " city TEXT, country TEXT, isp TEXT, seen INTEGER)"
     )
+    # Every node we have ever been connected to. Kept HERE rather than in the
+    # browser: a visitor's own storage starts empty, so a per-browser history
+    # means nobody ever sees the wider network. Accumulated centrally, the map
+    # is complete for everyone on their first visit.
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS known (ip TEXT PRIMARY KEY, first_seen INTEGER,"
+        " last_seen INTEGER)"
+    )
     return db
+
+
+def record_known(ips):
+    """Note that these nodes exist right now."""
+    if not ips:
+        return
+    now = int(time.time())
+    db = geo_db()
+    try:
+        db.executemany(
+            "INSERT INTO known(ip, first_seen, last_seen) VALUES(?,?,?) "
+            "ON CONFLICT(ip) DO UPDATE SET last_seen=excluded.last_seen",
+            [(ip, now, now) for ip in ips],
+        )
+        db.commit()
+    finally:
+        db.close()
 
 
 def strip_port(addr):
@@ -339,7 +366,28 @@ def net_query(method, params):
             if local:
                 votes[local] = votes.get(local, 0) + 1
         self_ip = max(votes.items(), key=lambda kv: kv[1])[0] if votes else None
+        # Every sighting widens the picture the map can draw for everyone.
+        record_known([p["ip"] for p in out])
         return {"peers": out, "selfIp": self_ip}
+
+    if method == "scan_known":
+        cutoff = int(time.time()) - KNOWN_TTL
+        db = geo_db()
+        try:
+            rows = db.execute(
+                "SELECT k.ip, k.last_seen, g.lat, g.lon, g.city, g.country "
+                "FROM known k LEFT JOIN geo g ON g.ip = k.ip "
+                "WHERE k.last_seen >= ? AND g.lat IS NOT NULL "
+                "ORDER BY k.last_seen DESC LIMIT 400",
+                (cutoff,),
+            ).fetchall()
+            return [
+                {"ip": ip, "lastSeen": ls * 1000, "lat": lat, "lon": lon,
+                 "city": city, "country": country}
+                for ip, ls, lat, lon, city, country in rows
+            ]
+        finally:
+            db.close()
 
     if method == "scan_geo":
         ips = [str(i)[:64] for i in (params[0] if params else [])][:MAX_IPS]

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { scanPeers, scanProbe, type Peer, type Geo } from "../api";
+import { scanPeers, scanProbe, scanKnown, type Peer, type Geo } from "../api";
 import { resolveGeos } from "./geoCache";
 import { loadKnown, recordKnown, type Known } from "./knownPeers";
 import worldmap from "../assets/worldmap.json";
@@ -217,6 +217,26 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
     // ping them yet — that starts once we have 20 live peers (see the poll).
     const known = loadKnown();
     knownRef.current = known;
+    // The server has been accumulating every node it has seen; merge that in so
+    // the wider network is present immediately rather than only for people who
+    // have had this page open for weeks.
+    scanKnown()
+      .then((list) => {
+        const merged = { ...knownRef.current };
+        for (const k of list) {
+          merged[k.ip] = {
+            lat: k.lat,
+            lon: k.lon,
+            city: k.city,
+            country: k.country,
+            lastSeen: k.lastSeen,
+          };
+        }
+        knownRef.current = merged;
+      })
+      .catch(() => {
+        /* fall back to whatever this browser has seen itself */
+      });
     const ips = Object.keys(known);
     if (ips.length) {
       for (const ip of ips) probeRef.current.set(ip, "probing");
@@ -457,9 +477,9 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
       const blueNodes =
         liveCount >= 20
           ? Object.entries(knownRef.current)
-              .filter(([ip]) => !liveIps.has(ip) && probeRef.current.get(ip) === "online")
+              .filter(([ip]) => !liveIps.has(ip) && probeRef.current.get(ip) !== "offline")
               .sort((a, b) => b[1].lastSeen - a[1].lastSeen)
-              .slice(0, 40)
+              .slice(0, 60)
           : [];
 
       // ── View transform: auto-fit into the viewport with a 2% margin, or honour
@@ -514,10 +534,13 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
         // 3-nearest-neighbour mesh lines (faint, slowly pulsing, ≤20%)
         for (let i = 0; i < blue.length; i++) {
           const a = blue[i];
-          const near = blue
+          const want = 3 + Math.floor((phaseOf(a.ip) / (Math.PI * 2)) * 3); // 3..5
+          const pool = blue
             .map((b, j) => ({ j, d: j === i ? Infinity : Math.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]) }))
             .sort((x, y) => x.d - y.d)
-            .slice(0, 3);
+            .slice(0, 8); // nearest handful
+          // Deterministic pick from that pool, so links stay put frame to frame.
+          const near = pool.filter((_, k) => (k * 7 + Math.round(phaseOf(a.ip) * 5)) % 8 < want).slice(0, want);
           for (const { j } of near) {
             const b = blue[j];
             const pulse = 0.1 + 0.1 * (0.5 + 0.5 * Math.sin(now / 1600 + phaseOf(a.ip)));
@@ -814,6 +837,18 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
         ctx.fillText("SCANNER", selfXY[0], selfXY[1] - r - 6);
         ctx.textBaseline = "top";
         ctx.fillText("NODE", selfXY[0], selfXY[1] + r + 6);
+
+        // Counts to the right of our node: what we're connected to now, and how
+        // much of the network we've seen in the last 30 days.
+        ctx.textAlign = "left";
+        ctx.font = "600 10px system-ui";
+        const lx = selfXY[0] + r + 10;
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = outbound(0.95);
+        ctx.fillText(`Peers: ${liveCount}`, lx, selfXY[1] - 1);
+        ctx.textBaseline = "top";
+        ctx.fillStyle = BLUE(0.95);
+        ctx.fillText(`30-Day Network: ${Object.keys(knownRef.current).length}`, lx, selfXY[1] + 2);
       }
 
       // stake-winner sunglasses on a peer (only when the winner ISN'T the user —

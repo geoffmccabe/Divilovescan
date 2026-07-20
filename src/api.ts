@@ -305,3 +305,15 @@ export interface Series {
   days: DayRow[];
 }
 export const scanSeries = () => rpc<Series>("scan_series");
+
+export interface KnownNode {
+  ip: string;
+  lastSeen: number;
+  lat: number;
+  lon: number;
+  city?: string;
+  country?: string;
+}
+/** Every node seen in the last 30 days — accumulated on the server, so a first
+ *  visit already shows the wider network rather than an empty map. */
+export const scanKnown = () => rpc<KnownNode[]>("scan_known");

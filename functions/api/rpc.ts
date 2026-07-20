@@ -50,6 +50,7 @@ const ALLOWED = new Set([
   "scan_peers",
   "scan_geo",
   "scan_probe",
+  "scan_known",
 ]);
 
 // Confirmed chain data is immutable, so it can cache effectively forever. Tip
@@ -74,6 +75,7 @@ function cacheSeconds(method: string, params: unknown[]): number {
   if (method === "scan_peers") return 20;
   if (method === "scan_probe") return 30;
   if (method === "scan_geo") return 86400;
+  if (method === "scan_known") return 120;
   if (method.startsWith("scan_")) return 120;
   return 15;
 }
