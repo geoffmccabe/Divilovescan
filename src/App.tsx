@@ -11,6 +11,7 @@ import { NetworkPage } from "./pages/Network";
 import { StatsPage } from "./pages/Stats";
 import { StyleDrawer } from "./admin/StyleDrawer";
 import { APP_VERSION } from "./version";
+import heart from "./assets/heart.webp";
 
 // Analysis sections. Each gets its own URL so they're linkable and survive a
 // refresh, rather than being hidden UI state.
@@ -57,8 +58,15 @@ export function App() {
   return (
     <div className="shell">
       <header className="hdr">
-        <Link to="/" className="hdr-brand">
-          divi<span>love</span>scan
+        <Link to="/" className="hdr-brand logo" aria-label="Divi Love Scan">
+          {/* Sits behind the words, never on top of them. */}
+          <span className="logo-glow" aria-hidden />
+          <span className="logo-word logo-divi">divi</span>
+          <span className="logo-mid">
+            <span className="logo-love">love</span>
+            <img className="logo-heart" src={heart} alt="" aria-hidden />
+          </span>
+          <span className="logo-word logo-scan">scan</span>
         </Link>
         <form className="search" onSubmit={submit}>
           <input
