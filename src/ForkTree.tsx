@@ -26,6 +26,15 @@ const RUN_W = 52; // width of a collapsed "N blocks" connector
 const CTX = 1; // blocks of context drawn either side of a fork
 const ROW_Y = 22;
 const STUB_Y = 52;
+const STUB_GAP = 4;   // between stacked blocks of a deeper branch
+const BOTTOM_PAD = 8;
+/** Depth shown before the panel starts scrolling instead of growing. */
+const DEPTH_NO_SCROLL = 3;
+
+/** Height of the hanging stub for a branch `d` blocks deep. */
+const stubHeight = (d: number) => Math.max(1, d) * BLK_H + (Math.max(1, d) - 1) * STUB_GAP;
+/** Total drawing height needed for the deepest branch present. */
+const treeHeight = (d: number) => STUB_Y + stubHeight(d) + BOTTOM_PAD;
 
 type Cell = { kind: "block"; height: number } | { kind: "run"; count: number };
 
@@ -79,9 +88,19 @@ export function ForkTree({ forks, tip }: { forks: SeenFork[]; tip: number }) {
   const width = Math.max(x, 10);
   const deep = asc.some((f) => f.branchLen >= 2);
 
+  // The drawing used to be a fixed 76px tall, so a two-block branch (which
+  // reaches 82px) was simply clipped off the bottom and vanished. It now sizes
+  // to the deepest branch present, and only scrolls past three deep.
+  const maxDepth = asc.reduce((m, f) => Math.max(m, f.branchLen || 1), 1);
+  const svgH = treeHeight(maxDepth);
+  const viewH = Math.min(svgH, treeHeight(DEPTH_NO_SCROLL));
+
   return (
-    <div style={{ overflowX: "auto", overflowY: "hidden", padding: "4px 0 2px" }}>
-      <svg width={width} height={76} style={{ display: "block" }}>
+    <div
+      className="forktree-scroll"
+      style={{ maxHeight: viewH + 6, overflowX: "auto", overflowY: svgH > viewH ? "auto" : "hidden" }}
+    >
+      <svg width={width} height={svgH} style={{ display: "block" }}>
         {placed.map(({ c, x: cx }, i) => {
           if (c.kind === "run") {
             return (
@@ -111,7 +130,7 @@ export function ForkTree({ forks, tip }: { forks: SeenFork[]; tip: number }) {
           const f = byHeight.get(c.height);
           const followed = !!f && f.status.includes("fork");
           const isDeep = !!f && f.branchLen >= 2;
-          const stubH = f ? (isDeep ? BLK_H * 2 + 4 : BLK_H) : 0;
+          const stubH = f ? stubHeight(f.branchLen || 1) : 0;
           const stubColor = isDeep ? "rgb(255, 90, 80)" : followed ? "rgb(255, 140, 125)" : "rgba(160, 170, 200, 0.75)";
           return (
             <g key={`b-${c.height}`}>
