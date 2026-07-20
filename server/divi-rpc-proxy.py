@@ -498,11 +498,22 @@ def scan_query(method, params):
                 "SELECT day, blocks, txs, payments, supply, difficulty, "
                 "COALESCE(new_wallets,0) FROM daily ORDER BY day"
             ).fetchall()
+            # Distinct wallets that won a block each day. Built by a separate
+            # pass, so it may cover only part of the range while that runs; days
+            # it hasn't reached report null rather than a misleading zero.
+            winners = {}
+            try:
+                winners = dict(
+                    db.execute("SELECT day, COUNT(*) FROM stake_day GROUP BY day").fetchall()
+                )
+            except Exception:
+                pass
             return {
                 "builtAt": int(meta.get("summary_built", 0)),
                 "days": [
                     {"d": d, "blocks": b, "txs": t, "pay": p,
-                     "supply": sup, "diff": diff, "neww": nw}
+                     "supply": sup, "diff": diff, "neww": nw,
+                     "win": winners.get(d)}
                     for d, b, t, p, sup, diff, nw in rows
                 ],
             }

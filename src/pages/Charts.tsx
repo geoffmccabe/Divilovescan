@@ -77,6 +77,15 @@ export const CHARTS: ChartDef[] = [
     color: "hsl(var(--warning))",
   },
   {
+    id: "stake-winners",
+    title: "Stake winners per day",
+    blurb:
+      "How many different wallets won at least one block that day. Vaulted wins count for the owner, not the delegate who staked for them.",
+    pick: (d) => d.win,
+    fmt: compact,
+    color: "hsl(var(--warning))",
+  },
+  {
     id: "difficulty",
     title: "Difficulty",
     blurb: "How hard it is to win a block, which tracks how much stake is competing.",

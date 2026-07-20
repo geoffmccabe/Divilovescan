@@ -299,6 +299,7 @@ export interface DayRow {
   supply: number | null;  // satoshi at the day's last block
   diff: number | null;
   neww: number;   // wallets first seen that day
+  win: number | null;  // distinct wallets that won a block; null = not scanned yet
 }
 export interface Series {
   builtAt: number;
