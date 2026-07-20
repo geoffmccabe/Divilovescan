@@ -197,6 +197,9 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
   const baseRef = useRef<HTMLCanvasElement | null>(null);
   // Peers seen in the last 30 days (grey at startup), and the live probe result.
   const knownRef = useRef<Known>({});
+  // Mirrored into state purely so the legend can show them; the canvas itself
+  // works from the refs.
+  const [counts, setCounts] = useState({ peers: 0, known: 0 });
   const probeRef = useRef<Map<string, ProbeState>>(new Map());
   const lastProbe = useRef(0); // last re-ping time (re-ping every 60s)
   // The node currently wearing the "stake winner" sunglasses. NOTE: the real
@@ -233,6 +236,7 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           };
         }
         knownRef.current = merged;
+        setCounts((c) => ({ ...c, known: Object.keys(merged).length }));
       })
       .catch(() => {
         /* fall back to whatever this browser has seen itself */
@@ -256,6 +260,7 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
         const s = await scanPeers();
         if (!alive || !s) return;
         setSnap(s);
+        setCounts((c) => ({ ...c, peers: s.peers.length }));
         // Tell the Peers counter what we just saw, so it ticks up (and flashes)
         // at the same moment the peer turns pink on the map rather than up to
         // five seconds later on its own poll.
@@ -838,17 +843,7 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
         ctx.textBaseline = "top";
         ctx.fillText("NODE", selfXY[0], selfXY[1] + r + 6);
 
-        // Counts to the right of our node: what we're connected to now, and how
-        // much of the network we've seen in the last 30 days.
-        ctx.textAlign = "left";
-        ctx.font = "600 10px system-ui";
-        const lx = selfXY[0] + r + 10;
-        ctx.textBaseline = "bottom";
-        ctx.fillStyle = outbound(0.95);
-        ctx.fillText(`Peers: ${liveCount}`, lx, selfXY[1] - 1);
-        ctx.textBaseline = "top";
-        ctx.fillStyle = BLUE(0.95);
-        ctx.fillText(`30-Day Network: ${Object.keys(knownRef.current).length}`, lx, selfXY[1] + 2);
+
       }
 
       // stake-winner sunglasses on a peer (only when the winner ISN'T the user —
@@ -941,6 +936,8 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           <span className="nm-item"><span className="nm-dot nm-out" /> Active Peers</span>
           <span className="nm-item"><span className="nm-dot nm-in" /> Full Network</span>
           <span className="nm-item"><span className="nm-dot nm-self" /> Scanner node</span>
+          <span className="nm-count nm-count-peers">Peers: {counts.peers}</span>
+          <span className="nm-count nm-count-known">30-Day Network: {counts.known}</span>
         </div>
       </div>
       <div className="netmap-canvas-wrap" ref={wrapRef}>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { scanRichList, type RichList } from "../api";
-import { fmtDivi } from "../format";
 
 // Rich List — ranked by OWNER, not by whoever stakes the coins.
 //
@@ -91,7 +90,7 @@ export function RichListPage() {
                     </Link>
                   </td>
                   <td className="mono" style={{ textAlign: "right" }}>
-                    {fmtDivi(r.balance / 1e8)}
+                    {Math.round(r.balance / 1e8).toLocaleString()}
                   </td>
                   <td className="muted" style={{ textAlign: "right" }}>
                     {pct < 0.01 ? "<0.01%" : `${pct.toFixed(2)}%`}
