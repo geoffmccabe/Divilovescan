@@ -98,7 +98,7 @@ a:hover { color: hsl(var(--accent)); }
   color: hsl(var(--foreground));
   line-height: 1;
   /* Reserve the heart's height up front so hovering never resizes the header. */
-  height: 48px;
+  height: 40px;
   text-decoration: none;
 }
 .hdr-brand.logo:hover { color: hsl(var(--foreground)); }
@@ -115,8 +115,11 @@ a:hover { color: hsl(var(--accent)); }
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 48px;              /* the heart's width, held constant */
-  height: 48px;
+  /* Sized to the WORD, not the heart: the heart is smaller, so keying off it
+     would clip "love" in the resting state. Fixed either way, so swapping
+     between them still can't shift the layout. */
+  width: 44px;
+  height: 40px;
 }
 .logo-mid > * { grid-area: 1 / 1; }
 
@@ -125,8 +128,8 @@ a:hover { color: hsl(var(--accent)); }
   transition: opacity 260ms ease, transform 320ms ease;
 }
 .logo-heart {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   opacity: 0;
   transform: scale(0.55);
@@ -138,8 +141,8 @@ a:hover { color: hsl(var(--accent)); }
    draw inward towards it. */
 .logo:hover .logo-love { opacity: 0; transform: scale(0.6); }
 .logo:hover .logo-heart { opacity: 1; transform: scale(1); }
-.logo:hover .logo-divi { transform: translateX(13px); }
-.logo:hover .logo-scan { transform: translateX(-13px); }
+.logo:hover .logo-divi { transform: translateX(9px); }
+.logo:hover .logo-scan { transform: translateX(-9px); }
 
 /* The glow. Sits at z-index 1 — above the background, BEHIND the words — and is
    centred on the heart. Only animates on hover. */
@@ -147,8 +150,8 @@ a:hover { color: hsl(var(--accent)); }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 46px;
-  height: 46px;
+  width: 138px;
+  height: 138px;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0.6);
   opacity: 0;
@@ -156,9 +159,10 @@ a:hover { color: hsl(var(--accent)); }
   pointer-events: none;
   background: radial-gradient(
     circle,
-    hsl(340 90% 62% / 0.85) 0%,
-    hsl(350 95% 55% / 0.45) 45%,
-    transparent 72%
+    hsl(340 95% 66% / 1) 0%,
+    hsl(345 95% 60% / 0.75) 28%,
+    hsl(350 95% 55% / 0.34) 52%,
+    transparent 74%
   );
 }
 .logo:hover .logo-glow { animation: logo-heartbeat 0.92s ease-in-out infinite; }
