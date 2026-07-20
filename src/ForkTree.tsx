@@ -27,7 +27,7 @@ const CTX = 1; // blocks of context drawn either side of a fork
 const ROW_Y = 22;
 const STUB_Y = 52;
 const STUB_GAP = 4;   // between stacked blocks of a deeper branch
-const BOTTOM_PAD = 8;
+const BOTTOM_PAD = 16;
 /** Depth shown before the panel starts scrolling instead of growing. */
 const DEPTH_NO_SCROLL = 3;
 
