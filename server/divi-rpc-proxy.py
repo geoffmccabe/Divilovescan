@@ -103,7 +103,7 @@ BATCH_METHODS = {"scan_blockrange"}
 
 # Answered from the chain-scan database, not the node. These are things the node
 # fundamentally cannot do: rank every address, and see vault holdings at all.
-SCAN_METHODS = {"scan_richlist", "scan_summary", "scan_address"}
+SCAN_METHODS = {"scan_richlist", "scan_summary", "scan_address", "scan_series"}
 
 # Network-map support. Peers come from the node; locations come from a public
 # geolocation service and are cached indefinitely (an IP's city does not move),
@@ -439,6 +439,23 @@ def scan_query(method, params):
                 "rows": [
                     {"address": a, "balance": b, "vaulted": v, "utxos": u, "rank": offset + i + 1}
                     for i, (a, b, v, u) in enumerate(rows)
+                ],
+            }
+
+        if method == "scan_series":
+            # ~2,900 rows for the whole chain's history; small enough to send
+            # whole and let the page slice it, rather than a round trip per
+            # chart and per date range.
+            rows = db.execute(
+                "SELECT day, blocks, txs, payments, supply, difficulty, "
+                "COALESCE(new_wallets,0) FROM daily ORDER BY day"
+            ).fetchall()
+            return {
+                "builtAt": int(meta.get("summary_built", 0)),
+                "days": [
+                    {"d": d, "blocks": b, "txs": t, "pay": p,
+                     "supply": sup, "diff": diff, "neww": nw}
+                    for d, b, t, p, sup, diff, nw in rows
                 ],
             }
 

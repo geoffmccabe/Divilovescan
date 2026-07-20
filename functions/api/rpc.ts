@@ -45,6 +45,7 @@ const ALLOWED = new Set([
   "scan_summary",
   "scan_richlist",
   "scan_address",
+  "scan_series",
   // Network map. Peer data is short-lived; locations are cached on the node.
   "scan_peers",
   "scan_geo",

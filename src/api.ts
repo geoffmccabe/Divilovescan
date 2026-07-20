@@ -288,3 +288,20 @@ export interface Probe {
   online: boolean;
 }
 export const scanProbe = (ips: string[]) => rpc<Probe[]>("scan_probe", [ips]);
+
+// --- chart series ---
+
+export interface DayRow {
+  d: string;      // YYYY-MM-DD
+  blocks: number;
+  txs: number;    // all transactions
+  pay: number;    // real payments (staking/coinbase excluded)
+  supply: number | null;  // satoshi at the day's last block
+  diff: number | null;
+  neww: number;   // wallets first seen that day
+}
+export interface Series {
+  builtAt: number;
+  days: DayRow[];
+}
+export const scanSeries = () => rpc<Series>("scan_series");

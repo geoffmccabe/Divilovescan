@@ -66,6 +66,22 @@ def main():
     )
     db.execute("CREATE INDEX delegation_staker ON delegation(staker)")
 
+    # Wallet growth. chain-scan recorded the height each address first appeared
+    # and chart-scan mapped heights to days, so this is a join rather than
+    # another pass over the chain.
+    if db.execute("SELECT COUNT(*) FROM sqlite_master WHERE name='height_day'").fetchone()[0]:
+        cols = [c[1] for c in db.execute("PRAGMA table_info(daily)")]
+        if "new_wallets" not in cols:
+            db.execute("ALTER TABLE daily ADD COLUMN new_wallets INTEGER")
+        db.execute("DROP TABLE IF EXISTS _nw")
+        db.execute(
+            """CREATE TEMP TABLE _nw AS
+               SELECT hd.day AS day, COUNT(*) AS n
+               FROM addr a JOIN height_day hd ON a.first_height = hd.height
+               GROUP BY hd.day"""
+        )
+        db.execute("UPDATE daily SET new_wallets = COALESCE((SELECT n FROM _nw WHERE _nw.day = daily.day), 0)")
+
     # Headline totals, so the stats page is a handful of key reads.
     def one(sql):
         return db.execute(sql).fetchone()[0] or 0

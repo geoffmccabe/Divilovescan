@@ -575,3 +575,5 @@ tr:last-child td { border-bottom: 0; }
   color: hsl(var(--muted-foreground)); font-size: 0.9rem;
 }
 
+
+.chartsvg { width: 100%; display: block; overflow: visible; }

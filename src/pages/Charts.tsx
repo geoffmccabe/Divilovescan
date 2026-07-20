@@ -1,96 +1,161 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { scanSeries, type DayRow, type Series } from "../api";
+import { Chart, type Point } from "../Chart";
 
-// Charts. The cards are deliberately dumb — a title, a one-line explanation and
-// a preview. Controls (date ranges and so on) belong to the full-screen view at
-// /charts/:id, so a wall of nine cards doesn't become a wall of nine control
-// panels.
-//
-// The series themselves come from the chain scan. Everything is wired now so
-// that plugging the data in later is the only remaining step.
+// Charts. Cards are deliberately dumb — title, one-line explanation, preview.
+// Controls live on the full-screen view at /charts/:id, so eight cards don't
+// become eight control panels.
+
+type Pick = (d: DayRow) => number | null;
 
 export interface ChartDef {
   id: string;
   title: string;
   blurb: string;
-  /** Where the numbers will come from, so it's obvious what's still missing. */
-  source: "scan" | "blocks" | "derived";
+  pick: Pick;
+  /** Running total rather than a per-day figure. */
+  cumulative?: boolean;
+  fmt?: (n: number) => string;
+  color?: string;
 }
+
+const compact = (n: number) =>
+  n >= 1e9 ? `${(n / 1e9).toFixed(1)}B` :
+  n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` :
+  n >= 1e3 ? `${(n / 1e3).toFixed(0)}k` :
+  n.toLocaleString(undefined, { maximumFractionDigits: 0 });
 
 export const CHARTS: ChartDef[] = [
   {
     id: "transactions",
-    title: "Transactions per day",
+    title: "Payments per day",
     blurb: "Real payments, with staking and block rewards excluded so it reflects actual use.",
-    source: "blocks",
+    pick: (d) => d.pay,
+    fmt: compact,
   },
   {
     id: "supply",
     title: "Supply growth",
     blurb: "Total DIVI in existence over time, as recorded by the chain itself.",
-    source: "blocks",
+    pick: (d) => (d.supply == null ? null : d.supply / 1e8),
+    fmt: compact,
+    color: "hsl(var(--success))",
   },
   {
     id: "wallets",
     title: "Wallet growth",
     blurb: "Cumulative count of addresses that have ever held DIVI.",
-    source: "scan",
+    pick: (d) => d.neww,
+    cumulative: true,
+    fmt: compact,
+    color: "hsl(var(--accent))",
   },
   {
     id: "new-wallets",
     title: "New wallets per day",
     blurb: "Addresses appearing on the chain for the first time.",
-    source: "scan",
+    pick: (d) => d.neww,
+    fmt: compact,
+    color: "hsl(var(--accent))",
   },
   {
     id: "block-time",
     title: "Block time",
     blurb: "Average seconds between blocks — how steadily the chain is moving.",
-    source: "blocks",
+    // 86,400 seconds in a day divided by the blocks found in it.
+    pick: (d) => (d.blocks ? 86400 / d.blocks : null),
+    fmt: (n) => `${n.toFixed(0)}s`,
+    color: "hsl(var(--warning))",
   },
   {
     id: "difficulty",
     title: "Difficulty",
     blurb: "How hard it is to win a block, which tracks how much stake is competing.",
-    source: "blocks",
+    pick: (d) => d.diff,
+    fmt: compact,
+    color: "hsl(var(--info))",
   },
   {
-    id: "staking",
-    title: "Staking participation",
-    blurb: "How much of the supply is actively staking rather than sitting idle.",
-    source: "derived",
+    id: "blocks",
+    title: "Blocks per day",
+    blurb: "How many blocks the network produced each day.",
+    pick: (d) => d.blocks,
+    fmt: compact,
   },
   {
-    id: "vaulted",
-    title: "Vaulted vs self-custodied",
-    blurb:
-      "How much DIVI is staked through a delegate rather than directly. Unique to Divi — no other explorer shows this.",
-    source: "scan",
+    id: "all-transactions",
+    title: "All transactions per day",
+    blurb: "Every transaction including the coinbase and coinstake each block carries.",
+    pick: (d) => d.txs,
+    fmt: compact,
   },
 ];
 
 export const chartById = (id: string) => CHARTS.find((c) => c.id === id) ?? null;
 
-/** Placeholder preview until the scan lands; deliberately not fake data. */
-function Pending({ tall }: { tall?: boolean }) {
-  return (
-    <div className={"chart-pending" + (tall ? " chart-pending-tall" : "")}>
-      <span>Awaiting chain scan</span>
-    </div>
-  );
+const RANGES: { id: string; label: string; days: number | null }[] = [
+  { id: "30d", label: "30 days", days: 30 },
+  { id: "90d", label: "90 days", days: 90 },
+  { id: "1y", label: "1 year", days: 365 },
+  { id: "all", label: "All time", days: null },
+];
+
+function toPoints(days: DayRow[], def: ChartDef): Point[] {
+  const out: Point[] = [];
+  let run = 0;
+  for (const d of days) {
+    const v = def.pick(d);
+    if (def.cumulative) {
+      run += v ?? 0;
+      out.push({ x: d.d, y: run });
+    } else if (v != null) {
+      out.push({ x: d.d, y: v });
+    }
+  }
+  return out;
+}
+
+/** Shared fetch — eight cards must not each pull the whole series. */
+function useSeries() {
+  const [series, setSeries] = useState<Series | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    let alive = true;
+    scanSeries()
+      .then((s) => alive && setSeries(s))
+      .catch((e) => alive && setErr((e as Error).message));
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return { series, err };
 }
 
 export function ChartsPage() {
+  const { series, err } = useSeries();
+
   return (
     <section className="panel">
       <h2 className="section-title">Charts</h2>
       <p className="wl-note">
-        Click any chart to open it full screen, where date ranges and other controls live.
+        Click any chart to open it full screen, where date ranges live. Built from a full scan of
+        the chain — {series ? `${series.days.length.toLocaleString()} days since ${series.days[0]?.d}` : "loading"}.
       </p>
+
+      {err && <p className="err">{err}</p>}
+
       <div className="chart-grid">
         {CHARTS.map((c) => (
           <Link key={c.id} to={`/charts/${c.id}`} className="chart-card">
             <div className="chart-card-title">{c.title}</div>
-            <Pending />
+            {series ? (
+              <Chart points={toPoints(series.days, c)} mini fmt={c.fmt} color={c.color} />
+            ) : (
+              <div className="chart-pending">
+                <span>Loading…</span>
+              </div>
+            )}
             <div className="chart-card-blurb">{c.blurb}</div>
           </Link>
         ))}
@@ -101,9 +166,11 @@ export function ChartsPage() {
 
 export function ChartFullPage() {
   const { id = "" } = useParams();
-  const chart = chartById(id);
+  const def = chartById(id);
+  const { series, err } = useSeries();
+  const [range, setRange] = useState("all");
 
-  if (!chart) {
+  if (!def) {
     return (
       <section className="panel">
         <p className="err">No chart by that name.</p>
@@ -112,23 +179,32 @@ export function ChartFullPage() {
     );
   }
 
+  const days = series?.days ?? [];
+  const window = RANGES.find((r) => r.id === range)?.days ?? null;
+  // Cumulative series are sliced AFTER accumulating, so a 30-day view still
+  // shows the true running total rather than restarting from zero.
+  const all = toPoints(days, def);
+  const points = window ? all.slice(-window) : all;
+
+  const latest = points.length ? points[points.length - 1].y : null;
+  const first = points.length ? points[0].y : null;
+  const change = first != null && latest != null && first !== 0 ? ((latest - first) / first) * 100 : null;
+
   return (
     <section className="panel">
       <div className="list-head">
         <h2 className="section-title" style={{ margin: 0 }}>
-          {chart.title}
+          {def.title}
         </h2>
         <div className="list-controls">
-          {/* Range controls belong here rather than on the cards. Disabled until
-              there is a series to range over — an enabled control that does
-              nothing is worse than an obviously inactive one. */}
           <label className="sizer">
             Range
-            <select disabled defaultValue="all">
-              <option value="30d">30 days</option>
-              <option value="90d">90 days</option>
-              <option value="1y">1 year</option>
-              <option value="all">All time</option>
+            <select value={range} onChange={(e) => setRange(e.target.value)}>
+              {RANGES.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.label}
+                </option>
+              ))}
             </select>
           </label>
           <Link to="/charts" className="linkbtn">
@@ -136,8 +212,42 @@ export function ChartFullPage() {
           </Link>
         </div>
       </div>
-      <p className="wl-note">{chart.blurb}</p>
-      <Pending tall />
+
+      <p className="wl-note">{def.blurb}</p>
+      {err && <p className="err">{err}</p>}
+
+      {latest != null && (
+        <div className="ch-stats" style={{ marginBottom: 6 }}>
+          <div className="ch-stat">
+            <div className="ch-stat-value">{(def.fmt ?? compact)(latest)}</div>
+            <div className="ch-stat-label">Latest</div>
+          </div>
+          {change != null && (
+            <div className="ch-stat">
+              <div
+                className="ch-stat-value"
+                style={{ color: change >= 0 ? "hsl(var(--success))" : "hsl(var(--destructive))" }}
+              >
+                {change >= 0 ? "+" : ""}
+                {change.toFixed(1)}%
+              </div>
+              <div className="ch-stat-label">Over this range</div>
+            </div>
+          )}
+          <div className="ch-stat">
+            <div className="ch-stat-value">{points.length.toLocaleString()}</div>
+            <div className="ch-stat-label">Days shown</div>
+          </div>
+        </div>
+      )}
+
+      {series ? (
+        <Chart points={points} height={340} fmt={def.fmt} color={def.color} />
+      ) : (
+        <div className="chart-pending chart-pending-tall">
+          <span>Loading…</span>
+        </div>
+      )}
     </section>
   );
 }
