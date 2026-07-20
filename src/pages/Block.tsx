@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { getBlockHash, getBlockRaw, summariseBlock, type BlockSummary } from "../api";
+import { getBlockHash, getBlockRaw, summariseBlock, isLotteryBlock, type BlockSummary } from "../api";
 import { fmtDivi, fmtTime, shortHash } from "../format";
 
 export function BlockPage() {
@@ -40,12 +40,20 @@ export function BlockPage() {
   if (err) return <p className="panel err">{err}</p>;
   if (!summary) return <p className="panel muted">Loading block…</p>;
 
+  // A lottery block pays eleven winners out of the same coinstake that pays the
+  // staker, so it needs labelling that separates the two.
+  const lottery = isLotteryBlock(summary.height);
+
   return (
     <>
       <section className="panel" style={{ marginBottom: 16 }}>
         <h2 className="section-title">
           Block {summary.height.toLocaleString()}{" "}
-          {summary.isPoS && <span className="badge badge-pos">PROOF OF STAKE</span>}
+          {lottery ? (
+            <span className="badge badge-lottery">LOTTERY BLOCK</span>
+          ) : (
+            summary.isPoS && <span className="badge badge-pos">PROOF OF STAKE</span>
+          )}
         </h2>
         <dl className="kv">
           <dt>Hash</dt>
@@ -56,11 +64,16 @@ export function BlockPage() {
           <dd>{summary.txCount}</dd>
           {summary.isPoS && (
             <>
-              <dt>Stake reward</dt>
-              <dd className="mono ok">
+              <dt className={lottery ? "lot-gold" : undefined}>
+                {lottery ? "Lottery rewards" : "Stake reward"}
+              </dt>
+              <dd className={"mono " + (lottery ? "lot-gold" : "ok")}>
                 {summary.stakeReward != null ? `+${fmtDivi(summary.stakeReward)} DIVI` : "—"}
               </dd>
-              <dt>Won by</dt>
+              {/* "Won by" read as though this address won the lottery. It didn't:
+                  it staked the coins that produced the block. The winners are
+                  separate outputs of the same transaction. */}
+              <dt>Staked by</dt>
               <dd>
                 {summary.stakeWinner ? (
                   <Link to={`/address/${summary.stakeWinner}`} className="hash">
@@ -69,6 +82,11 @@ export function BlockPage() {
                 ) : (
                   "—"
                 )}
+                <div className="muted stake-by-note">
+                  {lottery
+                    ? "This address found the block. The lottery winners are paid separately, in the transaction below."
+                    : "This address found the block by staking."}
+                </div>
               </dd>
             </>
           )}
@@ -93,13 +111,24 @@ export function BlockPage() {
             <tbody>
               {txids.map((t, i) => (
                 <tr key={t}>
-                  <td style={{ width: 70 }} className="muted">
-                    {i === 1 && summary.isPoS ? <span className="badge badge-pos">STAKE</span> : `#${i}`}
+                  <td style={{ width: 84 }} className="muted">
+                    {i === 1 && lottery ? (
+                      <span className="badge badge-lottery">LOTTERY!</span>
+                    ) : i === 1 && summary.isPoS ? (
+                      <span className="badge badge-pos">STAKE</span>
+                    ) : (
+                      `#${i}`
+                    )}
                   </td>
                   <td>
                     <Link to={`/tx/${t}`} className="mono">
                       {shortHash(t, 20, 12)}
                     </Link>
+                    {i === 1 && lottery && (
+                      <Link to={`/tx/${t}`} className="lot-seewinners">
+                        {" "}← See the winners here!
+                      </Link>
+                    )}
                   </td>
                 </tr>
               ))}

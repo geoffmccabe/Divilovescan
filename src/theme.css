@@ -717,3 +717,46 @@ tr:last-child td { border-bottom: 0; }
   border: 2px solid transparent; background-clip: padding-box;
 }
 .forktree-scroll::-webkit-scrollbar-thumb:hover { background-color: hsl(var(--muted-foreground) / 0.8); background-clip: padding-box; }
+
+/* ---- lottery blocks ----
+   A lottery block pays eleven winners out of the same coinstake that pays the
+   staker. Without labelling, that reads as one undifferentiated list of large
+   numbers, and the staker's own returned coins look like the biggest prize. */
+.lot-gold { color: hsl(var(--warning)); }
+
+.lot-seewinners {
+  color: hsl(var(--warning));
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.lot-seewinners:hover { color: hsl(45 100% 65%); }
+
+.lot-big {
+  color: hsl(var(--warning));
+  font-weight: 800;
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+}
+.lot-small { color: hsl(var(--warning)); font-weight: 600; font-size: 0.82rem; }
+/* Grey, deliberately: this line is not a prize, and gold would say it was. */
+.lot-staker { font-size: 0.76rem; }
+
+/* The whole row, so a lottery block is obvious while scanning the list. */
+.row-lottery td { color: hsl(var(--warning)); font-weight: 700; }
+.row-lottery td a { color: hsl(var(--warning)); }
+.row-lottery td a:hover { color: hsl(45 100% 68%); }
+.row-lottery .muted { color: hsl(var(--warning) / 0.75); }
+
+/* Capsule and cat sit on one line, the cat pushed to the right so it can never
+   overlap the label. */
+.lot-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+  min-width: 118px;
+}
+.lot-nyan { height: 24px; width: auto; display: block; flex-shrink: 0; }
+
+.stake-by-note { font-size: 0.76rem; margin-top: 3px; line-height: 1.4; }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getTx, getTxHex, type RawTx } from "../api";
+import { getTx, getTxHex, getBlockRaw, isLotteryBlock, lotteryPayouts, type RawTx } from "../api";
 import { fmtDivi, fmtTime } from "../format";
 import { TxInspector } from "../TxInspector";
 
@@ -15,6 +15,9 @@ export function TxPage() {
   // because a transaction never states its own fee — it is only implied by what
   // went in versus what came out.
   const [inputTotal, setInputTotal] = useState<number | null>(null);
+  // A coinstake alone can't say whether it's a lottery block — that's a property
+  // of the HEIGHT, so the containing block has to be looked up.
+  const [height, setHeight] = useState<number | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,6 +26,7 @@ export function TxPage() {
     setRaw(null);
     setRawErr(null);
     setInputTotal(null);
+    setHeight(null);
     setErr(null);
     getTx(txid)
       .then(async (t) => {
@@ -32,6 +36,14 @@ export function TxPage() {
         // Resolve input values so the fee can be shown. Divi DESTROYS fees
         // rather than paying them to the staker, so without this the difference
         // between inputs and outputs just disappears from the page unexplained.
+        if (t.blockhash) {
+          getBlockRaw(t.blockhash)
+            .then((b) => alive && typeof b?.height === "number" && setHeight(b.height))
+            .catch(() => {
+              /* lottery labelling simply won't apply */
+            });
+        }
+
         const ins = t.vin.filter((v) => v.txid !== undefined);
         if (!ins.length) return; // generated coins: nothing was spent
         const vals = await Promise.all(
@@ -80,6 +92,9 @@ export function TxPage() {
     inputTotal != null && !isCoinbase && !isCoinstake
       ? Math.max(0, inputTotal - totalOut)
       : null;
+
+  const lottery = isCoinstake && height != null && isLotteryBlock(height);
+  const payouts = lottery ? lotteryPayouts(tx.vout, inputTotal) : null;
 
   return (
     <>
@@ -140,12 +155,37 @@ export function TxPage() {
       </section>
 
       <section className="panel">
-        <h2 className="section-title">Outputs ({tx.vout.length})</h2>
+        <h2 className="section-title">
+          {lottery ? (
+            <>
+              Lottery payouts{" "}
+              <span className="badge badge-lottery">
+                {payouts?.winnerCount ?? 0} WINNERS
+              </span>
+            </>
+          ) : (
+            `Outputs (${tx.vout.length})`
+          )}
+        </h2>
+        {lottery && (
+          <p className="wl-note">
+            The big winner takes ten times a small win. The staker who found the block is paid from
+            this same transaction, and is marked below so it isn't mistaken for a prize.
+          </p>
+        )}
         <div className="table-scroll">
           <table>
             <tbody>
               {tx.vout.map((o) => {
                 const addr = o.scriptPubKey?.addresses?.[0];
+                // The zero-value first output is only the marker that makes this
+                // a coinstake. It carries nothing and explains nothing, so on a
+                // lottery block — where every other line is money — it is pure
+                // noise between the reader and the winners.
+                if (lottery && !(o.value > 0)) return null;
+                const isBig = payouts?.bigIndex === o.n;
+                const isSmall = payouts?.smallIndexes.includes(o.n) ?? false;
+                const isStaker = payouts?.stakerIndex === o.n;
                 return (
                   <tr key={o.n}>
                     <td>
@@ -155,6 +195,15 @@ export function TxPage() {
                         </Link>
                       ) : (
                         <span className="muted">{o.scriptPubKey?.type ?? "nonstandard"}</span>
+                      )}
+                      {isBig && <span className="lot-big"> — BIG WINNER!!!</span>}
+                      {isSmall && <span className="lot-small"> — Small Winner!</span>}
+                      {isStaker && (
+                        <span className="muted lot-staker">
+                          {" "}
+                          — not a lottery prize: the staker's own coins returned, plus the block
+                          reward
+                        </span>
                       )}
                     </td>
                     <td className="mono" style={{ textAlign: "right" }}>

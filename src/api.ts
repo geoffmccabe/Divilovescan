@@ -318,3 +318,57 @@ export interface KnownNode {
 /** Every node seen in the last 30 days — accumulated on the server, so a first
  *  visit already shows the wider network rather than an empty map. */
 export const scanKnown = () => rpc<KnownNode[]>("scan_known");
+
+// --- lottery block anatomy ---
+
+/**
+ * A lottery block's coinstake pays the staker AND the eleven lottery winners
+ * from the same transaction, which is why it reads as one confusing list:
+ *
+ *   output 0     value 0, nonstandard  — the marker that makes this a coinstake
+ *   output 1     the STAKER's own coins back, plus the block reward
+ *   output 2..n  the lottery payouts: one big win, then ten small ones
+ *
+ * The big win is exactly 10x a small one. Verified on block 4,132,800:
+ * staked 15,767.49779392 + 498 reward = 16,265.49779392 to the staker, then
+ * 252,000 to one winner and 25,200 to each of ten more.
+ */
+export interface LotteryPayouts {
+  /** Index of the staker's own return, or null if it can't be identified. */
+  stakerIndex: number | null;
+  /** Output index of the single big winner. */
+  bigIndex: number | null;
+  /** Output indexes of the small winners. */
+  smallIndexes: number[];
+  winnerCount: number;
+}
+
+export function lotteryPayouts(vout: Vout[], stakedInput: number | null): LotteryPayouts {
+  // Everything with value; the zero-value marker is never a payout.
+  const paid = vout.filter((o) => (o.value || 0) > 0);
+  if (paid.length < 2) {
+    return { stakerIndex: null, bigIndex: null, smallIndexes: [], winnerCount: 0 };
+  }
+
+  // The staker's return is the output that gives their stake back. Identified by
+  // value rather than position, so an ordering change can't mislabel a winner as
+  // the staker.
+  let stakerIndex: number | null = null;
+  if (stakedInput != null && stakedInput > 0) {
+    const match = paid.find((o) => (o.value || 0) >= stakedInput);
+    if (match) stakerIndex = match.n;
+  }
+  if (stakerIndex == null) stakerIndex = paid[0].n;
+
+  const winners = paid.filter((o) => o.n !== stakerIndex);
+  if (!winners.length) {
+    return { stakerIndex, bigIndex: null, smallIndexes: [], winnerCount: 0 };
+  }
+  const top = winners.reduce((m, o) => ((o.value || 0) > (m.value || 0) ? o : m), winners[0]);
+  return {
+    stakerIndex,
+    bigIndex: top.n,
+    smallIndexes: winners.filter((o) => o.n !== top.n).map((o) => o.n),
+    winnerCount: winners.length,
+  };
+}

@@ -13,6 +13,7 @@ import {
   type ChainInfo,
 } from "../api";
 import { timeAgo, fmtTime } from "../format";
+import nyan from "../assets/nyan_cat.webp";
 
 const PAGE_SIZES = [10, 100, 1000];
 
@@ -169,8 +170,9 @@ export function Home() {
                     // sometimes. Flag it rather than hide or "correct" it.
                     const parent = rows[i + 1];
                     const backwards = parent != null && b.time < parent.time;
+                    const lottery = isLotteryBlock(b.height);
                     return (
-                    <tr key={b.hash}>
+                    <tr key={b.hash} className={lottery ? "row-lottery" : undefined}>
                       <td>
                         <Link to={`/block/${b.height}`} className="mono">
                           {b.height.toLocaleString()}
@@ -199,8 +201,11 @@ export function Home() {
                             showing. The weekly superblocks are. */}
                         {isProofOfWork(b.height) ? (
                           <span className="badge badge-pow">POW</span>
-                        ) : isLotteryBlock(b.height) ? (
-                          <span className="badge badge-lottery">LOTTERY</span>
+                        ) : lottery ? (
+                          <span className="lot-cell">
+                            <span className="badge badge-lottery">LOTTERY!</span>
+                            <img className="lot-nyan" src={nyan} alt="" aria-hidden />
+                          </span>
                         ) : isTreasuryBlock(b.height) ? (
                           <span className="badge badge-treasury">TREASURY</span>
                         ) : (
