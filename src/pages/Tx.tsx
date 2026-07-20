@@ -166,8 +166,7 @@ export function TxPage() {
               {fee != null && fee > 0 && (
                 <tr className="tx-fee-row">
                   <td>
-                    <span className="tx-fee-label">GAS FEE</span>
-                    <span className="muted tx-fee-note"> destroyed, not paid to anyone</span>
+                    <span className="tx-fee-label">GAS FEE BURNED</span>
                   </td>
                   <td className="mono tx-fee-amount" style={{ textAlign: "right" }}>
                     {fmtDivi(fee)}
