@@ -2,20 +2,17 @@
 //
 // Charting libraries are heavy and would have to be restyled to obey the skin
 // tokens anyway; an SVG path costs a few dozen lines and inherits the theme for
-// free. Deliberately minimal: no gridlines or axis furniture on the card
-// preview, since at that size they're noise.
+// free. Card previews drop all axis furniture, which is noise at that size.
 
 export interface Point {
-  x: string; // day
+  x: string; // YYYY-MM-DD
   y: number;
 }
 
 interface Props {
   points: Point[];
   height?: number;
-  /** Card previews drop axes, labels and hover entirely. */
   mini?: boolean;
-  /** Formats the value in the axis and the hover readout. */
   fmt?: (n: number) => string;
   color?: string;
 }
@@ -30,6 +27,53 @@ function niceTicks(min: number, max: number, count = 4): number[] {
   const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) ?? mag * 10;
   const out: number[] = [];
   for (let v = Math.ceil(min / step) * step; v <= max; v += step) out.push(v);
+  return out;
+}
+
+interface XTick {
+  i: number;
+  label?: string;
+  major: boolean;
+}
+
+/**
+ * Time ticks sized to the window: years over long spans, months (labelled) with
+ * unlabelled day marks over a year or less. Driven by the actual dates rather
+ * than by evenly slicing the index, so ticks land on real calendar boundaries.
+ */
+function xTicks(points: Point[]): XTick[] {
+  if (points.length < 2) return [];
+  const spanDays =
+    (Date.parse(points[points.length - 1].x) - Date.parse(points[0].x)) / 86400000;
+  const out: XTick[] = [];
+
+  if (spanDays > 366) {
+    let lastYear = "";
+    points.forEach((p, i) => {
+      const [y, m, d] = p.x.split("-");
+      // First point of each calendar year — Jan 1 where the data has it.
+      if (y !== lastYear && (m === "01" || i === 0)) {
+        if (i > 0 || d === "01") out.push({ i, label: y, major: true });
+        lastYear = y;
+      }
+    });
+    return out;
+  }
+
+  let lastMonth = "";
+  points.forEach((p, i) => {
+    const [y, m, d] = p.x.split("-");
+    const ym = `${y}-${m}`;
+    if (ym !== lastMonth) {
+      lastMonth = ym;
+      const month = new Date(Date.parse(p.x)).toLocaleString(undefined, { month: "short" });
+      out.push({ i, label: spanDays > 120 ? month : `${month} ${d}`, major: true });
+    } else if (spanDays <= 120) {
+      // Small unlabelled day marks, thinned so they stay legible.
+      const every = spanDays <= 40 ? 1 : 5;
+      if (Number(d) % every === 0) out.push({ i, major: false });
+    }
+  });
   return out;
 }
 
@@ -51,9 +95,9 @@ export function Chart({ points, height = 260, mini = false, fmt, color }: Props)
   const max = lo === hi ? hi + 1 : hi;
 
   const padL = mini ? 0 : 62;
-  const padR = mini ? 0 : 8;
+  const padR = mini ? 0 : 10;
   const padT = mini ? 4 : 10;
-  const padB = mini ? 4 : 22;
+  const padB = mini ? 4 : 30;
   const innerW = W - padL - padR;
   const innerH = height - padT - padB;
 
@@ -64,10 +108,11 @@ export function Chart({ points, height = 260, mini = false, fmt, color }: Props)
   const area = `${line}L${x(points.length - 1).toFixed(1)},${padT + innerH}L${x(0).toFixed(1)},${padT + innerH}Z`;
   const stroke = color ?? "hsl(var(--primary))";
   const f = fmt ?? ((n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 0 }));
+  const gid = `g${stroke.replace(/[^a-z0-9]/gi, "")}`;
 
-  // Labels only where they'd be legible.
-  const ticks = mini ? [] : niceTicks(min, max);
-  const dateAt = (i: number) => points[Math.min(points.length - 1, Math.max(0, i))].x;
+  const yTicks = mini ? [] : niceTicks(min, max);
+  const tx = mini ? [] : xTicks(points);
+  const axisY = padT + innerH;
 
   return (
     <svg
@@ -76,51 +121,55 @@ export function Chart({ points, height = 260, mini = false, fmt, color }: Props)
       className="chartsvg"
       style={{ height: mini ? 110 : height }}
       role="img"
-      aria-label={`${points.length} data points from ${points[0].x} to ${points[points.length - 1].x}`}
+      aria-label={`${points.length} points from ${points[0].x} to ${points[points.length - 1].x}`}
     >
       <defs>
-        <linearGradient id={`g-${stroke}`} x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={stroke} stopOpacity="0.35" />
           <stop offset="100%" stopColor={stroke} stopOpacity="0" />
         </linearGradient>
       </defs>
 
-      {ticks.map((t) => (
-        <g key={t}>
-          <line
-            x1={padL}
-            x2={W - padR}
-            y1={y(t)}
-            y2={y(t)}
-            stroke="hsl(var(--border))"
-            strokeWidth="1"
-            opacity="0.5"
-          />
-          <text
-            x={padL - 6}
-            y={y(t)}
-            textAnchor="end"
-            dominantBaseline="middle"
-            fontSize="11"
-            fill="hsl(var(--muted-foreground))"
-          >
+      {yTicks.map((t) => (
+        <g key={`y${t}`}>
+          <line x1={padL} x2={W - padR} y1={y(t)} y2={y(t)} stroke="hsl(var(--border))" strokeWidth="1" opacity="0.5" />
+          <text x={padL - 6} y={y(t)} textAnchor="end" dominantBaseline="middle" fontSize="11" fill="hsl(var(--muted-foreground))">
             {f(t)}
           </text>
         </g>
       ))}
 
-      <path d={area} fill={`url(#g-${stroke})`} />
+      <path d={area} fill={`url(#${gid})`} />
       <path d={line} fill="none" stroke={stroke} strokeWidth={mini ? 2 : 1.8} vectorEffect="non-scaling-stroke" />
 
       {!mini && (
-        <>
-          <text x={padL} y={height - 6} fontSize="11" fill="hsl(var(--muted-foreground))">
-            {dateAt(0)}
-          </text>
-          <text x={W - padR} y={height - 6} textAnchor="end" fontSize="11" fill="hsl(var(--muted-foreground))">
-            {dateAt(points.length - 1)}
-          </text>
-        </>
+        <g>
+          <line x1={padL} x2={W - padR} y1={axisY} y2={axisY} stroke="hsl(var(--border))" strokeWidth="1" />
+          {tx.map((t, k) => (
+            <g key={`x${k}`}>
+              <line
+                x1={x(t.i)}
+                x2={x(t.i)}
+                y1={axisY}
+                y2={axisY + (t.major ? 6 : 3)}
+                stroke="hsl(var(--border))"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+              {t.label && (
+                <text
+                  x={x(t.i)}
+                  y={axisY + 18}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fill="hsl(var(--muted-foreground))"
+                >
+                  {t.label}
+                </text>
+              )}
+            </g>
+          ))}
+        </g>
       )}
     </svg>
   );

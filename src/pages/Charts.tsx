@@ -16,6 +16,13 @@ export interface ChartDef {
   pick: Pick;
   /** Running total rather than a per-day figure. */
   cumulative?: boolean;
+  /**
+   * Trim leading zeroes. Only for series where zero cannot be a real reading —
+   * supply and difficulty are never genuinely zero, so a leading zero there is
+   * "not recorded yet" and anchors the chart to the bottom. For counts, zero IS
+   * a real measurement (no payments that day) and must be kept.
+   */
+  trimZeroStart?: boolean;
   fmt?: (n: number) => string;
   color?: string;
 }
@@ -40,6 +47,7 @@ export const CHARTS: ChartDef[] = [
     blurb: "Total DIVI in existence over time, as recorded by the chain itself.",
     pick: (d) => (d.supply == null ? null : d.supply / 1e8),
     fmt: compact,
+    trimZeroStart: true,
     color: "hsl(var(--success))",
   },
   {
@@ -74,6 +82,7 @@ export const CHARTS: ChartDef[] = [
     blurb: "How hard it is to win a block, which tracks how much stake is competing.",
     pick: (d) => d.diff,
     fmt: compact,
+    trimZeroStart: true,
     color: "hsl(var(--info))",
   },
   {
@@ -101,10 +110,25 @@ const RANGES: { id: string; label: string; days: number | null }[] = [
   { id: "all", label: "All time", days: null },
 ];
 
+/**
+ * Drops the days that would lie.
+ *
+ * The LAST day is today and still in progress, so its totals are a fraction of
+ * a real day — plotted raw it looks like a collapse. The FIRST day is the
+ * chain's launch day, equally partial: it carries a single block, which made
+ * "block time" read 86,400 seconds and flattened that chart entirely.
+ *
+ * Both are excluded everywhere rather than special-cased per chart, because a
+ * partial day is misleading in every series it appears in.
+ */
+function completeDays(days: DayRow[]): DayRow[] {
+  return days.length > 2 ? days.slice(1, -1) : [];
+}
+
 function toPoints(days: DayRow[], def: ChartDef): Point[] {
   const out: Point[] = [];
   let run = 0;
-  for (const d of days) {
+  for (const d of completeDays(days)) {
     const v = def.pick(d);
     if (def.cumulative) {
       run += v ?? 0;
@@ -112,6 +136,11 @@ function toPoints(days: DayRow[], def: ChartDef): Point[] {
     } else if (v != null) {
       out.push({ x: d.d, y: v });
     }
+  }
+  if (def.trimZeroStart) {
+    let i = 0;
+    while (i < out.length - 1 && out[i].y === 0) i++;
+    return out.slice(i);
   }
   return out;
 }
@@ -140,7 +169,8 @@ export function ChartsPage() {
       <h2 className="section-title">Charts</h2>
       <p className="wl-note">
         Click any chart to open it full screen, where date ranges live. Built from a full scan of
-        the chain — {series ? `${series.days.length.toLocaleString()} days since ${series.days[0]?.d}` : "loading"}.
+        the chain{series ? `, ${completeDays(series.days).length.toLocaleString()} complete days since ${completeDays(series.days)[0]?.d}` : ""}.
+        Today is excluded until it finishes, so no chart ends on a part-day.
       </p>
 
       {err && <p className="err">{err}</p>}
@@ -187,8 +217,6 @@ export function ChartFullPage() {
   const points = window ? all.slice(-window) : all;
 
   const latest = points.length ? points[points.length - 1].y : null;
-  const first = points.length ? points[0].y : null;
-  const change = first != null && latest != null && first !== 0 ? ((latest - first) / first) * 100 : null;
 
   return (
     <section className="panel">
@@ -222,18 +250,6 @@ export function ChartFullPage() {
             <div className="ch-stat-value">{(def.fmt ?? compact)(latest)}</div>
             <div className="ch-stat-label">Latest</div>
           </div>
-          {change != null && (
-            <div className="ch-stat">
-              <div
-                className="ch-stat-value"
-                style={{ color: change >= 0 ? "hsl(var(--success))" : "hsl(var(--destructive))" }}
-              >
-                {change >= 0 ? "+" : ""}
-                {change.toFixed(1)}%
-              </div>
-              <div className="ch-stat-label">Over this range</div>
-            </div>
-          )}
           <div className="ch-stat">
             <div className="ch-stat-value">{points.length.toLocaleString()}</div>
             <div className="ch-stat-label">Days shown</div>
