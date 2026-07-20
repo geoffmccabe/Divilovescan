@@ -131,7 +131,24 @@ const RANGES: { id: string; label: string; days: number | null }[] = [
  * partial day is misleading in every series it appears in.
  */
 function completeDays(days: DayRow[]): DayRow[] {
-  return days.length > 2 ? days.slice(1, -1) : [];
+  if (days.length <= 2) return [];
+  const inner = days.slice(1, -1);
+
+  // Dropping the launch day isn't enough: the chain took a while to reach its
+  // stride, and a day carrying 434 blocks against a typical 1,453 is still a
+  // part-day in everything but name. Left in, it reported a 199-second block
+  // time and squashed that chart's whole scale.
+  //
+  // Measured against the median of the settled middle of the series, so a
+  // genuinely quiet stretch later on is never mistaken for ramp-up — this only
+  // ever trims from the START.
+  const mid = inner.slice(10, -10);
+  if (mid.length < 20) return inner;
+  const sorted = mid.map((d) => d.blocks).sort((a, b) => a - b);
+  const typical = sorted[Math.floor(sorted.length / 2)];
+  let i = 0;
+  while (i < inner.length - 1 && inner[i].blocks < typical * 0.6) i++;
+  return inner.slice(i);
 }
 
 function toPoints(days: DayRow[], def: ChartDef): Point[] {

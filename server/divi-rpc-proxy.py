@@ -506,6 +506,12 @@ def scan_query(method, params):
                 winners = dict(
                     db.execute("SELECT day, COUNT(*) FROM stake_day GROUP BY day").fetchall()
                 )
+                # The newest day present is the one the pass is CURRENTLY inside,
+                # so its count is a part-day and reads as a collapse. Drop it.
+                # Once the pass completes that day is simply today, which the
+                # page already excludes, so this stays correct either way.
+                if winners:
+                    winners.pop(max(winners), None)
             except Exception:
                 pass
             return {
