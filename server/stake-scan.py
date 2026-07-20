@@ -34,7 +34,7 @@ RPC_PASS = os.environ.get("DIVI_RPC_PASS", "")
 DB_PATH = os.environ.get("SCAN_DB", "/var/lib/divi-scan/divi-index.sqlite")
 
 BATCH = 800
-WORKERS = 16  # matches the node's rpcthreads; more just queues
+WORKERS = 6  # the node has 32 RPC threads; leave most of them for the site
 _auth = base64.b64encode(f"{RPC_USER}:{RPC_PASS}".encode()).decode()
 
 
