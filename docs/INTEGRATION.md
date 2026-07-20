@@ -265,6 +265,13 @@ this way; a plausible-looking rich list that is quietly wrong is worse than none
 fork tree, stats, 9 charts, network map with geolocation and liveness probing,
 byte-by-byte transaction inspector, burned-fee accounting, shared skin system.
 
+**Planned — NFD (Divi Collectibles) and DMT (Divi Meta Tokens) browsing.**
+See `docs/NFD-DMT-EXPLORER-PLAN.md`. Neither protocol carries live records yet.
+The explorer will consume the existing reference indexers
+(`Divi-Blockchain_6.9/contrib/{dvxp-core,nfd-indexer,dmt-indexer}`) rather than
+re-implementing record parsing — two indexers that disagree is the one failure
+these overlays cannot survive.
+
 **In progress / next:**
 - Stake-winner scan completing (chart is partial until then)
 - **Fees burned** totals and a daily chart — needs one more pass; no scan
