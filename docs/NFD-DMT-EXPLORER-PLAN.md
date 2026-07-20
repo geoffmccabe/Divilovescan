@@ -148,7 +148,19 @@ NFD/DMT activity added to the charts page.
 
 ---
 
-## 5. Decisions needed
+## 5. Decisions — SETTLED (Geoff, 2026-Jul-20)
+
+1. **Collections → "Creators".** The protocol has no grouping field, so NFDs are
+   grouped by the creator address that minted them.
+2. **Total Tokens → "Token Users":** addresses holding at least one token.
+   Summing units across tokens with different `decimals` would have produced a
+   meaningless number.
+3. **Rust indexer sidecar** — reuse `dvxp-core` / `nfd-indexer` / `dmt-indexer`
+   rather than porting their logic.
+4. **Panels visible pre-launch**, marked "Coming Soon", and clickable so the
+   structure can be seen before there is data.
+
+### Original wording of the open questions
 
 1. **Collections** — not in the protocol. Group by creator address (available
    immediately, and how most chains without native collections do it), read from

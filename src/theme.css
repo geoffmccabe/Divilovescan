@@ -778,3 +778,51 @@ tr:last-child td { border-bottom: 0; }
   line-height: 1.5;
 }
 .lot-disclaimer strong { color: hsl(var(--warning)); }
+
+/* ---- four home panels ---- */
+.stats-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1000px) { .stats-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px)  { .stats-4 { grid-template-columns: 1fr; } }
+
+/* Panels that switch the list below are buttons, so they are keyboard
+   reachable and announce themselves as interactive. */
+.stat-btn {
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  border-color: hsl(var(--border));
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.stat-btn:hover { border-color: hsl(var(--primary) / 0.7); }
+.stat-on { border-color: hsl(var(--primary)); }
+.stat-on .stat-label { color: hsl(var(--primary)); }
+.stat-btn strong { font-weight: 800; color: hsl(var(--foreground)); }
+.stat-on strong { color: hsl(var(--primary)); }
+
+.stat-pair {
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+  margin-top: 4px; font-size: 0.72rem; color: hsl(var(--muted-foreground));
+}
+.stat-pair em { font-style: normal; font-family: var(--font-mono); font-size: 1rem; font-weight: 600; color: hsl(var(--foreground)); }
+
+.soon-tag {
+  margin-top: 6px; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: hsl(var(--warning)); opacity: 0.9;
+}
+
+/* Empty state that still shows the shape of what's coming. */
+.soon-empty {
+  text-align: center; padding: 26px 18px 20px;
+  border: 1px dashed hsl(var(--border)); border-radius: var(--panel-radius);
+  margin-top: 10px;
+}
+.soon-empty p { font-size: 0.84rem; line-height: 1.55; margin: 0 auto 8px; max-width: 620px; }
+.soon-badge {
+  display: inline-block; margin-bottom: 10px;
+  font-size: 0.64rem; letter-spacing: 0.12em; font-weight: 700;
+  color: hsl(var(--warning));
+  border: 1px solid hsl(var(--warning) / 0.5); border-radius: 999px;
+  padding: 3px 10px;
+}
+.nfd-sub { font-size: 0.78rem; font-weight: 400; margin-left: 6px; }

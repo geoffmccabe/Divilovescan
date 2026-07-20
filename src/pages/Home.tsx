@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   blockRange,
   getBlockCount,
@@ -14,10 +14,20 @@ import {
 } from "../api";
 import { timeAgo, fmtTime } from "../format";
 import nyan from "../assets/nyan_cat.webp";
+import { NfdList } from "../collectibles/NfdList";
+import { DmtList } from "../collectibles/DmtList";
 
 const PAGE_SIZES = [10, 100, 1000];
 
+type View = "blocks" | "nfd" | "dmt";
+
 export function Home() {
+  // Which list shows below the panels. Kept in the URL so it survives a refresh
+  // and can be linked to, rather than being invisible component state.
+  const [params, setParams] = useSearchParams();
+  const view = ((params.get("view") as View) || "blocks") as View;
+  const setView = (v: View) => setParams(v === "blocks" ? {} : { view: v }, { replace: true });
+
   const [info, setInfo] = useState<ChainInfo | null>(null);
   const [supply, setSupply] = useState<number | null>(null);
   const [tip, setTip] = useState<number | null>(null);
@@ -85,17 +95,54 @@ export function Home() {
 
   return (
     <>
-      <section className="stats">
-        <div className="panel stat">
+      <section className="stats stats-4">
+        <button
+          className={"panel stat stat-btn" + (view === "blocks" ? " stat-on" : "")}
+          onClick={() => setView("blocks")}
+        >
           <div className="stat-label">Blocks</div>
           <div className="stat-value">{info ? info.blocks.toLocaleString() : "—"}</div>
-        </div>
-        <div className="panel stat">
-          <div className="stat-label">Difficulty</div>
-          <div className="stat-value">
-            {info ? info.difficulty.toLocaleString(undefined, { maximumFractionDigits: 0 }) : "—"}
+        </button>
+
+        <button
+          className={"panel stat stat-btn" + (view === "nfd" ? " stat-on" : "")}
+          onClick={() => setView("nfd")}
+        >
+          <div className="stat-label">
+            <strong>NFD</strong>s – Divi Collectibles
           </div>
-        </div>
+          {/* Not launched, so these read as dashes with a "coming soon" marker.
+              A confident 0 would say nobody is using it, which is a different
+              and untrue claim. */}
+          <div className="stat-pair">
+            <span>
+              <em>—</em> Creators
+            </span>
+            <span>
+              <em>—</em> NFDs
+            </span>
+          </div>
+          <div className="soon-tag">Coming Soon</div>
+        </button>
+
+        <button
+          className={"panel stat stat-btn" + (view === "dmt" ? " stat-on" : "")}
+          onClick={() => setView("dmt")}
+        >
+          <div className="stat-label">
+            <strong>DMT</strong>s – Divi Meta Tokens
+          </div>
+          <div className="stat-pair">
+            <span>
+              <em>—</em> Tokens Made
+            </span>
+            <span>
+              <em>—</em> Token Users
+            </span>
+          </div>
+          <div className="soon-tag">Coming Soon</div>
+        </button>
+
         <div className="panel stat">
           <div className="stat-label">DIVI Coin Supply</div>
           <div className="stat-value">
@@ -104,6 +151,10 @@ export function Home() {
         </div>
       </section>
 
+      {view === "nfd" && <NfdList />}
+      {view === "dmt" && <DmtList />}
+
+      {view === "blocks" && (
       <section className="panel">
         <div className="list-head">
           <h2 className="section-title" style={{ margin: 0 }}>
@@ -247,6 +298,7 @@ export function Home() {
           </>
         )}
       </section>
+      )}
     </>
   );
 }
