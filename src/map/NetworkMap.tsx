@@ -61,13 +61,15 @@ const GREEN = (a: number) => `hsla(145, 80%, 50%, ${a})`;
 
 // Dark sunglasses drawn above the centre of a node's circle (the "face"), scaled
 // to it — the stake-winner marker. Drawn last so nothing covers it.
-// Lovenode marker. HSB 276,32,92 -> rgb(205,160,235).
+// Node-type markers. HSB 276,32,92 -> rgb(205,160,235).
 const LOVE_COLOR = "rgb(205, 160, 235)";
 
-// TEMPORARY: drawn on every node so the colour and scaling can be judged.
-// Replace with the real test once we can identify a Lovenode (a subver marker,
-// a published list, or similar) — the drawing below needs no changes then.
-const isLovenode = (_ip: string) => true;
+// Nodes identify their software in the P2P handshake, which is the only signal
+// available without trusting a list. Today every peer on the network reports
+// "DIVI Core: 3.0.0.0", so neither pattern matches anything yet — these light up
+// on their own as nodes running the new software appear.
+const isLoveNode = (subver: string) => /love\s*node|lovenode/i.test(subver || "");
+const isNewNode = (subver: string) => /divi\s*love\s*scan|dls[-\/]/i.test(subver || "");
 
 /**
  * A heart centred on a node dot, sized to sit INSIDE it. `r` is the dot's
@@ -95,6 +97,26 @@ function drawHeart(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: num
   ctx.closePath();
   ctx.fillStyle = LOVE_COLOR;
   ctx.fill();
+  ctx.restore();
+}
+
+/**
+ * A "+" for nodes running the new node software, sized like the heart so the
+ * two markers read as the same family at any dot size.
+ */
+function drawPlus(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
+  const arm = r * 0.62;
+  const thick = Math.max(1.6, r * 0.26);
+  ctx.save();
+  ctx.strokeStyle = LOVE_COLOR;
+  ctx.lineWidth = thick;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx - arm, cy);
+  ctx.lineTo(cx + arm, cy);
+  ctx.moveTo(cx, cy - arm);
+  ctx.lineTo(cx, cy + arm);
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -699,7 +721,7 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
       if (s) {
         const clusters = new Map<
           string,
-          { x: number; y: number; n: number; inbound: number; love: boolean }
+          { x: number; y: number; n: number; inbound: number; love: boolean; neu: boolean }
         >();
         for (const p of s.peers) {
           const pg = g[p.ip];
@@ -708,10 +730,11 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           if (rev == null || rev > now) continue; // not revealed yet
           const k = clusterKey(pg.lat, pg.lon);
           const [x, y] = P(pg.lon, pg.lat);
-          const c = clusters.get(k) ?? { x, y, n: 0, inbound: 0, love: false };
+          const c = clusters.get(k) ?? { x, y, n: 0, inbound: 0, love: false, neu: false };
           c.n += 1;
           if (p.inbound) c.inbound += 1;
-          if (isLovenode(p.ip)) c.love = true;
+          if (isLoveNode(p.subver)) c.love = true;
+          if (isNewNode(p.subver)) c.neu = true;
           clusters.set(k, c);
         }
         for (const c of clusters.values()) {
@@ -726,8 +749,10 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           ctx.strokeStyle = col(0.25);
           ctx.lineWidth = 1;
           ctx.stroke();
-          // Drawn last so it sits on top of the dot it marks.
-          if (c.love) drawHeart(ctx, c.x, c.y, r);
+          // Drawn last so it sits on top of the dot it marks. The new software
+          // wins if a cluster somehow contains both.
+          if (c.neu) drawPlus(ctx, c.x, c.y, r);
+          else if (c.love) drawHeart(ctx, c.x, c.y, r);
         }
         // green "appear" burst for freshly-located peers
         for (const p of s.peers) {
@@ -777,6 +802,9 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
         ctx.lineWidth = 1.5;
         ctx.stroke();
         if (USER_IS_WINNER) drawGlasses(ctx, selfXY[0], selfXY[1], r);
+        // This node runs the new software by definition — it IS the scanner —
+        // so it is marked directly instead of being sniffed from a handshake.
+        drawPlus(ctx, selfXY[0], selfXY[1], r);
         // This node, labelled over two lines — SCANNER above the dot and NODE
         // below it — so the marker sits between the two words.
         ctx.fillStyle = selfCol(1);
