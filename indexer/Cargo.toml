@@ -1,0 +1,24 @@
+[package]
+name = "divi-overlay-indexer"
+version = "0.1.0"
+edition = "2021"
+description = "Walks the Divi chain and feeds OP_META records to the NFD and DMT indexers. Contains no protocol logic of its own."
+
+[[bin]]
+name = "divi-overlay-indexer"
+path = "src/main.rs"
+
+[dependencies]
+# The protocol rules. Vendored by sync-crates.sh, never edited here — see README.
+dvxp-core = { path = "vendor/dvxp-core" }
+nfd-indexer = { path = "vendor/nfd-indexer" }
+dmt-indexer = { path = "vendor/dmt-indexer" }
+
+# Deliberately tiny: a pure-Rust HTTP client and JSON. No SQLite binding, since
+# the snapshot is a small JSON file the proxy already knows how to read, and a
+# C dependency would make this far harder to build on the node.
+ureq = { version = "2", default-features = false, features = ["tls"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 2
