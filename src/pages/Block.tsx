@@ -55,6 +55,13 @@ export function BlockPage() {
             summary.isPoS && <span className="badge badge-pos">PROOF OF STAKE</span>
           )}
         </h2>
+        {lottery && (
+          <p className="wl-note lot-disclaimer">
+            <strong>NOTE:</strong> This isn&apos;t a true lottery. It should be considered as a
+            STAKING BONUS for those who are supporting the Divi Network. No purchase is required.
+            The only requirement is supporting the Divi network by running a node.
+          </p>
+        )}
         <dl className="kv">
           <dt>Hash</dt>
           <dd className="hash">{summary.hash}</dd>

@@ -168,10 +168,20 @@ export function TxPage() {
           )}
         </h2>
         {lottery && (
-          <p className="wl-note">
-            The big winner takes ten times a small win. The staker who found the block is paid from
-            this same transaction, and is marked below so it isn't mistaken for a prize.
-          </p>
+          <>
+            <p className="wl-note">
+              The big winner takes ten times a small win. The staker who found the block is paid
+              from this same transaction, and is marked below so it isn&apos;t mistaken for a prize.
+            </p>
+            {/* Framing, not decoration: "lottery" carries a specific legal meaning
+                in many places, and this is not one. Kept adjacent to every use of
+                the word rather than buried elsewhere. */}
+            <p className="wl-note lot-disclaimer">
+              <strong>NOTE:</strong> This isn&apos;t a true lottery. It should be considered as a
+              STAKING BONUS for those who are supporting the Divi Network. No purchase is required.
+              The only requirement is supporting the Divi network by running a node.
+            </p>
+          </>
         )}
         <div className="table-scroll">
           <table>

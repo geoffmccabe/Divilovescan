@@ -766,3 +766,15 @@ tr:last-child td { border-bottom: 0; }
 .lot-nyan { height: 24px; width: auto; display: block; flex-shrink: 0; }
 
 .stake-by-note { font-size: 0.76rem; margin-top: 3px; line-height: 1.4; }
+
+/* Sits with the lottery wording wherever it appears. Bordered rather than
+   greyed away: it qualifies a legally loaded word and shouldn't read as
+   small print. */
+.lot-disclaimer {
+  border-left: 2px solid hsl(var(--warning) / 0.5);
+  padding: 6px 0 6px 10px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.lot-disclaimer strong { color: hsl(var(--warning)); }
