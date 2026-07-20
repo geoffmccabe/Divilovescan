@@ -9,6 +9,8 @@ import { ChainHealthPage } from "./pages/ChainHealth";
 import { ChartsPage, ChartFullPage } from "./pages/Charts";
 import { NetworkPage } from "./pages/Network";
 import { StatsPage } from "./pages/Stats";
+import { NfdDetail } from "./collectibles/NfdDetail";
+import { DmtDetail } from "./collectibles/DmtDetail";
 import { StyleDrawer } from "./admin/StyleDrawer";
 import { APP_VERSION } from "./version";
 import heart from "./assets/heart.webp";
@@ -34,6 +36,10 @@ function routeForQuery(q: string): string | null {
   if (!s) return null;
   if (/^\d+$/.test(s)) return `/block/${s}`;
   if (/^[0-9a-fA-F]{64}$/.test(s)) return `/block/${s.toLowerCase()}`;
+  // Token ticker: 3-8 chars, starts with a letter, protocol character set.
+  if (/^[A-Za-z][A-Za-z0-9!#^\-_+.]{2,7}$/.test(s) && !/^\d+$/.test(s)) {
+    return `/dmt/${s.toUpperCase()}`;
+  }
   if (/^[A-Za-z0-9]{26,48}$/.test(s)) return `/address/${s}`;
   return null;
 }
@@ -75,7 +81,7 @@ export function App() {
               setQ(e.target.value);
               setBad(false);
             }}
-            placeholder="Search block height, hash, transaction or address"
+            placeholder="Search block, transaction, address or token ticker"
             aria-label="Search the Divi blockchain"
             aria-invalid={bad}
           />
@@ -85,7 +91,7 @@ export function App() {
 
       {bad && (
         <p className="err" role="alert">
-          That doesn't look like a block height, hash, transaction id or Divi address.
+          That doesn't look like a block height, hash, transaction id, Divi address or token ticker.
         </p>
       )}
 
@@ -112,6 +118,8 @@ export function App() {
         <Route path="/block/:id" element={<BlockPage />} />
         <Route path="/tx/:txid" element={<TxPage />} />
         <Route path="/address/:address" element={<AddressPage />} />
+        <Route path="/nfd/:id" element={<NfdDetail />} />
+        <Route path="/dmt/:id" element={<DmtDetail />} />
       </Routes>
 
       <StyleDrawer />
