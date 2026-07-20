@@ -115,9 +115,11 @@ a:hover { color: hsl(var(--accent)); }
   z-index: 2;
   display: grid;
   place-items: center;
-  /* Sized to the WORD, not the heart: the heart is smaller, so keying off it
-     would clip "love" in the resting state. Fixed either way, so swapping
-     between them still can't shift the layout. */
+  /* The gap the heart sits in. Three literal spaces would be ~17px at this font
+     size — narrower than the 32px heart — so the heart would still land on the
+     letters either side. 44px gives it 6px of clearance each way, which is what
+     actually reads as "between the words". Fixed at all times, so swapping
+     between "love" and the heart can't shift the layout. */
   width: 44px;
   height: 40px;
 }
@@ -141,8 +143,12 @@ a:hover { color: hsl(var(--accent)); }
    draw inward towards it. */
 .logo:hover .logo-love { opacity: 0; transform: scale(0.6); }
 .logo:hover .logo-heart { opacity: 1; transform: scale(1); }
-.logo:hover .logo-divi { transform: translateX(9px); }
-.logo:hover .logo-scan { transform: translateX(-9px); }
+/* Previously the words slid 9px inward on hover, which is exactly what put the
+   "i" of divi underneath the heart: the gap is only 6px wider than the heart on
+   each side, so any inward travel eats that clearance. They now hold their
+   positions and the heart occupies the gap cleanly. */
+.logo:hover .logo-divi,
+.logo:hover .logo-scan { transform: none; }
 
 /* The glow. Sits at z-index 1 — above the background, BEHIND the words — and is
    centred on the heart. Only animates on hover. */
@@ -150,8 +156,8 @@ a:hover { color: hsl(var(--accent)); }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 138px;
-  height: 138px;
+  width: 92px;
+  height: 92px;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0.6);
   opacity: 0;

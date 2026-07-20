@@ -2,4 +2,4 @@
 // at a glance whether a deploy has actually reached the browser.
 //
 // BUMP THE LAST NUMBER ON EVERY CHANGE THAT SHIPS. The "v69." prefix is fixed.
-export const APP_VERSION = "v69.26";
+export const APP_VERSION = "v69.27";
