@@ -200,6 +200,15 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
   // Mirrored into state purely so the legend can show them; the canvas itself
   // works from the refs.
   const [counts, setCounts] = useState({ peers: 0, known: 0 });
+  // "30-Day Network" means the WHOLE network we've seen recently — the nodes
+  // we're connected to right now plus everything else seen in the window, not
+  // just the remainder. Computed as a union so a node can never be counted
+  // twice or dropped depending on which list it happens to be in.
+  const recount = (peers: string[]) =>
+    setCounts({
+      peers: peers.length,
+      known: new Set([...Object.keys(knownRef.current), ...peers]).size,
+    });
   const probeRef = useRef<Map<string, ProbeState>>(new Map());
   const lastProbe = useRef(0); // last re-ping time (re-ping every 60s)
   // The node currently wearing the "stake winner" sunglasses. NOTE: the real
@@ -236,7 +245,7 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           };
         }
         knownRef.current = merged;
-        setCounts((c) => ({ ...c, known: Object.keys(merged).length }));
+        recount(snapRef.current?.peers.map((p) => p.ip) ?? []);
       })
       .catch(() => {
         /* fall back to whatever this browser has seen itself */
@@ -260,7 +269,7 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
         const s = await scanPeers();
         if (!alive || !s) return;
         setSnap(s);
-        setCounts((c) => ({ ...c, peers: s.peers.length }));
+        recount(s.peers.map((p) => p.ip));
         // Tell the Peers counter what we just saw, so it ticks up (and flashes)
         // at the same moment the peer turns pink on the map rather than up to
         // five seconds later on its own poll.
@@ -316,7 +325,10 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
               newIdx++;
             }
           }
-          if (seen.length) knownRef.current = recordKnown(knownRef.current, seen);
+          if (seen.length) {
+            knownRef.current = recordKnown(knownRef.current, seen);
+            recount(snapRef.current?.peers.map((p) => p.ip) ?? []);
+          }
         });
       } catch {
         /* keep last */
