@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getChainTips, type ChainTip } from "../api";
+import { fmtTime } from "../format";
 import { ForkTree, type SeenFork } from "../ForkTree";
 
 // Chain Health — the same reading the Divi Desktop wallet gives, in a larger
@@ -134,9 +136,10 @@ export function ChainHealthPage() {
               <thead>
                 <tr>
                   <th>Height</th>
+                  <th>Date / time</th>
                   <th>Branch length</th>
                   <th>Status</th>
-                  <th>Hash</th>
+                  <th>Block</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,11 +149,20 @@ export function ChainHealthPage() {
                   .slice(0, 200)
                   .map((f) => (
                     <tr key={f.hash}>
-                      <td className="mono">{f.height.toLocaleString()}</td>
+                      <td className="mono">
+                        {/* Links to the block page, which serves stale forks
+                            too (the node keeps them; confirmations show -1). */}
+                        <Link to={`/block/${f.hash}`} className="mono">
+                          {f.height.toLocaleString()}
+                        </Link>
+                      </td>
+                      <td className="muted nowrap">{f.time ? fmtTime(f.time) : "—"}</td>
                       <td>{f.branchlen}</td>
                       <td className="muted">{f.status}</td>
-                      <td className="mono">
-                        {f.hash.slice(0, 14)}…{f.hash.slice(-8)}
+                      <td>
+                        <Link to={`/block/${f.hash}`} className="mono">
+                          {f.hash.slice(0, 14)}…{f.hash.slice(-8)}
+                        </Link>
                       </td>
                     </tr>
                   ))}

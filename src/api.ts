@@ -177,6 +177,8 @@ export interface ChainTip {
   hash: string;
   branchlen: number;
   status: string;
+  /** Block time; only the fork snapshot carries it (getchaintips does not). */
+  time?: number | null;
 }
 export const getChainTips = () => rpc<ChainTip[]>("getchaintips");
 
