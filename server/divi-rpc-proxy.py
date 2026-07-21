@@ -470,6 +470,7 @@ def scan_query(method, params):
             out = {k: int(meta.get(k, 0)) for k in keys}
             out["addresses"] = db.execute("SELECT COUNT(*) FROM addr").fetchone()[0]
             out["senders"] = db.execute("SELECT COUNT(*) FROM addr WHERE has_sent=1").fetchone()[0]
+            out["fees_burned_total"] = int(meta.get("fees_burned_total", 0))
             return out
 
         if method == "scan_richlist":
@@ -496,7 +497,7 @@ def scan_query(method, params):
             # chart and per date range.
             rows = db.execute(
                 "SELECT day, blocks, txs, payments, supply, difficulty, "
-                "COALESCE(new_wallets,0) FROM daily ORDER BY day"
+                "COALESCE(new_wallets,0), COALESCE(fees_burned,0) FROM daily ORDER BY day"
             ).fetchall()
             # Distinct wallets that won a block each day. Built by a separate
             # pass, so it may cover only part of the range while that runs; days
@@ -519,8 +520,8 @@ def scan_query(method, params):
                 "days": [
                     {"d": d, "blocks": b, "txs": t, "pay": p,
                      "supply": sup, "diff": diff, "neww": nw,
-                     "win": winners.get(d)}
-                    for d, b, t, p, sup, diff, nw in rows
+                     "win": winners.get(d), "burn": burn}
+                    for d, b, t, p, sup, diff, nw, burn in rows
                 ],
             }
 

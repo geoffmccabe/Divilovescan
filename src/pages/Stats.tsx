@@ -162,6 +162,11 @@ export function StatsPage() {
             />
             <Row label="Owners delegating a vault" value={scan.delegators.toLocaleString()} />
             <Row label="Delegates staking for others" value={scan.delegates.toLocaleString()} />
+            <Row
+              label="Fees burned (all time)"
+              value={scan.fees_burned_total ? `${fmtDivi(scan.fees_burned_total / 1e8)} DIVI` : "—"}
+              note="Divi destroys fees rather than paying stakers — approximate, and tiny by design"
+            />
           </dl>
         ) : (
           <p className="muted">Loading the chain index…</p>

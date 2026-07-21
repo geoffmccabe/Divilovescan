@@ -219,6 +219,7 @@ export interface ScanSummary {
   addresses: number;
   senders: number;
   summary_built: number;
+  fees_burned_total: number;
 }
 export const scanSummary = () => rpc<ScanSummary>("scan_summary");
 
@@ -302,6 +303,7 @@ export interface DayRow {
   diff: number | null;
   neww: number;   // wallets first seen that day
   win: number | null;  // distinct wallets that won a block; null = not scanned yet
+  burn: number;        // fees burned that day, satoshi
 }
 export interface Series {
   builtAt: number;

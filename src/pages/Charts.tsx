@@ -95,6 +95,15 @@ export const CHARTS: ChartDef[] = [
     color: "hsl(var(--info))",
   },
   {
+    id: "fees-burned",
+    title: "Fees burned per day",
+    blurb:
+      "Divi destroys transaction fees rather than paying them to stakers, so every fee is a tiny permanent removal from supply. Approximate; the amounts are small by design.",
+    pick: (d) => d.burn / 1e8,
+    fmt: (n) => (n >= 1 ? compact(n) : n.toFixed(4)),
+    color: "hsl(var(--destructive))",
+  },
+  {
     id: "blocks",
     title: "Blocks per day",
     blurb: "How many blocks the network produced each day.",
