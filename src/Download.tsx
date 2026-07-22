@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { DownloadGuide } from "./DownloadGuide";
 
 // Wallet download, bottom-left, mirroring the version marker on the right.
 //
@@ -86,6 +87,7 @@ const PLATFORMS: Platform[] = [
 
 export function DownloadButton() {
   const [open, setOpen] = useState(false);
+  const [guide, setGuide] = useState(false);
   // Which platform's instructions are showing. Defaults to the one available.
   const [selected, setSelected] = useState<string>("mac-arm");
 
@@ -145,19 +147,26 @@ export function DownloadButton() {
               </div>
 
               {active?.steps && (
-                <ol className="dl-steps">
-                  {active.steps.map((s) => (
-                    <li key={s.title}>
-                      <span className="dl-step-title">{s.title}</span>
-                      <span className="dl-step-body">{s.body}</span>
-                    </li>
-                  ))}
-                </ol>
+                <>
+                  <ol className="dl-steps">
+                    {active.steps.map((s) => (
+                      <li key={s.title}>
+                        <span className="dl-step-title">{s.title}</span>
+                        <span className="dl-step-body">{s.body}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <button className="dl-moreinfo" onClick={() => setGuide(true)}>
+                    More info: full step-by-step guide for beginners →
+                  </button>
+                </>
               )}
             </div>
           </div>,
           document.body,
         )}
+
+      {guide && <DownloadGuide onClose={() => setGuide(false)} />}
     </>
   );
 }
