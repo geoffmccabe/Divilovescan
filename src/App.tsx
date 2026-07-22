@@ -12,6 +12,7 @@ import { StatsPage } from "./pages/Stats";
 import { NfdDetail } from "./collectibles/NfdDetail";
 import { DmtDetail } from "./collectibles/DmtDetail";
 import { StyleDrawer } from "./admin/StyleDrawer";
+import { DownloadButton } from "./Download";
 import { APP_VERSION } from "./version";
 import heart from "./assets/heart.webp";
 
@@ -123,6 +124,7 @@ export function App() {
       </Routes>
 
       <StyleDrawer />
+      <DownloadButton />
       <div className="version">{APP_VERSION}</div>
     </div>
   );

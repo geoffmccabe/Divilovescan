@@ -826,3 +826,51 @@ tr:last-child td { border-bottom: 0; }
   padding: 3px 10px;
 }
 .nfd-sub { font-size: 0.78rem; font-weight: 400; margin-left: 6px; }
+
+/* ---- wallet download ---- */
+/* Mirrors the version marker's corner but on the left, and deliberately quiet
+   so it doesn't compete with the content. */
+.dl-fab {
+  position: fixed; left: 14px; bottom: 12px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 11px; border-radius: 999px;
+  background: hsl(var(--primary) / 0.14);
+  border: 1px solid hsl(var(--primary) / 0.45);
+  color: hsl(var(--primary));
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  opacity: 0.82; transition: opacity 0.15s ease, background 0.15s ease;
+}
+.dl-fab:hover { opacity: 1; background: hsl(var(--primary) / 0.24); }
+
+.dl-backdrop {
+  position: fixed; inset: 0; z-index: 200;
+  background: hsl(0 0% 0% / 0.6);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.dl-modal { width: min(440px, 100%); }
+.dl-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.dl-head h3 { margin: 0; font-size: 1.02rem; font-weight: 600; }
+
+.dl-list { display: flex; flex-direction: column; gap: 8px; }
+.dl-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "main go" "detail go";
+  gap: 1px 12px;
+  padding: 11px 13px; border-radius: 9px;
+  border: 1px solid hsl(var(--border));
+  text-decoration: none;
+}
+.dl-item-main { grid-area: main; font-weight: 600; font-size: 0.9rem; color: hsl(var(--foreground)); }
+.dl-item-detail { grid-area: detail; font-size: 0.74rem; color: hsl(var(--muted-foreground)); }
+.dl-item-go { grid-area: go; align-self: center; font-size: 0.8rem; font-weight: 600; color: hsl(var(--primary)); }
+
+.dl-item-on { cursor: pointer; }
+.dl-item-on:hover { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.08); }
+.dl-item-off { opacity: 0.42; cursor: default; }
+
+.dl-note { font-size: 0.8rem; line-height: 1.5; margin: 14px 0 0; }
+.dl-note.muted { margin-top: 8px; font-size: 0.76rem; }
