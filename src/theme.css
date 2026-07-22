@@ -872,5 +872,20 @@ tr:last-child td { border-bottom: 0; }
 .dl-item-on:hover { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.08); }
 .dl-item-off { opacity: 0.42; cursor: default; }
 
-.dl-note { font-size: 0.8rem; line-height: 1.5; margin: 14px 0 0; }
-.dl-note.muted { margin-top: 8px; font-size: 0.76rem; }
+.dl-steps {
+  margin: 16px 0 0; padding: 0 0 0 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.dl-steps li { font-size: 0.82rem; line-height: 1.5; }
+.dl-step-title {
+  display: block; font-weight: 700; color: hsl(var(--foreground)); margin-bottom: 2px;
+}
+.dl-step-body { color: hsl(var(--muted-foreground)); }
+.dl-step-body strong { color: hsl(var(--foreground)); font-weight: 600; }
+.dl-alt { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.9; }
+.dl-code {
+  display: block; margin-top: 5px; padding: 7px 9px;
+  background: hsl(0 0% 0% / 0.4); border: 1px solid hsl(var(--border)); border-radius: 6px;
+  font-family: var(--font-mono); font-size: 0.72rem; color: hsl(var(--primary));
+  word-break: break-all; user-select: all;
+}

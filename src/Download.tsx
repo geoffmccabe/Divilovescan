@@ -1,22 +1,75 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-// Small download affordance, bottom-left, mirroring the version marker at the
-// bottom-right. Opens a modal offering the desktop wallet per platform.
+// Wallet download, bottom-left, mirroring the version marker on the right.
 //
-// Only the build that actually exists is live. The rest are shown but disabled
-// rather than hidden, so a visitor sees the platforms coming without being able
-// to click a link to a file that isn't there — a dead download is worse than an
-// obviously pending one.
+// Instructions are per-platform because getting an unsigned app to run differs
+// completely across operating systems, and a generic note helps nobody. Only
+// the build that exists is downloadable; the rest are shown disabled so a
+// visitor sees them coming without being able to click through to a missing
+// file.
 
 const WALLET_VERSION = "69.0.1";
+const MAC_APP = "Divi Desktop 69.01.app";
+
+interface Step {
+  title: string;
+  body: React.ReactNode;
+}
 
 interface Platform {
   id: string;
   label: string;
   detail: string;
-  href?: string; // present => available
+  href?: string;
+  steps?: Step[];
 }
+
+const MAC_STEPS: Step[] = [
+  {
+    title: "Install",
+    body: (
+      <>
+        Double-click the downloaded <strong>.dmg</strong>, then drag{" "}
+        <strong>Divi Desktop</strong> into the Applications folder.
+      </>
+    ),
+  },
+  {
+    title: "Get past the security block",
+    body: (
+      <>
+        macOS <strong>will</strong> block the first launch, because this build is not code-signed
+        yet. To allow it: open <strong>System Settings</strong>, go to{" "}
+        <strong>Privacy &amp; Security</strong>, scroll to the Security section, find the line
+        saying Divi Desktop was blocked, and click <strong>Open Anyway</strong>. Confirm with your
+        password or Touch ID.
+        <br />
+        <span className="dl-alt">
+          If that option is missing, open <strong>Terminal</strong> and run this, then open the app
+          normally:
+        </span>
+        <code className="dl-code">xattr -dr com.apple.quarantine "/Applications/{MAC_APP}"</code>
+      </>
+    ),
+  },
+  {
+    title: "Allow it to connect",
+    body: (
+      <>
+        On first launch macOS asks whether to allow incoming network connections. Click{" "}
+        <strong>Allow</strong>, so the wallet can reach the Divi network. If you run{" "}
+        <strong>Little Snitch</strong>, <strong>LuLu</strong>, or another firewall, allow Divi
+        Desktop&apos;s outgoing connections when it prompts.
+        <br />
+        <span className="dl-alt">
+          Optional, for advanced users: to accept incoming peers, forward TCP port{" "}
+          <strong>51472</strong> on your router. The wallet works fully without this.
+        </span>
+      </>
+    ),
+  },
+];
 
 const PLATFORMS: Platform[] = [
   {
@@ -24,6 +77,7 @@ const PLATFORMS: Platform[] = [
     label: "macOS (Apple Silicon)",
     detail: "M1 / M2 / M3 and newer",
     href: "/downloads/Divi-Desktop-69.0.1-AppleSilicon.dmg",
+    steps: MAC_STEPS,
   },
   { id: "mac-intel", label: "macOS (Intel)", detail: "Coming soon" },
   { id: "windows", label: "Windows", detail: "Coming soon" },
@@ -32,6 +86,8 @@ const PLATFORMS: Platform[] = [
 
 export function DownloadButton() {
   const [open, setOpen] = useState(false);
+  // Which platform's instructions are showing. Defaults to the one available.
+  const [selected, setSelected] = useState<string>("mac-arm");
 
   useEffect(() => {
     if (!open) return;
@@ -39,6 +95,8 @@ export function DownloadButton() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  const active = PLATFORMS.find((p) => p.id === selected && p.href);
 
   return (
     <>
@@ -66,7 +124,13 @@ export function DownloadButton() {
               <div className="dl-list">
                 {PLATFORMS.map((p) =>
                   p.href ? (
-                    <a key={p.id} className="dl-item dl-item-on" href={p.href} download>
+                    <a
+                      key={p.id}
+                      className="dl-item dl-item-on"
+                      href={p.href}
+                      download
+                      onClick={() => setSelected(p.id)}
+                    >
                       <span className="dl-item-main">{p.label}</span>
                       <span className="dl-item-detail">{p.detail}</span>
                       <span className="dl-item-go">Download ↓</span>
@@ -80,17 +144,16 @@ export function DownloadButton() {
                 )}
               </div>
 
-              <p className="dl-note">
-                {/* Say exactly what to do with it, since a .dmg is unfamiliar to
-                    many people and "it downloaded, now what?" is where installs
-                    stall. */}
-                Double-click the downloaded file, then drag <strong>Divi Desktop</strong> into your
-                Applications folder. That&apos;s it — open it from Applications like any other app.
-              </p>
-              <p className="dl-note muted">
-                Not code-signed yet, so the first time you open it macOS may ask you to confirm:
-                right-click the app and choose <strong>Open</strong>.
-              </p>
+              {active?.steps && (
+                <ol className="dl-steps">
+                  {active.steps.map((s) => (
+                    <li key={s.title}>
+                      <span className="dl-step-title">{s.title}</span>
+                      <span className="dl-step-body">{s.body}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
             </div>
           </div>,
           document.body,
