@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getAddressBalance, getAddressTxids, scanAddress, type ScanAddress } from "../api";
+import { labelFor, labelTag } from "../labels";
 import { fmtDivi, shortHash } from "../format";
 
 export function AddressPage() {
@@ -47,6 +48,10 @@ export function AddressPage() {
         <h2 className="section-title">Address</h2>
         <p className="hash" style={{ marginTop: 0 }}>
           {address}
+          {(() => {
+            const l = labelFor(address);
+            return l ? <span className="addr-label" title={l.source}>{labelTag(l)}</span> : null;
+          })()}
         </p>
         {balance && !hasScan && (
           <dl className="kv">

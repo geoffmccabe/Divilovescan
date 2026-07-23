@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { scanRichList, type RichList } from "../api";
+import { labelFor, labelTag } from "../labels";
 
 // Rich List — ranked by OWNER, not by whoever stakes the coins.
 //
@@ -88,6 +89,10 @@ export function RichListPage() {
                     <Link to={`/address/${r.address}`} className="mono">
                       {r.address}
                     </Link>
+                    {(() => {
+                      const l = labelFor(r.address);
+                      return l ? <span className="addr-label" title={l.source}>{labelTag(l)}</span> : null;
+                    })()}
                   </td>
                   <td className="mono" style={{ textAlign: "right" }}>
                     {Math.round(r.balance / 1e8).toLocaleString()}
