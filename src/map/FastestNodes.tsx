@@ -109,10 +109,7 @@ export function FastestNodes({
           ×
         </button>
       </div>
-      <div className="fn-note">
-        Every known node, pinged from the scanner and ordered by response. This favours nodes
-        near the scanner, so it is <strong>not</strong> a fair contest between nodes.
-      </div>
+      <div className="fn-note">Node response time, pinged from the Scanner Node</div>
       <div className="fn-cols">
         <span>Country</span>
         <span>Distance</span>

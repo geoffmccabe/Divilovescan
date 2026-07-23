@@ -664,7 +664,7 @@ tr:last-child td { border-bottom: 0; }
 .nm-self { background: hsl(var(--warning)); }
 .netmap-canvas-wrap { cursor: grab; }
 .netmap-canvas-wrap:active { cursor: grabbing; }
-.nm-count { margin-left: auto; color: hsl(var(--foreground)); }
+.nm-count { color: hsl(var(--foreground)); }
 .netmap-canvas-wrap {
   flex: 1; position: relative; min-height: 320px; border-radius: 12px; overflow: hidden;
   background: radial-gradient(ellipse at center, hsl(var(--primary) / 0.05), transparent 70%);
@@ -960,7 +960,7 @@ tr:last-child td { border-bottom: 0; }
 
 /* ---- Fastest Nodes panel (top-right of the map) ---- */
 .nm-fastbtn {
-  margin-left: 10px; padding: 2px 8px; border-radius: 7px; cursor: pointer;
+  margin-left: auto; padding: 2px 8px; border-radius: 7px; cursor: pointer;
   background: hsl(var(--primary) / 0.16); border: 1px solid hsl(var(--primary) / 0.45);
   color: hsl(var(--primary)); font-size: 0.82rem; line-height: 1.2;
 }
