@@ -233,10 +233,13 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
     const out = new Map<string, FastCandidate>();
     const geos = geosRef.current;
     for (const p of snapRef.current?.peers ?? []) {
-      out.set(p.ip, { ip: p.ip, country: geos[p.ip]?.country });
+      const g = geos[p.ip];
+      out.set(p.ip, { ip: p.ip, country: g?.country, lat: g?.lat, lon: g?.lon });
     }
     for (const [ip, kp] of Object.entries(knownRef.current)) {
-      if (!out.has(ip)) out.set(ip, { ip, country: kp.country || geos[ip]?.country });
+      if (!out.has(ip)) {
+        out.set(ip, { ip, country: kp.country || geos[ip]?.country, lat: kp.lat, lon: kp.lon });
+      }
     }
     return [...out.values()];
   };
@@ -1057,7 +1060,13 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
       </div>
       <div className="netmap-canvas-wrap" ref={wrapRef}>
         <canvas ref={canvasRef} className="netmap-canvas" />
-        {showFastest && <FastestNodes nodes={fastCandidates()} onClose={() => setShowFastest(false)} />}
+        {showFastest && (
+          <FastestNodes
+            nodes={fastCandidates()}
+            self={selfRef.current ? { lat: selfRef.current.lat, lon: selfRef.current.lon } : null}
+            onClose={() => setShowFastest(false)}
+          />
+        )}
         <NodesByCountry rows={nodesByCountry} />
         
         {hover && (

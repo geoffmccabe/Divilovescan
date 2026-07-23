@@ -968,7 +968,7 @@ tr:last-child td { border-bottom: 0; }
 
 .fastnodes {
   position: absolute; right: 12px; top: 12px; z-index: 9;
-  width: 236px; max-height: 300px;
+  width: 250px; max-height: 340px;
   display: flex; flex-direction: column;
   background: hsl(var(--background) / 0.86);
   backdrop-filter: blur(10px);
@@ -1004,3 +1004,16 @@ tr:last-child td { border-bottom: 0; }
 .fn-ip { color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: 0.7rem; }
 .fn-ms { color: hsl(var(--success)); font-family: var(--font-mono); font-weight: 600; text-align: right; }
 .fn-empty { padding: 10px; font-size: 0.72rem; color: hsl(var(--muted-foreground)); }
+
+/* Explanation lines in the Best Connected panel. The ranking is unintuitive by
+   design, so it has to say what it means or it reads as wrong. */
+.fn-note {
+  padding: 6px 10px 0; font-size: 0.68rem; line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+}
+.fn-note strong { color: hsl(var(--success)); }
+.fn-foot {
+  padding: 6px 10px 8px; font-size: 0.63rem; line-height: 1.35;
+  color: hsl(var(--muted-foreground)); opacity: 0.75;
+  border-top: 1px solid hsl(var(--border));
+}
