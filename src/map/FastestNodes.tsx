@@ -9,7 +9,7 @@ export interface FastCandidate {
 }
 interface Ranked extends FastCandidate {
   ms: number;
-  km: number;
+  km: number | null;
 }
 
 /** Great-circle distance in km. */
@@ -55,6 +55,10 @@ export function FastestNodes({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [rows, setRows] = useState<Ranked[] | null>(null);
+  // How many were asked vs how many answered: with the full 30-day set, a good
+  // number are simply offline now, and that is worth stating rather than
+  // quietly showing a short list.
+  const [asked, setAsked] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
@@ -71,6 +75,7 @@ export function FastestNodes({
   useEffect(() => {
     let alive = true;
     const byIp = new Map(nodes.map((n) => [n.ip, n]));
+    setAsked(byIp.size);
     scanProbe([...byIp.keys()])
       .then((res) => {
         if (!alive) return;
@@ -78,12 +83,17 @@ export function FastestNodes({
         for (const r of res) {
           if (!r.online || !r.ms) continue;
           const n = byIp.get(r.ip);
-          if (!n || !self || n.lat == null || n.lon == null) continue;
-          const km = haversineKm(self.lat, self.lon, n.lat, n.lon);
+          if (!n) continue;
+          // Distance is shown for context only. A node with no location still
+          // belongs in the ranking, so it is optional rather than a filter.
+          const km =
+            self && n.lat != null && n.lon != null
+              ? haversineKm(self.lat, self.lon, n.lat, n.lon)
+              : null;
           ranked.push({ ...n, ms: r.ms, km });
         }
         ranked.sort((a, b) => a.ms - b.ms);
-        setRows(ranked.slice(0, 12));
+        setRows(ranked);
       })
       .catch(() => alive && setRows([]));
     return () => {
@@ -94,14 +104,14 @@ export function FastestNodes({
   return (
     <div className="fastnodes" ref={ref}>
       <div className="fn-head">
-        <span className="fn-title">Peer Response Times</span>
+        <span className="fn-title">Node Speed</span>
         <button type="button" className="fn-close" onClick={onClose} title="Close">
           ×
         </button>
       </div>
       <div className="fn-note">
-        Round trip from the scanner node, so this mostly reflects distance from it and is
-        <strong> not</strong> a ranking of node quality.
+        Every known node, pinged from the scanner and ordered by response. This favours nodes
+        near the scanner, so it is <strong>not</strong> a fair contest between nodes.
       </div>
       <div className="fn-cols">
         <span>Country</span>
@@ -110,12 +120,12 @@ export function FastestNodes({
       </div>
       <div className="fn-list">
         {rows === null ? (
-          <div className="fn-empty">Measuring the network…</div>
+          <div className="fn-empty">Pinging {asked} nodes…</div>
         ) : rows.length === 0 ? (
           <div className="fn-empty">No nodes answered.</div>
         ) : (
           rows.map((r, i) => (
-            <div key={r.ip} className="fn-row" title={`${r.ip} — ${r.ms}ms over ${Math.round(r.km).toLocaleString()}km`}>
+            <div key={r.ip} className="fn-row" title={r.km == null ? `${r.ip} — ${r.ms}ms` : `${r.ip} — ${r.ms}ms over ${Math.round(r.km).toLocaleString()}km`}>
               <span className="fn-country">
                 <span className="fn-rank">{i + 1}</span>
                 {r.country || "Unknown"}
@@ -123,7 +133,7 @@ export function FastestNodes({
               <span className="fn-ip">
                 {/* Full precision: rounding to the nearest 1,000 km collapsed
                     five different US cities into an identical "6k". */}
-                {Math.round(r.km).toLocaleString()} km
+                {r.km == null ? "—" : `${Math.round(r.km).toLocaleString()} km`}
               </span>
               <span className="fn-ms">{r.ms}</span>
             </div>
@@ -131,8 +141,9 @@ export function FastestNodes({
         )}
       </div>
       <div className="fn-foot">
-        Truly comparing node speed needs each node to measure and report its own latency. The
-        protocol cannot carry that today.
+        {rows === null
+          ? "Measuring every node the map knows."
+          : `${rows.length} of ${asked} answered. The rest are offline or not accepting connections.`}
       </div>
     </div>
   );

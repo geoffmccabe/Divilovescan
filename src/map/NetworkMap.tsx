@@ -232,14 +232,17 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
   const fastCandidates = (): FastCandidate[] => {
     const out = new Map<string, FastCandidate>();
     const geos = geosRef.current;
+    // The scanner is in the known set, and pinging itself returns ~1ms, so it
+    // would trivially top its own speed test. Exclude it.
+    const selfIp = snapRef.current?.selfIp ?? selfRef.current?.ip ?? null;
     for (const p of snapRef.current?.peers ?? []) {
+      if (p.ip === selfIp) continue;
       const g = geos[p.ip];
       out.set(p.ip, { ip: p.ip, country: g?.country, lat: g?.lat, lon: g?.lon });
     }
     for (const [ip, kp] of Object.entries(knownRef.current)) {
-      if (!out.has(ip)) {
-        out.set(ip, { ip, country: kp.country || geos[ip]?.country, lat: kp.lat, lon: kp.lon });
-      }
+      if (ip === selfIp || out.has(ip)) continue;
+      out.set(ip, { ip, country: kp.country || geos[ip]?.country, lat: kp.lat, lon: kp.lon });
     }
     return [...out.values()];
   };
