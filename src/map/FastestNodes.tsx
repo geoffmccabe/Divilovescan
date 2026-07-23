@@ -10,8 +10,6 @@ export interface FastCandidate {
 interface Ranked extends FastCandidate {
   ms: number;
   km: number;
-  /** Actual round trip divided by the physical minimum for that distance. */
-  eff: number;
 }
 
 /** Great-circle distance in km. */
@@ -26,25 +24,25 @@ function haversineKm(aLat: number, aLon: number, bLat: number, bLon: number): nu
 }
 
 /**
- * Node responsiveness, ranked FAIRLY.
+ * Round-trip time from THIS node to each peer. Presented as a plain fact about
+ * the scanner's own connections, with no claim about node quality.
  *
- * Ranking by raw ping is close to meaningless on a public explorer: it only
- * says which nodes sit nearest the scanner. Measured from London it listed
- * nothing but Germany and France, and a US node answering in 86ms across
- * 8,755km never appeared, even though that is a far better result.
+ * Two rankings were tried here and both were withdrawn as unsound:
  *
- * So each node is scored against the physical limit for its own distance.
- * Light in fibre travels ~200,000 km/s, so the fastest a round trip can
- * possibly be is roughly distance/100 milliseconds. Dividing the real round
- * trip by that floor gives a figure independent of where the node happens to
- * be: 1.0x means it is running at the speed of light, 5x means five times
- * slower than physics requires.
+ *  1. Raw ping "fastest nodes" only measured proximity to the scanner. From
+ *     London it listed nothing but Germany and France, by construction.
+ *  2. Normalising that by great-circle distance looked fairer but rests on an
+ *     assumption that is false: fibre does not run in straight lines. A Denver
+ *     node may route via Chicago and New York before crossing the Atlantic, so
+ *     a "1.0x the speed of light" score can just as easily mean the IP
+ *     geolocated near a cable landing as that the node is any good.
  *
- * On live data the two rankings shared NOT ONE node in their top tens.
+ * Sync freshness was checked as a third option and does not discriminate:
+ * 39 of 43 peers sit exactly at the chain tip and the rest are 1-2 blocks back.
  *
- * Honest limits, stated in the panel: IP geolocation is approximate, real
- * routes are never great-circle, and this is a single sample rather than an
- * average, so treat it as indicative rather than exact.
+ * Genuinely ranking node speed needs each node to measure and report its own
+ * latency to its peers, which the protocol has no way to carry today. That is a
+ * node-software feature, not something an explorer can infer.
  */
 export function FastestNodes({
   nodes,
@@ -82,13 +80,10 @@ export function FastestNodes({
           const n = byIp.get(r.ip);
           if (!n || !self || n.lat == null || n.lon == null) continue;
           const km = haversineKm(self.lat, self.lon, n.lat, n.lon);
-          // Floor the expected time so a node in the same city doesn't divide
-          // by ~0 and score as absurdly bad.
-          const floorMs = Math.max(1, km / 100);
-          ranked.push({ ...n, ms: r.ms, km, eff: r.ms / floorMs });
+          ranked.push({ ...n, ms: r.ms, km });
         }
-        ranked.sort((a, b) => a.eff - b.eff);
-        setRows(ranked.slice(0, 10));
+        ranked.sort((a, b) => a.ms - b.ms);
+        setRows(ranked.slice(0, 12));
       })
       .catch(() => alive && setRows([]));
     return () => {
@@ -99,19 +94,19 @@ export function FastestNodes({
   return (
     <div className="fastnodes" ref={ref}>
       <div className="fn-head">
-        <span className="fn-title">Best Connected</span>
+        <span className="fn-title">Peer Response Times</span>
         <button type="button" className="fn-close" onClick={onClose} title="Close">
           ×
         </button>
       </div>
       <div className="fn-note">
-        Speed relative to distance, so a far-off node with an excellent route beats a near one.
-        <strong> 1.0x</strong> is the speed of light in fibre.
+        Round trip from the scanner node, so this mostly reflects distance from it and is
+        <strong> not</strong> a ranking of node quality.
       </div>
       <div className="fn-cols">
         <span>Country</span>
         <span>Distance</span>
-        <span className="fn-ms-h">vs limit</span>
+        <span className="fn-ms-h">ms</span>
       </div>
       <div className="fn-list">
         {rows === null ? (
@@ -126,15 +121,18 @@ export function FastestNodes({
                 {r.country || "Unknown"}
               </span>
               <span className="fn-ip">
-                {r.km >= 1000 ? `${Math.round(r.km / 1000)}k` : Math.round(r.km)}km
+                {/* Full precision: rounding to the nearest 1,000 km collapsed
+                    five different US cities into an identical "6k". */}
+                {Math.round(r.km).toLocaleString()} km
               </span>
-              <span className="fn-ms">{r.eff.toFixed(1)}x</span>
+              <span className="fn-ms">{r.ms}</span>
             </div>
           ))
         )}
       </div>
       <div className="fn-foot">
-        Locations are approximate and this is a single sample, so treat it as indicative.
+        Truly comparing node speed needs each node to measure and report its own latency. The
+        protocol cannot carry that today.
       </div>
     </div>
   );
