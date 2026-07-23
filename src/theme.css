@@ -930,7 +930,7 @@ tr:last-child td { border-bottom: 0; }
 /* ---- Nodes by Country panel (bottom-left of the map) ---- */
 .nbc {
   position: absolute; left: 12px; bottom: 12px; z-index: 8;
-  width: 190px; max-height: 46%;
+  width: 190px; max-height: 260px;
   display: flex; flex-direction: column;
   background: hsl(var(--background) / 0.82);
   backdrop-filter: blur(10px);
@@ -956,3 +956,51 @@ tr:last-child td { border-bottom: 0; }
 .nbc-full { color: hsl(var(--primary)); font-family: var(--font-mono); font-weight: 600; min-width: 22px; text-align: right; }
 .nbc-love { color: hsl(340 90% 68%); font-family: var(--font-mono); min-width: 16px; text-align: right; }
 .nbc-empty { padding: 8px 10px; font-size: 0.72rem; color: hsl(var(--muted-foreground)); }
+
+
+/* ---- Fastest Nodes panel (top-right of the map) ---- */
+.nm-fastbtn {
+  margin-left: 10px; padding: 2px 8px; border-radius: 7px; cursor: pointer;
+  background: hsl(var(--primary) / 0.16); border: 1px solid hsl(var(--primary) / 0.45);
+  color: hsl(var(--primary)); font-size: 0.82rem; line-height: 1.2;
+}
+.nm-fastbtn:hover { background: hsl(var(--primary) / 0.3); }
+
+.fastnodes {
+  position: absolute; right: 12px; top: 12px; z-index: 9;
+  width: 236px; max-height: 300px;
+  display: flex; flex-direction: column;
+  background: hsl(var(--background) / 0.86);
+  backdrop-filter: blur(10px);
+  border: 1px solid hsl(var(--border)); border-radius: 10px; overflow: hidden;
+}
+.fn-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 10px; border-bottom: 1px solid hsl(var(--border));
+}
+.fn-title { font-size: 0.76rem; font-weight: 700; color: hsl(var(--foreground)); }
+.fn-close {
+  background: none; border: 0; color: hsl(var(--muted-foreground));
+  font-size: 1rem; line-height: 1; cursor: pointer; padding: 0 2px;
+}
+.fn-close:hover { color: hsl(var(--foreground)); }
+.fn-cols, .fn-row {
+  display: grid; grid-template-columns: 1fr auto 34px; gap: 8px; align-items: center;
+  padding: 3px 10px;
+}
+.fn-cols {
+  font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground)); padding-top: 6px; padding-bottom: 4px;
+}
+.fn-ms-h { text-align: right; }
+.fn-list { overflow-y: auto; padding-bottom: 6px; }
+.fn-row { font-size: 0.75rem; }
+.fn-row:hover { background: hsl(var(--primary) / 0.08); }
+.fn-country { color: hsl(var(--foreground)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fn-rank {
+  display: inline-block; min-width: 14px; margin-right: 6px;
+  color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: 0.68rem;
+}
+.fn-ip { color: hsl(var(--muted-foreground)); font-family: var(--font-mono); font-size: 0.7rem; }
+.fn-ms { color: hsl(var(--success)); font-family: var(--font-mono); font-weight: 600; text-align: right; }
+.fn-empty { padding: 10px; font-size: 0.72rem; color: hsl(var(--muted-foreground)); }

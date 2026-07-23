@@ -289,6 +289,8 @@ export const scanGeo = (ips: string[]) => rpc<Geo[]>("scan_geo", [ips]);
 export interface Probe {
   ip: string;
   online: boolean;
+  /** TCP round-trip in ms; 0 when unreachable. */
+  ms: number;
 }
 export const scanProbe = (ips: string[]) => rpc<Probe[]>("scan_probe", [ips]);
 

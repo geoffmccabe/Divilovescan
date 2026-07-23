@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { scanPeers, scanProbe, scanKnown, type Peer, type Geo } from "../api";
 import { resolveGeos } from "./geoCache";
 import { loadKnown, recordKnown, type Known } from "./knownPeers";
+import { FastestNodes, type FastCandidate } from "./FastestNodes";
 import worldmap from "../assets/worldmap.json";
 
 // A live map of the peers this node is connected to. At boot it centers on you
@@ -225,6 +226,20 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
   // Peers seen in the last 30 days (grey at startup), and the live probe result.
   const knownRef = useRef<Known>({});
   const arcFx = useRef<Map<string, ArcFx>>(new Map());
+  const [showFastest, setShowFastest] = useState(false);
+
+  // Every node the map knows, as ping candidates for the Fastest Nodes panel.
+  const fastCandidates = (): FastCandidate[] => {
+    const out = new Map<string, FastCandidate>();
+    const geos = geosRef.current;
+    for (const p of snapRef.current?.peers ?? []) {
+      out.set(p.ip, { ip: p.ip, country: geos[p.ip]?.country });
+    }
+    for (const [ip, kp] of Object.entries(knownRef.current)) {
+      if (!out.has(ip)) out.set(ip, { ip, country: kp.country || geos[ip]?.country });
+    }
+    return [...out.values()];
+  };
   // Mirrored into state purely so the legend can show them; the canvas itself
   // works from the refs.
   const [counts, setCounts] = useState({ peers: 0, known: 0 });
@@ -1022,7 +1037,6 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
 
   return (
     <div className="netmap">
-      <NodesByCountry rows={nodesByCountry} />
       <div className="netmap-topbar">
         <div className="netmap-legend">
           <span className="nm-item"><span className="nm-dot nm-out" /> Active Peers</span>
@@ -1030,10 +1044,21 @@ export function NetworkMap({ onReturn }: { onReturn?: () => void }) {
           <span className="nm-item"><span className="nm-dot nm-self" /> Scanner node</span>
           <span className="nm-count nm-count-peers">Peers: {counts.peers}</span>
           <span className="nm-count nm-count-known">30-Day Network: {counts.known}</span>
+          <button
+            type="button"
+            className="nm-fastbtn"
+            onClick={() => setShowFastest((v) => !v)}
+            title="Fastest nodes"
+            aria-label="Fastest nodes"
+          >
+            ⚡
+          </button>
         </div>
       </div>
       <div className="netmap-canvas-wrap" ref={wrapRef}>
         <canvas ref={canvasRef} className="netmap-canvas" />
+        {showFastest && <FastestNodes nodes={fastCandidates()} onClose={() => setShowFastest(false)} />}
+        <NodesByCountry rows={nodesByCountry} />
         
         {hover && (
           <div
@@ -1079,11 +1104,11 @@ function NodesByCountry({ rows }: { rows: { country: string; total: number; love
       <div className="nbc-head">
         <span className="nbc-title">Nodes ({totalNodes})</span>
         <span className="nbc-h-full">FULL</span>
-        <span className="nbc-h-love" title="Love nodes">\u2665</span>
+        <span className="nbc-h-love" title="Love nodes">♥</span>
       </div>
       <div className="nbc-list">
         {rows.length === 0 ? (
-          <div className="nbc-empty">Locating nodes\u2026</div>
+          <div className="nbc-empty">Locating nodes…</div>
         ) : (
           rows.map((r) => (
             <div key={r.country} className="nbc-row">

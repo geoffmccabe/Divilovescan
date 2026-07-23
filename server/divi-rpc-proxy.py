@@ -440,11 +440,16 @@ def net_query(method, params):
         ips = [str(i)[:64] for i in (params[0] if params else [])][:MAX_IPS]
 
         def alive(ip):
+            # Time the TCP handshake to the P2P port. That round trip is the
+            # closest thing to a "ping" available without raw ICMP sockets,
+            # which a non-root service cannot open.
+            t0 = time.monotonic()
             try:
                 with socket.create_connection((ip, PROBE_PORT), timeout=PROBE_TIMEOUT):
-                    return {"ip": ip, "online": True}
+                    ms = int((time.monotonic() - t0) * 1000)
+                    return {"ip": ip, "online": True, "ms": max(1, ms)}
             except Exception:
-                return {"ip": ip, "online": False}
+                return {"ip": ip, "online": False, "ms": 0}
 
         with ThreadPoolExecutor(max_workers=24) as pool:
             return list(pool.map(alive, ips))
