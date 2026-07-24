@@ -10,7 +10,7 @@ import { DownloadGuide } from "./DownloadGuide";
 // visitor sees them coming without being able to click through to a missing
 // file.
 
-const WALLET_VERSION = "69.0.1";
+const WALLET_VERSION = "69.0.2";
 const MAC_APP = "Divi Desktop 69.01.app";
 
 interface Step {
@@ -72,17 +72,67 @@ const MAC_STEPS: Step[] = [
   },
 ];
 
+const LINUX_STEPS: Step[] = [
+  {
+    title: "Install",
+    body: (
+      <>
+        Double-click the downloaded <strong>.deb</strong> file. Your software installer opens —
+        click <strong>Install</strong> and enter your password. It pulls in anything else it needs
+        automatically.
+        <br />
+        <span className="dl-alt">
+          Terminal alternative:{" "}
+          <code className="dl-code">sudo apt install ./Divi-Desktop-69.0.2-Linux-x86_64.deb</code>
+        </span>
+      </>
+    ),
+  },
+  {
+    title: "Open it",
+    body: (
+      <>
+        Find <strong>Divi Desktop</strong> in your applications menu and open it. The first run
+        downloads the Divi node software (a few MB, integrity-checked) and starts syncing the
+        blockchain — this takes hours and uses about 10 GB of disk; the wallet is usable while it
+        catches up.
+      </>
+    ),
+  },
+  {
+    title: "Requirements",
+    body: (
+      <>
+        A recent 64-bit distribution: <strong>Ubuntu 24.04+</strong>, <strong>Debian 13+</strong>,{" "}
+        <strong>Linux Mint 22+</strong> or similar. If your firewall asks, allow Divi Desktop&apos;s
+        network connections.
+        <br />
+        <span className="dl-alt">
+          Optional, for advanced users: to accept incoming peers, forward TCP port{" "}
+          <strong>51472</strong> on your router. The wallet works fully without this.
+        </span>
+      </>
+    ),
+  },
+];
+
 const PLATFORMS: Platform[] = [
   {
     id: "mac-arm",
     label: "macOS (Apple Silicon)",
     detail: "M1 / M2 / M3 and newer",
-    href: "/downloads/Divi-Desktop-69.0.1-AppleSilicon.dmg",
+    href: "/downloads/Divi-Desktop-69.0.2-AppleSilicon.dmg",
     steps: MAC_STEPS,
+  },
+  {
+    id: "linux",
+    label: "Linux",
+    detail: "Ubuntu 24.04+ / Debian 13+ / Mint 22+ (x86_64)",
+    href: "/downloads/Divi-Desktop-69.0.2-Linux-x86_64.deb",
+    steps: LINUX_STEPS,
   },
   { id: "mac-intel", label: "macOS (Intel)", detail: "Coming soon" },
   { id: "windows", label: "Windows", detail: "Coming soon" },
-  { id: "linux", label: "Linux", detail: "Coming soon" },
 ];
 
 export function DownloadButton() {
@@ -156,9 +206,13 @@ export function DownloadButton() {
                       </li>
                     ))}
                   </ol>
-                  <button className="dl-moreinfo" onClick={() => setGuide(true)}>
-                    More info: full step-by-step guide for beginners →
-                  </button>
+                  {/* The beginner walkthrough covers the macOS security maze;
+                      Linux has no equivalent hurdle, so no guide there. */}
+                  {active.id === "mac-arm" && (
+                    <button className="dl-moreinfo" onClick={() => setGuide(true)}>
+                      More info: full step-by-step guide for beginners →
+                    </button>
+                  )}
                 </>
               )}
             </div>
