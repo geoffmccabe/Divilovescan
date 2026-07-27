@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Routes, Route, Link, NavLink, useNavigate } from "react-router-dom";
 import { Home } from "./pages/Home";
+import { DivaBlocks } from "./pages/DivaBlocks";
 import { BlockPage } from "./pages/Block";
 import { TxPage } from "./pages/Tx";
 import { AddressPage } from "./pages/Address";
@@ -14,6 +15,7 @@ import { DmtDetail } from "./collectibles/DmtDetail";
 import { StyleDrawer } from "./admin/StyleDrawer";
 import { DownloadButton } from "./Download";
 import { APP_VERSION } from "./version";
+import { useChain } from "./chainMode";
 import heart from "./assets/heart.webp";
 
 // Analysis sections. Each gets its own URL so they're linkable and survive a
@@ -45,10 +47,18 @@ function routeForQuery(q: string): string | null {
   return null;
 }
 
+// The home route follows the chain toggle: DIVI's block list, or DIVA's. They
+// are separate components so each keeps its own hooks (no shared-hook issues).
+function HomeRoute() {
+  const { chain } = useChain();
+  return chain === "diva" ? <DivaBlocks /> : <Home />;
+}
+
 export function App() {
   const [q, setQ] = useState("");
   const [bad, setBad] = useState(false);
   const nav = useNavigate();
+  const { chain, setChain } = useChain();
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +100,23 @@ export function App() {
         </form>
       </header>
 
+      <div className="chain-toggle" role="group" aria-label="Choose chain">
+        <button
+          type="button"
+          className={"chain-opt" + (chain === "divi" ? " on" : "")}
+          onClick={() => setChain("divi")}
+        >
+          DIVI
+        </button>
+        <button
+          type="button"
+          className={"chain-opt" + (chain === "diva" ? " on" : "")}
+          onClick={() => setChain("diva")}
+        >
+          DIVA
+        </button>
+      </div>
+
       {bad && (
         <p className="err" role="alert">
           That doesn't look like a block height, hash, transaction id, Divi address or token ticker.
@@ -109,7 +136,7 @@ export function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomeRoute />} />
         <Route path="/richlist" element={<RichListPage />} />
         <Route path="/chain-health" element={<ChainHealthPage />} />
         <Route path="/charts" element={<ChartsPage />} />

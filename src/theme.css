@@ -1017,3 +1017,27 @@ tr:last-child td { border-bottom: 0; }
   color: hsl(var(--muted-foreground)); opacity: 0.75;
   border-top: 1px solid hsl(var(--border));
 }
+
+/* DIVI / DIVA chain toggle, below the search bar */
+.chain-toggle {
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  margin: 10px auto 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  overflow: hidden;
+}
+.chain-opt {
+  padding: 5px 24px;
+  background: transparent;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.chain-opt.on {
+  background: hsl(var(--accent));
+  color: hsl(var(--primary-foreground));
+}

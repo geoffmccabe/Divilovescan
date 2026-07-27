@@ -378,3 +378,65 @@ export function lotteryPayouts(vout: Vout[], stakedInput: number | null): Lotter
     winnerCount: winners.length,
   };
 }
+
+// ─── DIVA (EVM side-chain) read-only helpers. Talk to /api/diva. ───────────
+async function diva<T>(method: string, params: unknown[] = []): Promise<T> {
+  const res = await fetch("/api/diva", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ method, params }),
+  });
+  const body = (await res.json()) as { result?: T; error?: string };
+  if (!res.ok || body.error) throw new Error(body.error ?? "DIVA query failed.");
+  return body.result as T;
+}
+
+const hexToNum = (h: string | undefined): number => (h ? parseInt(h, 16) : 0);
+
+export interface DivaInfo {
+  chainId: number;
+  height: number;
+  gasPrice: number;
+}
+export interface DivaBlockRow {
+  height: number;
+  hash: string;
+  time: number;
+  txCount: number;
+  gasUsed: number;
+}
+interface EvmBlock {
+  number: string;
+  hash: string;
+  timestamp: string;
+  transactions: string[];
+  gasUsed: string;
+}
+
+export async function divaInfo(): Promise<DivaInfo> {
+  const [cid, bn, gp] = await Promise.all([
+    diva<string>("eth_chainId"),
+    diva<string>("eth_blockNumber"),
+    diva<string>("eth_gasPrice").catch(() => "0x0"),
+  ]);
+  return { chainId: hexToNum(cid), height: hexToNum(bn), gasPrice: hexToNum(gp) };
+}
+
+export async function divaBlockRange(tip: number, count: number): Promise<DivaBlockRow[]> {
+  const heights: number[] = [];
+  for (let h = tip; h > tip - count && h >= 0; h--) heights.push(h);
+  const blocks = await Promise.all(
+    heights.map((h) =>
+      diva<EvmBlock>("eth_getBlockByNumber", ["0x" + h.toString(16), false]).catch(() => null),
+    ),
+  );
+  return blocks
+    .filter((b): b is EvmBlock => b != null)
+    .map((b) => ({
+      height: hexToNum(b.number),
+      hash: b.hash,
+      time: hexToNum(b.timestamp),
+      txCount: Array.isArray(b.transactions) ? b.transactions.length : 0,
+      gasUsed: hexToNum(b.gasUsed),
+    }));
+}
