@@ -1021,9 +1021,9 @@ tr:last-child td { border-bottom: 0; }
 /* DIVI / DIVA chain toggle, below the search bar */
 .chain-toggle {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   width: fit-content;
-  margin: 10px auto 0;
+  margin: 8px 0 0 auto; /* right-aligned, sits under the Search button */
   border: 1px solid hsl(var(--border));
   border-radius: 999px;
   overflow: hidden;

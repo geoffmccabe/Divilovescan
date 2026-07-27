@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Link, NavLink, useNavigate } from "react-router-dom";
+import { Routes, Route, Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { DivaBlocks } from "./pages/DivaBlocks";
 import { BlockPage } from "./pages/Block";
@@ -15,7 +15,6 @@ import { DmtDetail } from "./collectibles/DmtDetail";
 import { StyleDrawer } from "./admin/StyleDrawer";
 import { DownloadButton } from "./Download";
 import { APP_VERSION } from "./version";
-import { useChain } from "./chainMode";
 import heart from "./assets/heart.webp";
 
 // Analysis sections. Each gets its own URL so they're linkable and survive a
@@ -47,18 +46,12 @@ function routeForQuery(q: string): string | null {
   return null;
 }
 
-// The home route follows the chain toggle: DIVI's block list, or DIVA's. They
-// are separate components so each keeps its own hooks (no shared-hook issues).
-function HomeRoute() {
-  const { chain } = useChain();
-  return chain === "diva" ? <DivaBlocks /> : <Home />;
-}
-
 export function App() {
   const [q, setQ] = useState("");
   const [bad, setBad] = useState(false);
   const nav = useNavigate();
-  const { chain, setChain } = useChain();
+  // The toggle is route-based so DIVA is linkable at /diva.
+  const onDiva = useLocation().pathname.startsWith("/diva");
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,15 +96,15 @@ export function App() {
       <div className="chain-toggle" role="group" aria-label="Choose chain">
         <button
           type="button"
-          className={"chain-opt" + (chain === "divi" ? " on" : "")}
-          onClick={() => setChain("divi")}
+          className={"chain-opt" + (!onDiva ? " on" : "")}
+          onClick={() => nav("/")}
         >
           DIVI
         </button>
         <button
           type="button"
-          className={"chain-opt" + (chain === "diva" ? " on" : "")}
-          onClick={() => setChain("diva")}
+          className={"chain-opt" + (onDiva ? " on" : "")}
+          onClick={() => nav("/diva")}
         >
           DIVA
         </button>
@@ -136,7 +129,8 @@ export function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<HomeRoute />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/diva" element={<DivaBlocks />} />
         <Route path="/richlist" element={<RichListPage />} />
         <Route path="/chain-health" element={<ChainHealthPage />} />
         <Route path="/charts" element={<ChartsPage />} />
