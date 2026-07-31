@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { CopyCmd } from "./CopyCmd";
+import { MAC_APP } from "./walletVersion";
 
 // The full beginner walkthrough behind "More info". Written for someone who has
 // never opened Terminal. Ordering matters: it LEADS with the one command that
@@ -8,7 +9,6 @@ import { CopyCmd } from "./CopyCmd";
 // button is missing or ineffective on recent versions — real user feedback was
 // "none of the guides worked other than the xattr command."
 
-const MAC_APP = "Divi Desktop 69.01.app";
 const UNLOCK = `xattr -dr com.apple.quarantine "/Applications/${MAC_APP}"`;
 
 interface Section {

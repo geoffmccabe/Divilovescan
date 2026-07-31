@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { DownloadGuide } from "./DownloadGuide";
 import { CopyCmd } from "./CopyCmd";
+import { WALLET_VERSION, MAC_APP, MAC_DMG, LINUX_DEB } from "./walletVersion";
 
 // Wallet download, bottom-left, mirroring the version marker on the right.
 //
@@ -11,8 +12,6 @@ import { CopyCmd } from "./CopyCmd";
 // visitor sees them coming without being able to click through to a missing
 // file.
 
-const WALLET_VERSION = "69.0.3";
-const MAC_APP = "Divi Desktop 69.01.app";
 
 interface Step {
   title: string;
@@ -112,14 +111,14 @@ const PLATFORMS: Platform[] = [
     id: "mac-arm",
     label: "macOS (Apple Silicon)",
     detail: "M1 / M2 / M3 and newer",
-    href: "/downloads/Divi-Desktop-69.0.3-AppleSilicon.dmg",
+    href: `/downloads/${MAC_DMG}`,
     steps: MAC_STEPS,
   },
   {
     id: "linux",
     label: "Linux",
     detail: "Ubuntu 24.04+ / Debian 13+ / Mint 22+ (x86_64)",
-    href: "/downloads/Divi-Desktop-69.0.2-Linux-x86_64.deb",
+    href: `/downloads/${LINUX_DEB}`,
     steps: LINUX_STEPS,
   },
   { id: "mac-intel", label: "macOS (Intel)", detail: "Coming soon" },
