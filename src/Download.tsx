@@ -29,7 +29,7 @@ interface Platform {
 
 const MAC_STEPS: Step[] = [
   {
-    title: "1. Install",
+    title: "Install",
     body: (
       <>
         Double-click the downloaded <strong>.dmg</strong>, then drag{" "}
@@ -38,7 +38,7 @@ const MAC_STEPS: Step[] = [
     ),
   },
   {
-    title: "2. Unlock it (one command)",
+    title: "Unlock it (one command)",
     body: (
       <>
         Apple blocks apps whose developer hasn&apos;t paid Apple&apos;s yearly fee, so you have to
@@ -53,7 +53,7 @@ const MAC_STEPS: Step[] = [
     ),
   },
   {
-    title: "3. Open it",
+    title: "Open it",
     body: (
       <>
         Open it from <strong>Applications</strong> — it launches normally now. When macOS asks about
