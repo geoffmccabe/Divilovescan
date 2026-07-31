@@ -11,7 +11,7 @@ import { CopyCmd } from "./CopyCmd";
 // visitor sees them coming without being able to click through to a missing
 // file.
 
-const WALLET_VERSION = "69.0.2";
+const WALLET_VERSION = "69.0.3";
 const MAC_APP = "Divi Desktop 69.01.app";
 
 interface Step {
@@ -112,7 +112,7 @@ const PLATFORMS: Platform[] = [
     id: "mac-arm",
     label: "macOS (Apple Silicon)",
     detail: "M1 / M2 / M3 and newer",
-    href: "/downloads/Divi-Desktop-69.0.2-AppleSilicon.dmg",
+    href: "/downloads/Divi-Desktop-69.0.3-AppleSilicon.dmg",
     steps: MAC_STEPS,
   },
   {
