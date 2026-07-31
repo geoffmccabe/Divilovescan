@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { DownloadGuide } from "./DownloadGuide";
+import { CopyCmd } from "./CopyCmd";
 
 // Wallet download, bottom-left, mirroring the version marker on the right.
 //
@@ -28,45 +29,35 @@ interface Platform {
 
 const MAC_STEPS: Step[] = [
   {
-    title: "Install",
+    title: "1. Install",
     body: (
       <>
         Double-click the downloaded <strong>.dmg</strong>, then drag{" "}
-        <strong>Divi Desktop</strong> into the Applications folder.
+        <strong>Divi Desktop</strong> into the <strong>Applications</strong> folder.
       </>
     ),
   },
   {
-    title: "Get past the security block",
+    title: "2. Unlock it (one command)",
     body: (
       <>
-        macOS <strong>will</strong> block the first launch, because this build is not code-signed
-        yet. To allow it: open <strong>System Settings</strong>, go to{" "}
-        <strong>Privacy &amp; Security</strong>, scroll to the Security section, find the line
-        saying Divi Desktop was blocked, and click <strong>Open Anyway</strong>. Confirm with your
-        password or Touch ID.
-        <br />
+        Apple blocks apps whose developer hasn&apos;t paid Apple&apos;s yearly fee, so you have to
+        approve it once. Open <strong>Terminal</strong> (Command + Space, type &quot;Terminal&quot;),
+        then copy, paste, and press Return:
+        <CopyCmd cmd={`xattr -dr com.apple.quarantine "/Applications/${MAC_APP}"`} />
         <span className="dl-alt">
-          If that option is missing, open <strong>Terminal</strong> and run this, then open the app
-          normally:
+          Enter your Mac password if asked (it stays hidden as you type). Nothing visible happens —
+          that means it worked.
         </span>
-        <code className="dl-code">xattr -dr com.apple.quarantine "/Applications/{MAC_APP}"</code>
       </>
     ),
   },
   {
-    title: "Allow it to connect",
+    title: "3. Open it",
     body: (
       <>
-        On first launch macOS asks whether to allow incoming network connections. Click{" "}
-        <strong>Allow</strong>, so the wallet can reach the Divi network. If you run{" "}
-        <strong>Little Snitch</strong>, <strong>LuLu</strong>, or another firewall, allow Divi
-        Desktop&apos;s outgoing connections when it prompts.
-        <br />
-        <span className="dl-alt">
-          Optional, for advanced users: to accept incoming peers, forward TCP port{" "}
-          <strong>51472</strong> on your router. The wallet works fully without this.
-        </span>
+        Open it from <strong>Applications</strong> — it launches normally now. When macOS asks about
+        network connections, click <strong>Allow</strong> so the wallet can reach the Divi network.
       </>
     ),
   },

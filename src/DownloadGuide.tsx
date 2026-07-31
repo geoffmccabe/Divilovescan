@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { CopyCmd } from "./CopyCmd";
 
 // The full beginner walkthrough behind "More info". Written for someone who has
-// never opened Terminal, doesn't know what a firewall is, and needs to be told
-// what each screen looks like. Every step is what they physically do and see,
-// in order, with no assumed knowledge.
+// never opened Terminal. Ordering matters: it LEADS with the one command that
+// reliably works on current macOS, because the System-Settings "Open Anyway"
+// button is missing or ineffective on recent versions — real user feedback was
+// "none of the guides worked other than the xattr command."
 
 const MAC_APP = "Divi Desktop 69.01.app";
+const UNLOCK = `xattr -dr com.apple.quarantine "/Applications/${MAC_APP}"`;
 
 interface Section {
   heading: string;
@@ -15,115 +18,85 @@ interface Section {
 
 const MAC_GUIDE: Section[] = [
   {
-    heading: "1. Open the download",
+    heading: "Why this extra step exists",
     steps: [
       <>
-        Find the file you just downloaded. It is in your <strong>Downloads</strong> folder, or you
-        can click it in your browser&apos;s downloads list. Its name ends in <strong>.dmg</strong>.
-      </>,
-      <>
-        Double-click that file. A small window opens showing the Divi Desktop icon next to a
-        shortcut to your Applications folder.
+        Apple only lets apps open without a warning if the developer pays Apple a yearly fee and
+        registers with them. Divi Desktop hasn&apos;t done that yet, so macOS blocks it the first
+        time. The app is safe; you just have to tell your Mac to trust it once. It takes about a
+        minute.
       </>,
     ],
   },
   {
-    heading: "2. Install it",
+    heading: "1. Install it",
     steps: [
       <>
-        In that window, drag the <strong>Divi Desktop</strong> icon on top of the{" "}
-        <strong>Applications</strong> folder shown beside it. This copies the app onto your Mac.
-      </>,
-      <>Close the window. You can throw away the .dmg file now if you like.</>,
-    ],
-  },
-  {
-    heading: "3. Open it for the first time",
-    steps: [
-      <>
-        Open your <strong>Applications</strong> folder and double-click <strong>Divi Desktop</strong>.
-        (Or press <strong>Command + Space</strong>, type &quot;Divi&quot;, and press Return.)
+        Double-click the downloaded <strong>.dmg</strong> file (it&apos;s in your{" "}
+        <strong>Downloads</strong> folder). A window opens with the Divi Desktop icon and your
+        Applications folder.
       </>,
       <>
-        macOS <strong>will</strong> stop it and show a message saying it cannot check the app, or
-        that it is from an unidentified developer. This is normal for a brand-new app. Click{" "}
-        <strong>Done</strong>. Do not click &quot;Move to Trash&quot;.
+        Drag the <strong>Divi Desktop</strong> icon onto the <strong>Applications</strong> folder
+        beside it. Then close the window. This is important — the next step expects the app to be in
+        Applications.
       </>,
     ],
   },
   {
-    heading: "4. Allow the app (the normal way)",
+    heading: "2. Unlock it (the one step that always works)",
     steps: [
-      <>
-        Open <strong>System Settings</strong>. It is the grey gear icon in your Dock, or click the
-        Apple logo at the very top-left of the screen and choose System Settings.
-      </>,
-      <>
-        In the list on the left, click <strong>Privacy &amp; Security</strong>.
-      </>,
-      <>
-        Scroll down to the <strong>Security</strong> section. You will see a line that says{" "}
-        <em>&quot;Divi Desktop was blocked to protect your Mac.&quot;</em>
-      </>,
-      <>
-        Click the <strong>Open Anyway</strong> button next to that line.
-      </>,
-      <>Enter your Mac password, or use Touch ID, when it asks.</>,
-      <>
-        One last warning appears. Click <strong>Open</strong>. Divi Desktop starts. You only do this
-        once.
-      </>,
-    ],
-  },
-  {
-    heading: "5. If there is no \"Open Anyway\" button (the Terminal way)",
-    steps: [
-      <>
-        This is a backup method that removes the block in one line. You do not need to understand
-        it, just copy it exactly.
-      </>,
       <>
         Press <strong>Command + Space</strong>, type <strong>Terminal</strong>, and press Return. A
-        plain text window opens.
+        plain text window opens. Don&apos;t worry — you&apos;ll paste one line and be done.
       </>,
       <>
-        Click the box below once to select the whole line, then copy it with{" "}
-        <strong>Command + C</strong>:
-        <code className="dg-code">xattr -dr com.apple.quarantine &quot;/Applications/{MAC_APP}&quot;</code>
+        Click <strong>Copy</strong> below, click into the Terminal window, paste with{" "}
+        <strong>Command + V</strong>, and press Return:
+        <CopyCmd cmd={UNLOCK} />
       </>,
       <>
-        Click in the Terminal window, paste with <strong>Command + V</strong>, and press Return.
+        If it asks for your password, type it (the screen won&apos;t show anything as you type — that
+        is normal) and press Return. Nothing visible happens afterward. That means it worked.
       </>,
-      <>
-        Nothing visible happens. That is correct. Close Terminal and open Divi Desktop normally.
-      </>,
+      <>Close Terminal.</>,
     ],
   },
   {
-    heading: "6. The network pop-up",
+    heading: "3. Open Divi Desktop",
     steps: [
       <>
-        The first time Divi Desktop runs, macOS may ask:{" "}
-        <em>&quot;Do you want the application Divi Desktop to accept incoming network
-        connections?&quot;</em>
+        Open your <strong>Applications</strong> folder and double-click <strong>Divi Desktop</strong>
+        . It now opens normally, with no warning. You only did the unlock step once — you won&apos;t
+        need it again.
       </>,
       <>
-        Click <strong>Allow</strong>. This lets the wallet connect to the Divi network. If you click
-        Don&apos;t Allow by accident, the wallet still works, it just reaches fewer computers.
+        The first time it runs, macOS may ask whether to allow incoming network connections. Click{" "}
+        <strong>Allow</strong> so the wallet can reach the Divi network.
       </>,
     ],
   },
   {
-    heading: "7. If you use a security app (most people don't)",
+    heading: "Didn't want to use Terminal? (alternative)",
+    steps: [
+      <>
+        On some older Macs you can skip Terminal: double-click the app, click <strong>Done</strong> on
+        the warning, then open <strong>System Settings → Privacy &amp; Security</strong>, scroll to the
+        Security section, and click <strong>Open Anyway</strong> next to the Divi Desktop line.
+      </>,
+      <>
+        On recent macOS that button is often missing — if you don&apos;t see it, use the one-line
+        unlock command above instead. It does the same thing, more reliably.
+      </>,
+    ],
+  },
+  {
+    heading: "If you use a security app (most people don't)",
     steps: [
       <>
         Some people install an extra firewall such as <strong>Little Snitch</strong> or{" "}
-        <strong>LuLu</strong>. If you have one, it will pop up asking about Divi Desktop&apos;s
-        connections.
-      </>,
-      <>
-        Choose <strong>Allow</strong> (allow all connections, forever). If you have no idea what
-        these are, you do not have them, and you can ignore this step entirely.
+        <strong>LuLu</strong>. If one pops up asking about Divi Desktop, choose <strong>Allow</strong>.
+        If you have no idea what these are, you don&apos;t have them — ignore this.
       </>,
     ],
   },
