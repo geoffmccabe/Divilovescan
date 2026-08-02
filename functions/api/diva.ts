@@ -13,7 +13,7 @@ interface Env {
   DIVA_ORIGIN?: string;
 }
 
-const FALLBACK_ORIGIN = "https://americans-science-dynamic-elect.trycloudflare.com";
+const FALLBACK_ORIGIN = "";
 
 const ALLOWED = new Set([
   "eth_chainId",
