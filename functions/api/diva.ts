@@ -13,7 +13,7 @@ interface Env {
   DIVA_ORIGIN?: string;
 }
 
-const FALLBACK_ORIGIN = "";
+const FALLBACK_ORIGIN = "https://hugh-keep-evolution-drain.trycloudflare.com";
 
 const ALLOWED = new Set([
   "eth_chainId",
