@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DownloadGuide } from "./DownloadGuide";
 import { CopyCmd } from "./CopyCmd";
 import { WALLET_VERSION, MAC_APP, MAC_DMG, LINUX_DEB } from "./walletVersion";
@@ -126,17 +127,28 @@ const PLATFORMS: Platform[] = [
 ];
 
 export function DownloadButton() {
+  // The panel is linkable at /download so it can be shared directly; the
+  // floating button still opens it in place on any page without touching the URL.
+  const loc = useLocation();
+  const nav = useNavigate();
+  const routeOpen = loc.pathname === "/download";
   const [open, setOpen] = useState(false);
+  const isOpen = open || routeOpen;
+  const close = () => {
+    setOpen(false);
+    if (routeOpen) nav("/", { replace: true });
+  };
   const [guide, setGuide] = useState(false);
   // Which platform's instructions are showing. Defaults to the one available.
   const [selected, setSelected] = useState<string>("mac-arm");
 
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   const active = PLATFORMS.find((p) => p.id === selected && p.href);
 
@@ -146,9 +158,9 @@ export function DownloadButton() {
         ↓ Wallet
       </button>
 
-      {open &&
+      {isOpen &&
         createPortal(
-          <div className="dl-backdrop" onClick={() => setOpen(false)} role="presentation">
+          <div className="dl-backdrop" onClick={close} role="presentation">
             <div
               className="dl-modal panel"
               onClick={(e) => e.stopPropagation()}
@@ -158,7 +170,7 @@ export function DownloadButton() {
             >
               <div className="dl-head">
                 <h3>Download Divi Desktop V{WALLET_VERSION}</h3>
-                <button className="linkbtn" onClick={() => setOpen(false)} aria-label="Close">
+                <button className="linkbtn" onClick={close} aria-label="Close">
                   ✕
                 </button>
               </div>
