@@ -4,7 +4,11 @@
 // from here and can never drift from what the DMG actually contains.
 export const WALLET_VERSION = "69.0.3";
 export const MAC_APP = `Divi Desktop ${WALLET_VERSION}.app`;
-export const MAC_DMG = `Divi-Desktop-${WALLET_VERSION}-AppleSilicon.dmg`;
-// Linux app trails the Mac for now (still needs a rebuild for the newest flow).
-export const LINUX_VERSION = "69.0.2";
+// The macOS build is a Universal binary (Apple Silicon + Intel) as of 69.0.3.
+export const MAC_DMG = `Divi-Desktop-${WALLET_VERSION}-Universal.dmg`;
+// Linux now matches the Mac version.
+export const LINUX_VERSION = "69.0.3";
 export const LINUX_DEB = `Divi-Desktop-${LINUX_VERSION}-Linux-x86_64.deb`;
+// Windows is an EXPERIMENTAL test build: unsigned, and the bundled node daemon
+// is not published for Windows yet, so blockchain sync won't run there.
+export const WIN_EXE = `Divi-Desktop-${WALLET_VERSION}-Windows-x64-setup.exe`;

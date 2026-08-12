@@ -865,6 +865,7 @@ tr:last-child td { border-bottom: 0; }
   text-decoration: none;
 }
 .dl-item-main { grid-area: main; font-weight: 600; font-size: 1.03rem; color: hsl(var(--foreground)); }
+.dl-exp { margin-left: 8px; color: #ff3b3b; font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; vertical-align: middle; }
 .dl-item-detail { grid-area: detail; font-size: 0.87rem; color: hsl(var(--muted-foreground)); }
 .dl-item-go { grid-area: go; align-self: center; font-size: 0.93rem; font-weight: 600; color: hsl(var(--primary)); }
 

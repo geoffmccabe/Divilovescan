@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DownloadGuide } from "./DownloadGuide";
 import { CopyCmd } from "./CopyCmd";
-import { WALLET_VERSION, MAC_APP, MAC_DMG, LINUX_DEB } from "./walletVersion";
+import { WALLET_VERSION, MAC_APP, MAC_DMG, LINUX_DEB, WIN_EXE } from "./walletVersion";
 
 // Wallet download, bottom-left, mirroring the version marker on the right.
 //
@@ -25,6 +25,8 @@ interface Platform {
   detail: string;
   href?: string;
   steps?: Step[];
+  // Shown with a red "Experimental" tag; used for the unsigned Windows test build.
+  experimental?: boolean;
 }
 
 const MAC_STEPS: Step[] = [
@@ -74,7 +76,7 @@ const LINUX_STEPS: Step[] = [
         <br />
         <span className="dl-alt">
           Terminal alternative:{" "}
-          <code className="dl-code">sudo apt install ./Divi-Desktop-69.0.2-Linux-x86_64.deb</code>
+          <code className="dl-code">sudo apt install ./{LINUX_DEB}</code>
         </span>
       </>
     ),
@@ -107,6 +109,39 @@ const LINUX_STEPS: Step[] = [
   },
 ];
 
+const WINDOWS_STEPS: Step[] = [
+  {
+    title: "Install",
+    body: (
+      <>
+        Double-click the downloaded <strong>-setup.exe</strong>. Because this early build
+        isn&apos;t code-signed yet, Windows shows a blue <strong>SmartScreen</strong> warning —
+        click <strong>More info</strong>, then <strong>Run anyway</strong>, and follow the
+        installer.
+      </>
+    ),
+  },
+  {
+    title: "Open it",
+    body: (
+      <>
+        Launch <strong>Divi Desktop</strong> from the Start menu. If Windows Firewall asks,
+        click <strong>Allow</strong> so the wallet can reach the Divi network.
+      </>
+    ),
+  },
+  {
+    title: "Please note — experimental",
+    body: (
+      <>
+        This is an early Windows test build. The app runs, but the built-in node isn&apos;t
+        available on Windows yet, so blockchain sync won&apos;t start here. Please report
+        anything that looks broken.
+      </>
+    ),
+  },
+];
+
 const PLATFORMS: Platform[] = [
   {
     id: "mac-arm",
@@ -122,8 +157,21 @@ const PLATFORMS: Platform[] = [
     href: `/downloads/${LINUX_DEB}`,
     steps: LINUX_STEPS,
   },
-  { id: "mac-intel", label: "macOS (Intel)", detail: "Coming soon" },
-  { id: "windows", label: "Windows", detail: "Coming soon" },
+  {
+    id: "mac-intel",
+    label: "macOS (Intel)",
+    detail: "2019 and earlier Intel Macs",
+    href: `/downloads/${MAC_DMG}`,
+    steps: MAC_STEPS,
+  },
+  {
+    id: "windows",
+    label: "Windows",
+    detail: "Windows 10 / 11 (64-bit)",
+    href: `/downloads/${WIN_EXE}`,
+    steps: WINDOWS_STEPS,
+    experimental: true,
+  },
 ];
 
 export function DownloadButton() {
@@ -185,7 +233,10 @@ export function DownloadButton() {
                       download
                       onClick={() => setSelected(p.id)}
                     >
-                      <span className="dl-item-main">{p.label}</span>
+                      <span className="dl-item-main">
+                        {p.label}
+                        {p.experimental && <span className="dl-exp">Experimental</span>}
+                      </span>
                       <span className="dl-item-detail">{p.detail}</span>
                       <span className="dl-item-go">Download ↓</span>
                     </a>
