@@ -179,7 +179,7 @@ export function DownloadButton() {
   // floating button still opens it in place on any page without touching the URL.
   const loc = useLocation();
   const nav = useNavigate();
-  const routeOpen = loc.pathname === "/download";
+  const routeOpen = loc.pathname === "/downloads" || loc.pathname === "/download";
   const [open, setOpen] = useState(false);
   const isOpen = open || routeOpen;
   const close = () => {
@@ -228,7 +228,7 @@ export function DownloadButton() {
                   p.href ? (
                     <a
                       key={p.id}
-                      className="dl-item dl-item-on"
+                      className={"dl-item dl-item-on" + (p.id === selected ? " dl-item-sel" : "")}
                       href={p.href}
                       download
                       onClick={() => setSelected(p.id)}

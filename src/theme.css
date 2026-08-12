@@ -872,6 +872,9 @@ tr:last-child td { border-bottom: 0; }
 .dl-item-on { cursor: pointer; }
 .dl-item-on:hover { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.08); }
 .dl-item-off { opacity: 0.42; cursor: default; }
+/* Currently-selected platform: 2px bright-green border + dark-grey fill (from black).
+   Listed after the hover rule so it wins on selected items, hovered or not. */
+.dl-item-sel, .dl-item-sel:hover { border: 2px solid #2bd94f; background: #2a2a2a; }
 
 .dl-steps {
   margin: 16px 0 0; padding: 0 0 0 20px;

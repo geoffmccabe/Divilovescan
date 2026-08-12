@@ -130,7 +130,9 @@ export function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* Linkable download panel: renders home underneath, DownloadButton opens the modal. */}
+        {/* Linkable download panel: renders home underneath, DownloadButton opens the modal.
+            Both /downloads (canonical) and /download (alias) work. */}
+        <Route path="/downloads" element={<Home />} />
         <Route path="/download" element={<Home />} />
         <Route path="/diva" element={<DivaBlocks />} />
         <Route path="/richlist" element={<RichListPage />} />
