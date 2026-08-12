@@ -13,7 +13,7 @@ import { StatsPage } from "./pages/Stats";
 import { NfdDetail } from "./collectibles/NfdDetail";
 import { DmtDetail } from "./collectibles/DmtDetail";
 import { StyleDrawer } from "./admin/StyleDrawer";
-import { DownloadButton } from "./Download";
+import { DownloadButton, DownloadPage } from "./Download";
 import { APP_VERSION } from "./version";
 import heart from "./assets/heart.webp";
 
@@ -130,10 +130,9 @@ export function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* Linkable download panel: renders home underneath, DownloadButton opens the modal.
-            Both /downloads (canonical) and /download (alias) work. */}
-        <Route path="/downloads" element={<Home />} />
-        <Route path="/download" element={<Home />} />
+        {/* Standalone download page. Both /downloads (canonical) and /download (alias). */}
+        <Route path="/downloads" element={<DownloadPage />} />
+        <Route path="/download" element={<DownloadPage />} />
         <Route path="/diva" element={<DivaBlocks />} />
         <Route path="/richlist" element={<RichListPage />} />
         <Route path="/chain-health" element={<ChainHealthPage />} />

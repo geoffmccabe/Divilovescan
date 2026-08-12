@@ -1,18 +1,13 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DownloadGuide } from "./DownloadGuide";
 import { CopyCmd } from "./CopyCmd";
 import { WALLET_VERSION, MAC_APP, MAC_DMG, LINUX_DEB, WIN_EXE } from "./walletVersion";
 
-// Wallet download, bottom-left, mirroring the version marker on the right.
-//
-// Instructions are per-platform because getting an unsigned app to run differs
-// completely across operating systems, and a generic note helps nobody. Only
-// the build that exists is downloadable; the rest are shown disabled so a
-// visitor sees them coming without being able to click through to a missing
-// file.
-
+// Wallet download. The floating "↓ Wallet" button (bottom-left, mirroring the
+// version marker on the right) links to the standalone /downloads page. That
+// page lists each platform and shows per-platform install instructions, because
+// getting an unsigned app to run differs completely across operating systems.
 
 interface Step {
   title: string;
@@ -142,11 +137,21 @@ const WINDOWS_STEPS: Step[] = [
   },
 ];
 
+// One macOS build serves both Apple Silicon and Intel (a Universal binary), so
+// there is a single macOS row rather than one per chip.
 const PLATFORMS: Platform[] = [
   {
-    id: "mac-arm",
-    label: "macOS (Apple Silicon)",
-    detail: "M1 / M2 / M3 and newer",
+    id: "windows",
+    label: "Windows",
+    detail: "Windows 10 / 11 (64-bit)",
+    href: `/downloads/${WIN_EXE}`,
+    steps: WINDOWS_STEPS,
+    experimental: true,
+  },
+  {
+    id: "mac",
+    label: "macOS",
+    detail: "Apple Silicon & Intel — one build for every Mac",
     href: `/downloads/${MAC_DMG}`,
     steps: MAC_STEPS,
   },
@@ -157,123 +162,81 @@ const PLATFORMS: Platform[] = [
     href: `/downloads/${LINUX_DEB}`,
     steps: LINUX_STEPS,
   },
-  {
-    id: "mac-intel",
-    label: "macOS (Intel)",
-    detail: "2019 and earlier Intel Macs",
-    href: `/downloads/${MAC_DMG}`,
-    steps: MAC_STEPS,
-  },
-  {
-    id: "windows",
-    label: "Windows",
-    detail: "Windows 10 / 11 (64-bit)",
-    href: `/downloads/${WIN_EXE}`,
-    steps: WINDOWS_STEPS,
-    experimental: true,
-  },
 ];
 
+// Floating button on every page; takes the visitor to the standalone /downloads page.
 export function DownloadButton() {
-  // The panel is linkable at /download so it can be shared directly; the
-  // floating button still opens it in place on any page without touching the URL.
-  const loc = useLocation();
   const nav = useNavigate();
-  const routeOpen = loc.pathname === "/downloads" || loc.pathname === "/download";
-  const [open, setOpen] = useState(false);
-  const isOpen = open || routeOpen;
-  const close = () => {
-    setOpen(false);
-    if (routeOpen) nav("/", { replace: true });
-  };
+  return (
+    <button className="dl-fab" onClick={() => nav("/downloads")} aria-label="Download the Divi wallet">
+      ↓ Wallet
+    </button>
+  );
+}
+
+// The standalone download page, rendered at /downloads (and /download). Picking a
+// platform selects it (green highlight) and swaps the instructions below to that OS.
+// Defaults to Windows, the build currently under test.
+export function DownloadPage() {
+  const [selected, setSelected] = useState<string>("windows");
   const [guide, setGuide] = useState(false);
-  // Which platform's instructions are showing. Defaults to the one available.
-  const [selected, setSelected] = useState<string>("mac-arm");
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
-
   const active = PLATFORMS.find((p) => p.id === selected && p.href);
 
   return (
-    <>
-      <button className="dl-fab" onClick={() => setOpen(true)} aria-label="Download the Divi wallet">
-        ↓ Wallet
-      </button>
+    <div className="dl-page">
+      <div className="dl-panel panel">
+        <div className="dl-head">
+          <h3>Download Divi Desktop V{WALLET_VERSION}</h3>
+        </div>
 
-      {isOpen &&
-        createPortal(
-          <div className="dl-backdrop" onClick={close} role="presentation">
-            <div
-              className="dl-modal panel"
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Download Divi Desktop"
-            >
-              <div className="dl-head">
-                <h3>Download Divi Desktop V{WALLET_VERSION}</h3>
-                <button className="linkbtn" onClick={close} aria-label="Close">
-                  ✕
-                </button>
+        <div className="dl-list">
+          {PLATFORMS.map((p) =>
+            p.href ? (
+              <a
+                key={p.id}
+                className={"dl-item dl-item-on" + (p.id === selected ? " dl-item-sel" : "")}
+                href={p.href}
+                download
+                onClick={() => setSelected(p.id)}
+              >
+                <span className="dl-item-main">
+                  {p.label}
+                  {p.experimental && <span className="dl-exp">Experimental</span>}
+                </span>
+                <span className="dl-item-detail">{p.detail}</span>
+                <span className="dl-item-go">Download ↓</span>
+              </a>
+            ) : (
+              <div key={p.id} className="dl-item dl-item-off" aria-disabled="true">
+                <span className="dl-item-main">{p.label}</span>
+                <span className="dl-item-detail">{p.detail}</span>
               </div>
+            ),
+          )}
+        </div>
 
-              <div className="dl-list">
-                {PLATFORMS.map((p) =>
-                  p.href ? (
-                    <a
-                      key={p.id}
-                      className={"dl-item dl-item-on" + (p.id === selected ? " dl-item-sel" : "")}
-                      href={p.href}
-                      download
-                      onClick={() => setSelected(p.id)}
-                    >
-                      <span className="dl-item-main">
-                        {p.label}
-                        {p.experimental && <span className="dl-exp">Experimental</span>}
-                      </span>
-                      <span className="dl-item-detail">{p.detail}</span>
-                      <span className="dl-item-go">Download ↓</span>
-                    </a>
-                  ) : (
-                    <div key={p.id} className="dl-item dl-item-off" aria-disabled="true">
-                      <span className="dl-item-main">{p.label}</span>
-                      <span className="dl-item-detail">{p.detail}</span>
-                    </div>
-                  ),
-                )}
-              </div>
-
-              {active?.steps && (
-                <>
-                  <ol className="dl-steps">
-                    {active.steps.map((s) => (
-                      <li key={s.title}>
-                        <span className="dl-step-title">{s.title}</span>
-                        <span className="dl-step-body">{s.body}</span>
-                      </li>
-                    ))}
-                  </ol>
-                  {/* The beginner walkthrough covers the macOS security maze;
-                      Linux has no equivalent hurdle, so no guide there. */}
-                  {active.id === "mac-arm" && (
-                    <button className="dl-moreinfo" onClick={() => setGuide(true)}>
-                      More info: full step-by-step guide for beginners →
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
-          </div>,
-          document.body,
+        {active?.steps && (
+          <>
+            <ol className="dl-steps">
+              {active.steps.map((s) => (
+                <li key={s.title}>
+                  <span className="dl-step-title">{s.title}</span>
+                  <span className="dl-step-body">{s.body}</span>
+                </li>
+              ))}
+            </ol>
+            {/* The beginner walkthrough covers the macOS security maze;
+                Linux and Windows have no equivalent, so no guide there. */}
+            {active.id === "mac" && (
+              <button className="dl-moreinfo" onClick={() => setGuide(true)}>
+                More info: full step-by-step guide for beginners →
+              </button>
+            )}
+          </>
         )}
+      </div>
 
       {guide && <DownloadGuide onClose={() => setGuide(false)} />}
-    </>
+    </div>
   );
 }

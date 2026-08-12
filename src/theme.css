@@ -848,6 +848,9 @@ tr:last-child td { border-bottom: 0; }
   display: flex; align-items: center; justify-content: center; padding: 24px;
 }
 .dl-modal { width: min(640px, 100%); }
+/* Standalone /downloads page: centered card within the normal site chrome. */
+.dl-page { display: flex; justify-content: center; padding: 20px 12px 48px; }
+.dl-panel { width: min(640px, 100%); }
 .dl-head {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 14px;
@@ -870,7 +873,8 @@ tr:last-child td { border-bottom: 0; }
 .dl-item-go { grid-area: go; align-self: center; font-size: 0.93rem; font-weight: 600; color: hsl(var(--primary)); }
 
 .dl-item-on { cursor: pointer; }
-.dl-item-on:hover { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.08); }
+/* Neutral hover only — the sole prominent highlight is the green selected item. */
+.dl-item-on:hover { border-color: hsl(0 0% 65% / 0.5); background: hsl(0 0% 100% / 0.03); }
 .dl-item-off { opacity: 0.42; cursor: default; }
 /* Currently-selected platform: 2px bright-green border + dark-grey fill (from black).
    Listed after the hover rule so it wins on selected items, hovered or not. */
