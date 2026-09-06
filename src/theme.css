@@ -1069,3 +1069,63 @@ tr:last-child td { border-bottom: 0; }
   background: hsl(var(--accent));
   color: hsl(var(--primary-foreground));
 }
+
+/* ---- collectibles ----
+   Previews are user-supplied images from a public chain, so every rule here
+   assumes the picture is the wrong size, the wrong shape, or missing entirely.
+   A fixed box with object-fit means one tall image cannot stretch a row, and
+   the placeholder occupies exactly the same box so a grid does not reflow as
+   images arrive. */
+.nfd-preview {
+  display: inline-flex; align-items: center; justify-content: center;
+  object-fit: cover; flex: none;
+  border: 1px solid hsl(var(--border)); border-radius: 8px;
+  background: hsl(var(--subpanel-bg) / 0.6);
+}
+.nfd-preview-none {
+  color: hsl(var(--muted-foreground)); font-size: 1.1rem;
+  border-style: dashed;
+}
+
+.nfd-subhead {
+  font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground)); font-weight: 600;
+  margin: 14px 0 8px;
+}
+
+/* A row of previews that wraps and scrolls rather than squashing. */
+.nfd-strip {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 12px;
+}
+.nfd-strip li { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.nfd-strip-id { font-size: 0.68rem; }
+
+.nfd-detail-head { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
+.nfd-detail-facts { flex: 1 1 320px; min-width: 0; }
+
+/* The preview caveat is load-bearing, not decoration: it is the difference
+   between showing a picture and implying it is the asset. Given weight so it
+   cannot be mistaken for filler. */
+.nfd-caveat {
+  border-left: 3px solid hsl(var(--warning) / 0.7);
+  padding-left: 12px;
+}
+
+.nfd-sync { font-size: 0.75rem; color: hsl(var(--muted-foreground)); margin-top: 12px; }
+.nfd-sync-behind { color: hsl(var(--warning)); }
+.nfd-sync-halted {
+  color: hsl(var(--destructive));
+  border: 1px solid hsl(var(--destructive) / 0.45); border-radius: 8px;
+  padding: 8px 10px; font-size: 0.8rem;
+}
+.nfd-fingerprint { opacity: 0.75; cursor: help; }
+
+/* Collectible grid on list and collection pages. */
+.nfd-grid {
+  list-style: none; margin: 12px 0 0; padding: 0;
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+}
+.nfd-grid li { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.nfd-grid .nfd-strip-id { word-break: break-all; }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getBlockHash, getBlockRaw, summariseBlock, isLotteryBlock, type BlockSummary } from "../api";
 import { fmtDivi, fmtTime, shortHash } from "../format";
+import { BlockCollectibles } from "../collectibles/BlockCollectibles";
 
 export function BlockPage() {
   const { id = "" } = useParams();
@@ -106,6 +107,10 @@ export function BlockPage() {
           </dd>
         </dl>
       </section>
+
+      {/* Collectibles and tokens in this block. Renders nothing when the block
+          contains none, which is almost all of them. */}
+      <BlockCollectibles height={summary.height} />
 
       <section className="panel">
         <h2 className="section-title">Transactions ({txids.length})</h2>

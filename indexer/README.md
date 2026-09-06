@@ -1,45 +1,58 @@
-# Overlay indexer sidecar
+# The explorer's overlay indexer
 
-Walks the Divi chain, pulls `OP_META` data outputs, and feeds them through the
-**existing** NFD and DMT indexers. Writes the resulting state to a JSON snapshot
-that `divi-rpc-proxy.py` serves.
+**There is deliberately almost nothing here.** `src/main.rs` is two lines: it
+calls the shared scanner in `vendor/dvxp-scan`. Everything it does lives in the
+chain repo.
 
-## Why a sidecar rather than re-implementing
+## Why it used to be more than that
 
-The record rules already exist as tested Rust in
-`Divi-Blockchain_6.9/contrib/` — `dvxp-core` (12 tests), `nfd-indexer` (9) and
-`dmt-indexer` (78). They encode the skip-vs-halt decision, canonical varints,
-deterministic ordering, and the `vin[0]` sender rule.
+This directory used to carry its own scanner, and it worked. It also had three
+problems that only appear once it runs as a service rather than as a one-shot
+job:
 
-Two indexers that silently disagree is the one failure these overlays cannot
-survive, which is exactly why `INDEXER-ARCHITECTURE.md` insists on one shared
-core. So this crate contains **no protocol logic at all**: it is I/O, a loop,
-and a snapshot writer. Every decision about what a record means belongs to the
-upstream handlers.
+1. **It ran once and exited.** No resume, no tip following; a restart rescanned
+   the whole chain from the start.
+2. **It never handled a reorg.** Divi caps reorganisations at 100 blocks and they
+   do happen. A replaced block silently left the wrong collectible owner in
+   place, with nothing anywhere to indicate it.
+3. **Its fingerprint covered collectibles but not tokens.** DMT records were
+   applied and then left out of the one value whose entire job is detecting that
+   two independent indexers disagree. A fingerprint that covers half the state
+   reads as an assurance and is not one.
 
-## The crates are vendored, not forked
+Fixing those in a copy that lived here would have meant two scanners to keep in
+step forever, which is precisely the divergence the shared crate exists to
+prevent. So the fixes went upstream and this became a shim.
 
-`sync-crates.sh` copies them from the chain repo into `vendor/` and records the
-upstream commit in `vendor/UPSTREAM`. They are gitignored, so this repo never
-carries a second copy that could drift silently.
+## The vendored crates
 
-**Re-run the sync after any upstream change.** Those specs moved several times in
-a single day while this was being planned.
+`vendor/` is a byte-identical copy of the chain repo's `contrib/`, made by
+`./sync-crates.sh`, recording the exact upstream commit in `vendor/UPSTREAM`.
+They are **not forks**. Never edit them here: change the chain repo and re-run
+the script, or the explorer and the wallet will quietly disagree about what a
+record means, and proof-of-work cannot arbitrate between two interpretations.
 
-## Output
+Note `name-registry` in that list. `dmt-indexer` gained a dependency on it when
+Divi Names and tokens started sharing ticker rules, and this script was not
+re-run afterwards, so the vendored set had quietly stopped building. Re-run the
+script after **any** upstream change, not only ones that look relevant.
 
-`/var/lib/divi-scan/overlay.json`:
+## Running it
 
-```json
-{
-  "height": 4132800,
-  "fingerprint": "…",
-  "builtAt": 1784500787,
-  "nfd": { "count": 0, "items": [], "creators": 0 },
-  "dmt": { "count": 0, "tokens": [], "users": 0 }
-}
+```
+DIVI_RPC_USER=... DIVI_RPC_PASS=... \
+START_HEIGHT=<overlay genesis> \
+API_BIND=127.0.0.1:8710 \
+  ./target/release/divi-overlay-indexer
 ```
 
-The fingerprint is `dvxp-core`'s chained per-block hash. Another indexer over the
-same chain must produce the same value; if it doesn't, one of them is wrong and
-that is worth knowing loudly.
+`API_BIND` is the read API that `functions/api/overlay/[[route]].ts` proxies to.
+Keep it on loopback and reach it through the tunnel, exactly as the node itself
+is reached: nothing here should be directly exposed.
+
+`START_HEIGHT` matters more than anything else. Overlay records below the genesis
+height are ignored by the rules, so with it set the scanner never touches the
+4.1M blocks that predate tokens. It is still `0` upstream, and the daemon warns
+when it is left there.
+
+Full documentation: `vendor/dvxp-scan/README.md`.

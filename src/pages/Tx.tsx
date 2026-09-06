@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getTx, getTxHex, getBlockRaw, isLotteryBlock, lotteryPayouts, type RawTx } from "../api";
 import { fmtDivi, fmtTime } from "../format";
 import { TxInspector } from "../TxInspector";
+import { BlockCollectibles } from "../collectibles/BlockCollectibles";
 
 export function TxPage() {
   const { txid = "" } = useParams();
@@ -98,6 +99,12 @@ export function TxPage() {
 
   return (
     <>
+      {/* Collectibles or tokens this transaction carried. Renders nothing for
+          an ordinary payment, which is nearly all of them. Asked by TRANSACTION
+          rather than by id: a mint's txid is the collectible's id, but a
+          transfer's is not, so an id lookup would miss every transfer. */}
+      <BlockCollectibles txid={txid} title="This transaction carried" />
+
       <section className="panel" style={{ marginBottom: 16 }}>
         <h2 className="section-title">
           Transaction {isCoinstake && <span className="badge badge-pos">STAKE</span>}

@@ -11,6 +11,7 @@ import { ChartsPage, ChartFullPage } from "./pages/Charts";
 import { NetworkPage } from "./pages/Network";
 import { StatsPage } from "./pages/Stats";
 import { NfdDetail } from "./collectibles/NfdDetail";
+import { CollectionDetail } from "./collectibles/CollectionDetail";
 import { DmtDetail } from "./collectibles/DmtDetail";
 import { StyleDrawer } from "./admin/StyleDrawer";
 import { DownloadButton, DownloadPage } from "./Download";
@@ -144,6 +145,7 @@ export function App() {
         <Route path="/tx/:txid" element={<TxPage />} />
         <Route path="/address/:address" element={<AddressPage />} />
         <Route path="/nfd/:id" element={<NfdDetail />} />
+        <Route path="/collection/:id" element={<CollectionDetail />} />
         <Route path="/dmt/:id" element={<DmtDetail />} />
       </Routes>
 

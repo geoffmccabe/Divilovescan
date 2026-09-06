@@ -1,26 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { shortId, type Nfd, type SyncState } from "../overlay";
+import { Preview, PreviewCaveat } from "./Preview";
+import { SyncNote } from "./SyncNote";
 
-// Latest NFDs — Divi Collectibles.
+// Latest collectibles.
 //
-// The protocol carries no records yet, so this deliberately shows its full
-// structure with an empty state rather than hiding until launch: the columns
-// and controls ARE the specification made visible, and they're what the indexer
-// will be wired into.
-//
-// Modelled on the spec (Divi-Blockchain_6.9/docs/NFD-COLLECTIBLES-SPEC.md):
-//   • an NFD's id IS its mint txid
-//   • ownership is by ADDRESS, never bound to a coin (staking would eat it)
-//   • the full file is encrypted on Arweave; a public preview is optional and
-//     is the creator's CLAIM, not proof of what was encrypted
-
-export interface NfdFilters {
-  q: string;
-  sort: "newest" | "oldest" | "transfers";
-  only: "all" | "preview" | "encrypted";
-}
+// Search is deliberately narrow: an id prefix, an owner, or a collection id.
+// The chain carries no name to search for, and matching against off-chain
+// metadata the index has not fetched would return results it cannot stand
+// behind. Better a search that says what it does than one that quietly does
+// less than it implies.
 
 export function NfdList({ compact = false }: { compact?: boolean }) {
-  const [f, setF] = useState<NfdFilters>({ q: "", sort: "newest", only: "all" });
+  const [q, setQ] = useState("");
+  const [submitted, setSubmitted] = useState("");
+  const [items, setItems] = useState<Nfd[] | null>(null);
+  const [sync, setSync] = useState<SyncState | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    const limit = compact ? 12 : 60;
+    const url = submitted
+      ? `/api/overlay/nfds?q=${encodeURIComponent(submitted)}&limit=${limit}`
+      : `/api/overlay/nfds?limit=${limit}`;
+
+    fetch(url)
+      .then((r) => (r.ok ? (r.json() as Promise<{ nfds: Nfd[]; sync: SyncState }>) : null))
+      .then((body) => {
+        if (!alive) return;
+        if (!body) {
+          setUnavailable(true);
+          return;
+        }
+        setItems(body.nfds);
+        setSync(body.sync);
+      })
+      .catch(() => alive && setUnavailable(true));
+    return () => {
+      alive = false;
+    };
+  }, [submitted, compact]);
 
   return (
     <section className="panel">
@@ -29,69 +50,82 @@ export function NfdList({ compact = false }: { compact?: boolean }) {
           Latest NFDs <span className="muted nfd-sub">Divi Collectibles</span>
         </h2>
         <div className="list-controls">
-          <form className="jump" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="jump"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSubmitted(q.trim());
+            }}
+          >
             <input
-              value={f.q}
-              onChange={(e) => setF({ ...f, q: e.target.value })}
-              placeholder="Search id, owner or creator…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Collectible id, owner or collection…"
               aria-label="Search collectibles"
-              style={{ width: 210 }}
+              style={{ width: 240 }}
             />
             <button type="submit">Search</button>
           </form>
-          <label className="sizer">
-            Show
-            <select value={f.only} onChange={(e) => setF({ ...f, only: e.target.value as NfdFilters["only"] })}>
-              <option value="all">All</option>
-              <option value="preview">With preview</option>
-              <option value="encrypted">Encrypted</option>
-            </select>
-          </label>
-          <label className="sizer">
-            Sort
-            <select value={f.sort} onChange={(e) => setF({ ...f, sort: e.target.value as NfdFilters["sort"] })}>
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-              <option value="transfers">Most transferred</option>
-            </select>
-          </label>
         </div>
       </div>
 
       {!compact && (
         <p className="wl-note">
-          Collectibles on Divi. Each is owned by an <strong>address</strong>, never tied to a coin —
+          Collectibles on Divi. Each is owned by an <strong>address</strong>, never tied to a coin,
           so staking or spending your DIVI never affects what you own. The artwork itself is
-          encrypted and only the owner can open it; a creator may publish a small preview alongside.
+          encrypted and only the owner can open it; a creator may publish a preview alongside.
         </p>
       )}
 
-      <div className="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Preview</th>
-              <th>Collectible</th>
-              <th>Creator</th>
-              <th>Owner</th>
-              <th>Minted</th>
-              <th style={{ textAlign: "right" }}>Transfers</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
+      {unavailable && (
+        <div className="soon-empty">
+          <div className="soon-badge">INDEX UNAVAILABLE</div>
+          <p>
+            The collectibles index is not answering right now. The chain itself is unaffected, and
+            block and transaction pages work normally.
+          </p>
+        </div>
+      )}
 
-      <div className="soon-empty">
-        <div className="soon-badge">COMING SOON</div>
-        <p>
-          No collectibles have been minted yet — the protocol is specified and its indexer is built
-          and tested, but no records exist on-chain so far.
-        </p>
-        <p className="muted">
-          When the first one is minted it appears here automatically. Nothing above is a mock-up:
-          those are the columns and controls that will be populated.
-        </p>
-      </div>
+      {!unavailable && items !== null && items.length === 0 && (
+        <div className="soon-empty">
+          <div className="soon-badge">{submitted ? "NO MATCHES" : "NONE YET"}</div>
+          <p>
+            {submitted
+              ? "Nothing matched that. Search takes a collectible id, an owner, or a collection id."
+              : "No collectibles have been minted yet. When the first one is, it appears here automatically."}
+          </p>
+        </div>
+      )}
+
+      {!unavailable && items !== null && items.length > 0 && (
+        <>
+          <ul className="nfd-grid">
+            {items.map((n) => (
+              <li key={n.id}>
+                <Link to={`/nfd/${n.id}`} title="Open this collectible">
+                  <Preview thumbPtr={n.thumbPtr} size="tile" alt={`Collectible ${shortId(n.id)}`} />
+                </Link>
+                <Link to={`/nfd/${n.id}`} className="mono nfd-strip-id">
+                  {shortId(n.id, 6)}
+                </Link>
+                {n.collectionId && (
+                  <Link
+                    to={`/collection/${n.collectionId}`}
+                    className="muted nfd-strip-id"
+                    title="Part of a collection"
+                  >
+                    in a collection
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+          {!compact && <PreviewCaveat />}
+        </>
+      )}
+
+      <SyncNote sync={sync} />
     </section>
   );
 }
