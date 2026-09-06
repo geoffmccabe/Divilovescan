@@ -1,28 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { allTokens, formatAmount, type SyncState, type TokenMeta } from "../overlay";
+import { SyncNote } from "./SyncNote";
 
 // Latest DMTs — Divi Meta Tokens.
 //
-// Structure taken from the spec (Divi-Blockchain_6.9/docs/DMT-TOKENS-SPEC.md):
-//   • a token's canonical id is (block height, tx index) of its issuance;
-//     the ticker is a human alias and every record references the id
-//   • tickers are 3-8 chars, A-Z 0-9 !#^-_+. , first char a letter, NO lowercase
-//     — case-folding is forbidden precisely so DIVI and divi can never be two
-//     different tokens, so search must uppercase before matching
-//   • `decimals` is display only; all arithmetic is integer smallest-units
-//   • supply policy comes from flags: open mint, locked, non-transferable,
-//     issuer-mintable, proceeds burned, rising price
-
-export interface DmtFilters {
-  q: string;
-  sort: "newest" | "holders" | "supply" | "activity";
-  policy: "all" | "open" | "fixed" | "mintable" | "nontransferable";
-}
+// From the spec:
+//   • a token's canonical id is (block height, tx index) of its issuance; the
+//     ticker is a human alias and every record references the id
+//   • tickers are uppercase-only, deliberately: case-folding is forbidden so
+//     that DIVI and divi can never become two different tokens, which means
+//     search must uppercase before matching
+//   • `decimals` is display only; all arithmetic is integer smallest-units, and
+//     amounts arrive as strings because a large supply with 8 decimals exceeds
+//     what a JavaScript number holds exactly
 
 /** Tickers are uppercase-only by protocol, so typing lowercase must still match. */
 export const normaliseTicker = (s: string) => s.trim().toUpperCase();
 
+function policyOf(t: TokenMeta): string {
+  if (t.mintOpen) return "Open mint";
+  if (t.supplyLocked) return "Supply locked";
+  return "Fixed";
+}
+
 export function DmtList({ compact = false }: { compact?: boolean }) {
-  const [f, setF] = useState<DmtFilters>({ q: "", sort: "newest", policy: "all" });
+  const [q, setQ] = useState("");
+  const [tokens, setTokens] = useState<TokenMeta[] | null>(null);
+  const [sync, setSync] = useState<SyncState | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    allTokens()
+      .then((e) => {
+        if (!alive) return;
+        setTokens(e.data.tokens);
+        setSync(e.sync);
+      })
+      .catch(() => alive && setUnavailable(true));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const needle = normaliseTicker(q);
+  const shown = (tokens ?? []).filter(
+    (t) =>
+      !needle ||
+      t.ticker.includes(needle) ||
+      t.tokenId.includes(needle) ||
+      t.issuer.toUpperCase().includes(needle),
+  );
 
   return (
     <section className="panel">
@@ -33,71 +62,86 @@ export function DmtList({ compact = false }: { compact?: boolean }) {
         <div className="list-controls">
           <form className="jump" onSubmit={(e) => e.preventDefault()}>
             <input
-              value={f.q}
-              onChange={(e) => setF({ ...f, q: e.target.value })}
-              placeholder="Search ticker, name or issuer…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Ticker, token id or issuer…"
               aria-label="Search tokens"
-              style={{ width: 210 }}
+              style={{ width: 220 }}
             />
-            <button type="submit">Search</button>
           </form>
-          <label className="sizer">
-            Policy
-            <select value={f.policy} onChange={(e) => setF({ ...f, policy: e.target.value as DmtFilters["policy"] })}>
-              <option value="all">All</option>
-              <option value="open">Open mint</option>
-              <option value="fixed">Fixed supply</option>
-              <option value="mintable">Issuer mintable</option>
-              <option value="nontransferable">Non-transferable</option>
-            </select>
-          </label>
-          <label className="sizer">
-            Sort
-            <select value={f.sort} onChange={(e) => setF({ ...f, sort: e.target.value as DmtFilters["sort"] })}>
-              <option value="newest">Newest</option>
-              <option value="holders">Most holders</option>
-              <option value="supply">Largest supply</option>
-              <option value="activity">Most active</option>
-            </select>
-          </label>
         </div>
       </div>
 
       {!compact && (
         <p className="wl-note">
-          Tokens issued on Divi — anything from a currency to a ticket, a membership or a points
-          balance. Balances are held by <strong>address</strong>, so staking never touches them.
-          Each token sets its own supply rules, and those rules are fixed on-chain at issue.
+          Tokens issued on the Divi blockchain. Balances are recorded and ordered by the chain
+          itself. A token always has a numeric id; a ticker is an optional human-readable alias on
+          top of it.
         </p>
       )}
 
-      <div className="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Ticker</th>
-              <th>Name</th>
-              <th style={{ textAlign: "right" }}>Supply</th>
-              <th style={{ textAlign: "right" }}>Holders</th>
-              <th>Policy</th>
-              <th>Issued</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
+      {unavailable && (
+        <div className="soon-empty">
+          <div className="soon-badge">INDEX UNAVAILABLE</div>
+          <p>
+            The token index is not answering right now. Block and transaction pages are unaffected.
+          </p>
+        </div>
+      )}
 
-      <div className="soon-empty">
-        <div className="soon-badge">COMING SOON</div>
-        <p>
-          No tokens have been issued yet — the protocol is specified and its indexer is built and
-          tested (78 tests), but no records exist on-chain so far.
-        </p>
-        <p className="muted">
-          Tickers will be 3–8 characters, uppercase only. That restriction is deliberate: it makes
-          look-alike names using Cyrillic or invisible characters structurally impossible, so no
-          token can impersonate another.
-        </p>
-      </div>
+      {!unavailable && tokens !== null && shown.length === 0 && (
+        <div className="soon-empty">
+          <div className="soon-badge">{needle ? "NO MATCHES" : "NONE YET"}</div>
+          <p>
+            {needle
+              ? "Nothing matched that. Search takes a ticker, a token id, or an issuer."
+              : "No tokens have been issued yet. When the first one is, it appears here automatically."}
+          </p>
+        </div>
+      )}
+
+      {!unavailable && shown.length > 0 && (
+        <div className="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Ticker</th>
+                <th>Policy</th>
+                <th>Issuer</th>
+                <th style={{ textAlign: "right" }}>Supply</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map((t) => (
+                <tr key={t.tokenId}>
+                  <td>
+                    <Link to={`/dmt/${t.tokenId}`} className="mono">
+                      {t.tokenId}
+                    </Link>
+                  </td>
+                  <td>
+                    {t.ticker ? (
+                      <span className="badge badge-pos">{t.ticker}</span>
+                    ) : (
+                      <span className="muted">no ticker</span>
+                    )}
+                  </td>
+                  <td>{policyOf(t)}</td>
+                  <td className="mono dmt-issuer">{t.issuer}</td>
+                  {/* decimals is a DISPLAY concern only; the stored amount is
+                      always an integer in the smallest unit. */}
+                  <td className="mono" style={{ textAlign: "right" }}>
+                    {formatAmount(t.totalSupply, t.decimals)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <SyncNote sync={sync} />
     </section>
   );
 }

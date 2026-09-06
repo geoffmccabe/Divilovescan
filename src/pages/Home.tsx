@@ -15,6 +15,7 @@ import {
 import { timeAgo, fmtTime } from "../format";
 import nyan from "../assets/nyan_cat.webp";
 import { NfdList } from "../collectibles/NfdList";
+import { stats as fetchStats, type Stats } from "../overlay";
 import { DmtList } from "../collectibles/DmtList";
 
 const PAGE_SIZES = [10, 100, 1000];
@@ -38,6 +39,22 @@ export function Home() {
   // null = follow the chain tip; a number pins the list to that height.
   const [from, setFrom] = useState<number | null>(null);
   const [jump, setJump] = useState("");
+  // Overlay counters. Null until the index answers: dashes and a "coming soon"
+  // marker stay until then, because a confident 0 would claim nobody is using
+  // the feature, which is a different and untrue statement from "cannot see".
+  const [ov, setOv] = useState<Stats | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetchStats()
+      .then((e) => alive && setOv(e.data))
+      // Silent: the overlay is an extra layer, and the rest of the front page
+      // is a complete front page without it.
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // Chain summary. Total supply isn't in getblockchaininfo — every block header
   // carries the money supply as of that block, so the tip gives it for free.
@@ -111,18 +128,18 @@ export function Home() {
           <div className="stat-label">
             <strong>NFD</strong>s – Divi Collectibles
           </div>
-          {/* Not launched, so these read as dashes with a "coming soon" marker.
-              A confident 0 would say nobody is using it, which is a different
-              and untrue claim. */}
+          {/* Dashes until the index answers. A confident 0 would say nobody is
+              using it, which is a different and untrue claim from "we cannot
+              see yet". */}
           <div className="stat-pair">
             <span>
-              <em>—</em> Creators
+              <em>{ov ? ov.creators.toLocaleString() : "—"}</em> Creators
             </span>
             <span>
-              <em>—</em> NFDs
+              <em>{ov ? ov.collectibles.toLocaleString() : "—"}</em> NFDs
             </span>
           </div>
-          <div className="soon-tag">Coming Soon</div>
+          {!ov && <div className="soon-tag">Coming Soon</div>}
         </button>
 
         <button
@@ -134,13 +151,13 @@ export function Home() {
           </div>
           <div className="stat-pair">
             <span>
-              <em>—</em> Tokens Made
+              <em>{ov ? ov.tokens.toLocaleString() : "—"}</em> Tokens Made
             </span>
             <span>
-              <em>—</em> Token Users
+              <em>{ov ? ov.tokenHolders.toLocaleString() : "—"}</em> Token Users
             </span>
           </div>
-          <div className="soon-tag">Coming Soon</div>
+          {!ov && <div className="soon-tag">Coming Soon</div>}
         </button>
 
         <div className="panel stat">

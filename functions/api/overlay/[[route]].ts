@@ -25,6 +25,7 @@ interface Env {
 // publicly reachable just because it shipped.
 const ALLOWED = new Set([
   "sync",
+  "stats",
   "tokens",
   "token",
   "balances",
@@ -40,6 +41,9 @@ const ALLOWED = new Set([
 /// stale "trustworthy: true" at the edge would be worse than no answer.
 function cacheSeconds(head: string): number {
   if (head === "sync") return 5;
+  // Front-page counters: fresh enough to feel live, cached enough that a busy
+  // front page does not become a load test on the index.
+  if (head === "stats") return 15;
   // A collectible's ownership and a token's supply both move, but not fast,
   // and every answer carries the height it was true at.
   if (head === "nfd" || head === "collection" || head === "token") return 30;

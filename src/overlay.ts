@@ -106,7 +106,16 @@ async function get<T>(path: string): Promise<Envelope<T>> {
   return { data: rest as T, sync: sync as SyncState };
 }
 
+export interface Stats {
+  tokens: number;
+  tokenHolders: number;
+  collectibles: number;
+  collections: number;
+  creators: number;
+}
+
 export const syncState = () => get<Record<string, never>>("sync").then((e) => e.sync);
+export const stats = () => get<Stats>("stats");
 export const allTokens = () => get<{ tokens: TokenMeta[] }>("tokens");
 export const token = (id: string) =>
   get<{ token: TokenMeta; history: HistoryEvent[] }>(`token/${encodeURIComponent(id)}`);

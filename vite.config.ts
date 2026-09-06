@@ -12,6 +12,14 @@ export default defineConfig({
         target: "http://127.0.0.1:5174",
         changeOrigin: true,
       },
+      // Overlay data (tokens and collectibles) comes from the indexer running
+      // beside the node. In production that is a Pages Function reaching it
+      // through the tunnel; in dev, straight at a local indexer.
+      "/api/overlay": {
+        target: "http://127.0.0.1:8713",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/overlay/, ""),
+      },
     },
   },
 });

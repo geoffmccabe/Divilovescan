@@ -73,10 +73,23 @@ a:hover { color: hsl(var(--accent)); }
   word-break: break-all;
 }
 
+/* The page uses the width it is given.
+   A hard 1100px cap left a third of a modern monitor empty on every page, which
+   reads as unfinished and wastes room the tables actually want. This grows with
+   the window and still stops before lines get uncomfortably long. Long-form
+   reading text keeps its own narrow measure (see .wl-note and .soon-empty p);
+   tables, grids and cards do not need one. */
 .shell {
-  max-width: 1100px;
+  max-width: min(1560px, 100%);
   margin: 0 auto;
   padding: 24px 18px 64px;
+}
+
+@media (max-width: 620px) {
+  /* Phones: the frame should not eat the content. Divi Lovenode is a mobile
+     wallet and will reuse these views, so narrow is a first-class case here,
+     not an afterthought. */
+  .shell { padding: 14px 10px 48px; }
 }
 
 /* ---- header ---- */
@@ -461,7 +474,11 @@ tr:last-child td { border-bottom: 0; }
 }
 
 /* ---- detail rows ---- */
-.kv { display: grid; grid-template-columns: 190px 1fr; gap: 10px 16px; }
+/* The label column is a CEILING, not a fixed width, so it gives way when the
+   container is narrow instead of squeezing the values into a ribbon. Matters
+   for a panel in a sidebar as much as for a phone, where the media query below
+   takes over and stacks them entirely. */
+.kv { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr); gap: 10px 16px; }
 .kv dt { color: hsl(var(--muted-foreground)); font-size: 0.8rem; }
 .kv dd { margin: 0; font-size: 0.88rem; }
 @media (max-width: 620px) {
@@ -1101,8 +1118,10 @@ tr:last-child td { border-bottom: 0; }
 .nfd-strip li { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .nfd-strip-id { font-size: 0.68rem; }
 
+/* Preview beside the facts on a wide screen, stacked on a narrow one, with the
+   facts taking every pixel the preview does not. */
 .nfd-detail-head { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-start; }
-.nfd-detail-facts { flex: 1 1 320px; min-width: 0; }
+.nfd-detail-facts { flex: 1 1 min(420px, 100%); min-width: 0; }
 
 /* The preview caveat is load-bearing, not decoration: it is the difference
    between showing a picture and implying it is the asset. Given weight so it
@@ -1111,6 +1130,8 @@ tr:last-child td { border-bottom: 0; }
   border-left: 3px solid hsl(var(--warning) / 0.7);
   padding-left: 12px;
 }
+
+.dmt-issuer { word-break: break-all; font-size: 0.78rem; }
 
 .nfd-sync { font-size: 0.75rem; color: hsl(var(--muted-foreground)); margin-top: 12px; }
 .nfd-sync-behind { color: hsl(var(--warning)); }
@@ -1122,10 +1143,24 @@ tr:last-child td { border-bottom: 0; }
 .nfd-fingerprint { opacity: 0.75; cursor: help; }
 
 /* Collectible grid on list and collection pages. */
+/* Fills whatever width it is given: more columns on a wide monitor, two on a
+   phone, without a breakpoint per size. */
 .nfd-grid {
   list-style: none; margin: 12px 0 0; padding: 0;
   display: grid; gap: 14px;
   grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
 }
+@media (max-width: 420px) {
+  .nfd-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+}
 .nfd-grid li { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .nfd-grid .nfd-strip-id { word-break: break-all; }
+
+/* Search and filters sit beside the heading when there is room, and wrap under
+   it when there is not, instead of the input shrinking to nothing. */
+@media (max-width: 620px) {
+  .list-head { flex-wrap: wrap; gap: 10px; }
+  .list-controls { width: 100%; }
+  .list-controls .jump { width: 100%; }
+  .list-controls .jump input { width: 100% !important; min-width: 0; }
+}
