@@ -131,6 +131,28 @@ export const history = (addresses: string[], limit = 50) =>
   );
 
 /**
+ * A 32-byte storage pointer, hex as the chain holds it, to the base64url form
+ * the storage system addresses it by.
+ *
+ * The chain stores 32 raw bytes and the API hands them over as hex, like every
+ * other 32-byte value. Arweave names the same bytes in base64url: 43 characters,
+ * no padding. Two spellings of one id, and the conversion has to happen
+ * somewhere. It happens here, at the point where a pointer stops being data and
+ * becomes a place to fetch from.
+ *
+ * Returns null for anything that is not 32 bytes of hex, rather than building a
+ * URL that cannot work.
+ */
+export function pointerToStorageId(hex: string): string | null {
+  if (!/^[0-9a-fA-F]{64}$/.test(hex)) return null;
+  const bytes = new Uint8Array(32);
+  for (let i = 0; i < 32; i++) bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  let binary = "";
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/**
  * The URL for a collectible's preview.
  *
  * Always same-origin. Nothing on this site points a browser at a storage
@@ -141,7 +163,9 @@ export const history = (addresses: string[], limit = 50) =>
  */
 export function previewUrl(thumbPtr: string | null): string | null {
   if (!thumbPtr) return null;
-  return `/api/nfd-image/${encodeURIComponent(thumbPtr)}`;
+  const id = pointerToStorageId(thumbPtr);
+  if (!id) return null;
+  return `/api/nfd-image/${id}`;
 }
 
 /**
