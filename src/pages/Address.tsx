@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getAddressBalance, getAddressTxids, scanAddress, type ScanAddress } from "../api";
 import { labelFor, labelTag } from "../labels";
 import { fmtDivi, shortHash } from "../format";
+import { AddressHoldings } from "../collectibles/AddressHoldings";
 
 export function AddressPage() {
   const { address = "" } = useParams();
@@ -147,6 +148,12 @@ export function AddressPage() {
         {err && !indexLikelyOff && <p className="err">{err}</p>}
         {!err && !balance && <p className="muted">Loading address…</p>}
       </section>
+
+      {/* Tokens and collectibles at this address. Renders nothing when there
+          are none, which is almost every address. Outside the transactions
+          block on purpose: an address can hold a collectible without having any
+          transactions the explorer chose to list. */}
+      <AddressHoldings address={address} />
 
       {txids && txids.length > 0 && (
         <section className="panel">

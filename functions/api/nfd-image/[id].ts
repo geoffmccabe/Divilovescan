@@ -94,6 +94,12 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   let upstream: Response;
   try {
     upstream = await fetch(`${gateway}/${id}`, {
+      // Do NOT follow redirects. A gateway that redirects could send this
+      // function anywhere, and whatever came back would then be served from our
+      // own origin under our own headers. The content-type allow-list below
+      // limits the damage, but not proxying arbitrary destinations in the first
+      // place is the actual fix.
+      redirect: "error",
       // A gateway that is slow is a gateway we do not wait for. The grid shows
       // a placeholder instead, which is a better page than a hanging one.
       signal: AbortSignal.timeout(10000),

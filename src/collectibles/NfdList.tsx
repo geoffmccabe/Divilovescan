@@ -12,9 +12,24 @@ import { SyncNote } from "./SyncNote";
 // behind. Better a search that says what it does than one that quietly does
 // less than it implies.
 
+/// Restored from the placeholder this replaced.
+///
+/// The stub advertised Show and Sort controls, and the first real version
+/// dropped them rather than implementing them. Removing something a page already
+/// offered is a regression even when the thing removed never worked, so they are
+/// back, limited to what the index can actually answer.
+///
+/// "Most transferred" is deliberately NOT among them: the index does not count
+/// transfers per collectible, and an option that silently sorted by something
+/// else would be worse than not offering it.
+type Only = "all" | "preview" | "encrypted";
+type Sort = "newest" | "oldest";
+
 export function NfdList({ compact = false }: { compact?: boolean }) {
   const [q, setQ] = useState("");
   const [submitted, setSubmitted] = useState("");
+  const [only, setOnly] = useState<Only>("all");
+  const [sort, setSort] = useState<Sort>("newest");
   const [items, setItems] = useState<Nfd[] | null>(null);
   const [sync, setSync] = useState<SyncState | null>(null);
   const [unavailable, setUnavailable] = useState(false);
@@ -43,6 +58,16 @@ export function NfdList({ compact = false }: { compact?: boolean }) {
     };
   }, [submitted, compact]);
 
+  // Filtering and ordering are done here rather than asked of the index: the
+  // page already has the rows, and a round trip to reorder what is on screen
+  // would be slower and no more correct.
+  const shown = (items ?? [])
+    .filter((n) =>
+      only === "all" ? true : only === "preview" ? n.thumbPtr !== null : n.thumbPtr === null,
+    )
+    .slice()
+    .sort((a, b) => (sort === "newest" ? b.mintHeight - a.mintHeight : a.mintHeight - b.mintHeight));
+
   return (
     <section className="panel">
       <div className="list-head">
@@ -62,10 +87,24 @@ export function NfdList({ compact = false }: { compact?: boolean }) {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Collectible id, owner or collection…"
               aria-label="Search collectibles"
-              style={{ width: 240 }}
             />
             <button type="submit">Search</button>
           </form>
+          <label className="sizer">
+            Show
+            <select value={only} onChange={(e) => setOnly(e.target.value as Only)}>
+              <option value="all">All</option>
+              <option value="preview">With preview</option>
+              <option value="encrypted">No preview</option>
+            </select>
+          </label>
+          <label className="sizer">
+            Sort
+            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </label>
         </div>
       </div>
 
@@ -87,21 +126,23 @@ export function NfdList({ compact = false }: { compact?: boolean }) {
         </div>
       )}
 
-      {!unavailable && items !== null && items.length === 0 && (
+      {!unavailable && items !== null && shown.length === 0 && (
         <div className="soon-empty">
-          <div className="soon-badge">{submitted ? "NO MATCHES" : "NONE YET"}</div>
+          <div className="soon-badge">{submitted || only !== "all" ? "NO MATCHES" : "NONE YET"}</div>
           <p>
             {submitted
               ? "Nothing matched that. Search takes a collectible id, an owner, or a collection id."
-              : "No collectibles have been minted yet. When the first one is, it appears here automatically."}
+              : only !== "all"
+                ? "None match that filter. Try showing all."
+                : "No collectibles have been minted yet. When the first one is, it appears here automatically."}
           </p>
         </div>
       )}
 
-      {!unavailable && items !== null && items.length > 0 && (
+      {!unavailable && shown.length > 0 && (
         <>
           <ul className="nfd-grid">
-            {items.map((n) => (
+            {shown.map((n) => (
               <li key={n.id}>
                 <Link to={`/nfd/${n.id}`} title="Open this collectible">
                   <Preview thumbPtr={n.thumbPtr} size="tile" alt={`Collectible ${shortId(n.id)}`} />

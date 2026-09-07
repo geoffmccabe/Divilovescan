@@ -50,15 +50,38 @@ function cacheSeconds(head: string): number {
   return 15;
 }
 
+/// Every path segment must look like this, and the URL is REBUILT from the
+/// segments rather than passed through.
+///
+/// Checking only the first segment and forwarding the rest of the path was a
+/// real hole: `/api/overlay/sync/../../whatever` passes an allow-list that only
+/// looks at "sync", and `..` is then normalised away when the upstream URL is
+/// parsed, landing on a route the allow-list exists to keep unreachable. The
+/// index happens to serve nothing but reads today, which is exactly the
+/// reasoning that lets a hole like this survive until the day it does.
+const SEGMENT = /^[A-Za-z0-9][A-Za-z0-9:._-]*$/;
+/// Longest real route is two segments (`token/306:2`). More than that is not a
+/// route this API has.
+const MAX_SEGMENTS = 2;
+
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const url = new URL(ctx.request.url);
-  const path = url.pathname.replace(/^\/api\/overlay\/?/, "");
-  const head = path.split("/")[0] ?? "";
+  const raw = url.pathname.replace(/^\/api\/overlay\/?/, "");
+
+  const segments = raw.split("/").filter((s) => s.length > 0);
+  const head = segments[0] ?? "";
 
   if (!ALLOWED.has(head)) {
     return json({ error: "Unsupported query." }, 403);
   }
+  if (segments.length > MAX_SEGMENTS || !segments.every((s) => SEGMENT.test(s))) {
+    // Deliberately the same message: do not confirm which part offended.
+    return json({ error: "Unsupported query." }, 403);
+  }
 
+  // Rebuilt, never forwarded. Nothing the caller wrote reaches the upstream URL
+  // except segments that individually passed the check above.
+  const path = segments.map(encodeURIComponent).join("/");
   const target = `${ctx.env.OVERLAY_ORIGIN.replace(/\/$/, "")}/${path}${url.search}`;
 
   const key = new Request(`https://overlay.cache/${path}${url.search}`, { method: "GET" });
@@ -70,6 +93,10 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   try {
     upstream = await fetch(target, {
       headers: { "X-Scan-Secret": ctx.env.SCAN_SHARED_SECRET },
+      // The index is a service we run at a fixed address. If it starts
+      // redirecting, something is wrong and following the redirect would send
+      // our shared secret somewhere we did not choose.
+      redirect: "error",
       signal: AbortSignal.timeout(15000),
     });
   } catch {

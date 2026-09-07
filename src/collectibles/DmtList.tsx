@@ -66,7 +66,6 @@ export function DmtList({ compact = false }: { compact?: boolean }) {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Ticker, token id or issuer…"
               aria-label="Search tokens"
-              style={{ width: 220 }}
             />
           </form>
         </div>

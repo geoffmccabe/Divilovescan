@@ -114,7 +114,6 @@ export interface Stats {
   creators: number;
 }
 
-export const syncState = () => get<Record<string, never>>("sync").then((e) => e.sync);
 export const stats = () => get<Stats>("stats");
 export const allTokens = () => get<{ tokens: TokenMeta[] }>("tokens");
 export const token = (id: string) =>

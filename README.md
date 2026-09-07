@@ -72,7 +72,15 @@ Required secrets:
 | Secret | Meaning |
 |---|---|
 | `SCAN_ORIGIN` | Tunnel hostname of the read-only proxy on the node |
+| `OVERLAY_ORIGIN` | Tunnel hostname of the overlay indexer's read API on the node |
 | `SCAN_SHARED_SECRET` | Proves a request came from this Worker |
+
+Optional:
+
+| Variable | Meaning |
+|---|---|
+| `ARWEAVE_GATEWAY` | Where collectible previews are fetched from. Defaults to `https://arweave.net`. |
+| `NFD_BLOCKLIST` | Comma-separated preview ids to refuse, until the signed blocklist from `NFD-MODERATION.md` exists. |
 
 The node's RPC credentials are deliberately **not** among them — they stay in
 `/etc/divi-scan.env` on the node itself. Compromising the Cloudflare side
@@ -83,6 +91,13 @@ that is public anyway.
 node. The tunnel reaches only `http://localhost:5174` (the read-only proxy) — the
 Divi RPC port is never routed, so the tunnel cannot expose it even by
 misconfiguration.
+
+`OVERLAY_ORIGIN` points at the overlay indexer (`divi-overlay-indexer`) running
+beside the node, which serves tokens and collectibles on `127.0.0.1:8710` by
+default. It is reached the same way as the node: through the tunnel, never
+directly, and behind the same shared secret. **Until it is set, the collectibles
+and token pages say the index is unavailable and everything else on the site is
+unaffected**, which is the intended degradation rather than a failure.
 
 > Cloudflare Pages applies environment variables at **build** time: after adding or
 > changing a secret you must redeploy, or the Function sees an undefined value and

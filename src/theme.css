@@ -1156,6 +1156,17 @@ tr:last-child td { border-bottom: 0; }
 .nfd-grid li { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .nfd-grid .nfd-strip-id { word-break: break-all; }
 
+/* The collectible and token search boxes size themselves.
+   A fixed pixel width truncated the placeholder as soon as the Show and Sort
+   selects sat beside it, which is the same fixed-width habit that left the page
+   using a third of the window. It grows into the room it has and shrinks to a
+   usable minimum rather than to nothing. */
+.list-controls .jump input {
+  flex: 1 1 16rem;
+  min-width: 9rem;
+  max-width: 22rem;
+}
+
 /* Search and filters sit beside the heading when there is room, and wrap under
    it when there is not, instead of the input shrinking to nothing. */
 @media (max-width: 620px) {
