@@ -126,12 +126,13 @@ const WINDOWS_STEPS: Step[] = [
     ),
   },
   {
-    title: "Please note — experimental",
+    title: "First run",
     body: (
       <>
-        This is an early Windows test build. The app runs, but the built-in node isn&apos;t
-        available on Windows yet, so blockchain sync won&apos;t start here. Please report
-        anything that looks broken.
+        The first time it opens, Divi Desktop downloads the Windows node software (a few MB,
+        integrity-checked) and starts syncing the blockchain — this takes hours and uses about
+        10 GB of disk; the wallet is usable while it catches up. This build is unsigned and newer
+        than the Mac and Linux ones, so please report anything that looks off.
       </>
     ),
   },
