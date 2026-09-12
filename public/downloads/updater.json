@@ -1,0 +1,19 @@
+{
+  "version": "69.10.1",
+  "notes": "Divi Rebels updates, in-app updater, setup logging and map fixes.",
+  "pub_date": "2026-09-12T05:59:29Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG5yY2o2c3BrYXZFeElxb1FBZy9SRTJya1dQQ1dENWw1ZVVIc0tRcW84M2pVblFsN2hFYVFWb2dKaGxpYkt5ZXRvdFdpUWtXTnRTdC9mR3phdFlsSEFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MTkyNTk1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKdG9Qa2FOTGQzeE5KZklDZDVNbjR1ZUNTODVTVEJ1aVVaSitYZU0wYnlXZm5OSlBSOFhVeTNwNUhpVTF1bzBPVlNhNDd1RzFXeFdUcUsrZXRVS1RLRFE9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.10.1-macos-update.app.tar.gz"
+    },
+    "darwin-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG5yY2o2c3BrYXZFeElxb1FBZy9SRTJya1dQQ1dENWw1ZVVIc0tRcW84M2pVblFsN2hFYVFWb2dKaGxpYkt5ZXRvdFdpUWtXTnRTdC9mR3phdFlsSEFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MTkyNTk1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKdG9Qa2FOTGQzeE5KZklDZDVNbjR1ZUNTODVTVEJ1aVVaSitYZU0wYnlXZm5OSlBSOFhVeTNwNUhpVTF1bzBPVlNhNDd1RzFXeFdUcUsrZXRVS1RLRFE9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.10.1-macos-update.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGtqUUkrSGlhc1VxUXNqVDdwS1ZtZzRGMDNMSmVyNGVvY1RCL1pTTVVYVkVKRDJObDg3Sy94SUNvZlJsOWdNRThXdVIzZTdDTVcxU2hqS2xod1ZQV0E4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MTkyNDYyCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEwLjFfeDY0LXNldHVwLmV4ZQpHaUpmOEFrL1drN2IyQjFEMmZneTFNYk1xME9hbnA4L3BmRGxkVGZkQXNoOVVJOWs2TG1IMVp3WlNSeWh6dmdEVWIvaFZRdDlPWHhEWVNkajgyT0pCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.10.1-Windows-x64-setup.exe"
+    }
+  }
+}
