@@ -1,19 +1,19 @@
 {
-  "version": "69.10.3",
-  "notes": "Send fixes: valid addresses no longer rejected; node RPC queue raised.",
-  "pub_date": "2026-09-13T13:35:22Z",
+  "version": "69.11.0",
+  "notes": "Divi Rebels update (ships, upgrades, web build), Skins, and wallet send fixes.",
+  "pub_date": "2026-09-14T13:08:10Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpqc3EzZDZnTVpUcVJCT3pMWUU3bTQrMVp3YzhGbHU1eEs4aml2RzVkVC95STBHUzhOV0FTWmlQRWZJM2plQXpVUGtlekY2Qi8rZFVJLy9vYWhuY3drPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MzA2MjQ4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKalVNVXVYZnl0clU3VnBuWHRjY0Q3K3cyeDhnVFlrVzBlaFJnaW8waUZuMjZJRmRZbEJIK2FrbGF5L0ZMaUR1TTlWakFjbUJpYnF5a1FtbFBjL3lUQ0E9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.10.3-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1VNEhEdFYzdjNQUDVoSDdHbnRUNmFjWDI1ZUxWNVZEWEI5RUxqVnVjUHN3MGdDYnFFeTI2MmtGMUtiTEh1NGw0THE2NUdvc3hlbDhONC9jNWdQTndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MzkxMDQzCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKSVVrcjlOb1ZRbkpLeVBzUHptVy9JR3dqV3FKL0ZoVGJwd0lybnpuT2FlWTFGWHRiclJmVUFiVTFYdVdyUUhMUStkQlJLbU5icjFycm41c1BvK3MvQ1E9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.11.0-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpqc3EzZDZnTVpUcVJCT3pMWUU3bTQrMVp3YzhGbHU1eEs4aml2RzVkVC95STBHUzhOV0FTWmlQRWZJM2plQXpVUGtlekY2Qi8rZFVJLy9vYWhuY3drPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MzA2MjQ4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKalVNVXVYZnl0clU3VnBuWHRjY0Q3K3cyeDhnVFlrVzBlaFJnaW8waUZuMjZJRmRZbEJIK2FrbGF5L0ZMaUR1TTlWakFjbUJpYnF5a1FtbFBjL3lUQ0E9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.10.3-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1VNEhEdFYzdjNQUDVoSDdHbnRUNmFjWDI1ZUxWNVZEWEI5RUxqVnVjUHN3MGdDYnFFeTI2MmtGMUtiTEh1NGw0THE2NUdvc3hlbDhONC9jNWdQTndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MzkxMDQzCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKSVVrcjlOb1ZRbkpLeVBzUHptVy9JR3dqV3FKL0ZoVGJwd0lybnpuT2FlWTFGWHRiclJmVUFiVTFYdVdyUUhMUStkQlJLbU5icjFycm41c1BvK3MvQ1E9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.11.0-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpwakRtcURuVDZBbkxBYnZMS2RxQ2xvTE1sa1VKMGltWTdtUmd4dW5mUjEvL2Z3RDB1MFpodTZ5SkpWbStSWG0rUzRnNlFWRG81UGVFOExsQnVCU0FFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MzA2MjE0CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEwLjNfeDY0LXNldHVwLmV4ZQpQVEhYNmY5bHpPZTZleGcxU0xnWmRTalcrQjEwcmZidGhHbzFEYXAycmg0VUdiZ2hMSTBDWkQ4SVFLZEZ1V1RWRnphNTdiMUZ6aVVvOFBjN29abUxCZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.10.3-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHVjWUZCYWRxUUVXK21vWjRPU09JbHQyS2QzOW1COHlzS3lKaGNRUlpkcXhmdnJWbm50NVV3WEtmeTc3QklrUGxsWVFMK2swcGdvbG1ESWxHWFJ4SHc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5MzkxMTg3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjExLjBfeDY0LXNldHVwLmV4ZQpNWnc3U1ozeU5kN0FCUGpVQ1JwczRtZFhnOVBJbzlsZWprck1neG1HK3dHOGRyakdJZzV3TG5ycjR5SG90MHF4bHNTc211QVN5SExrVXhqaDRVVzhBZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.11.0-Windows-x64-setup.exe"
     }
   }
 }
