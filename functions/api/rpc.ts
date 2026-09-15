@@ -53,12 +53,37 @@ const ALLOWED = new Set([
   "scan_known",
 ]);
 
+/**
+ * Does this query return the decoded object (which carries `confirmations`,
+ * and for a block `nextblockhash`), or the raw hex string?
+ *
+ * getrawtransaction takes the flag as its SECOND argument and defaults to hex.
+ * getblock takes it as its second argument too but defaults to the decoded
+ * object, so an absent flag means verbose there and non-verbose here. Divi
+ * accepts both booleans and 0/1, hence the loose truthiness check.
+ */
+function isVerbose(method: string, params: unknown[]): boolean {
+  const flag = params[1];
+  if (method === "getblock") return flag === undefined ? true : Boolean(flag);
+  return Boolean(flag);
+}
+
 // Confirmed chain data is immutable, so it can cache effectively forever. Tip
 // data must stay fresh. Anything unknown gets the cautious short TTL.
 function cacheSeconds(method: string, params: unknown[]): number {
   if (method === "getblockcount" || method === "getblockchaininfo") return 10;
-  // A block/tx lookup by hash can never change its answer.
-  if (method === "getblock" || method === "getrawtransaction") return 31536000;
+  // A block or transaction's CONTENT can never change once it is mined, but the
+  // verbose form of both carries a `confirmations` field that grows with every
+  // new block. Caching that for a year froze it at whatever it was the first
+  // time anyone opened the page: a transaction viewed while it was one block
+  // old then showed "1 confirmation" for the next twelve months, which read as
+  // "this payment never settled" on a transaction buried three thousand deep.
+  //
+  // So the split is on whether the answer actually contains volatile fields.
+  // The raw hex form is genuinely immutable and still caches hard.
+  if (method === "getblock" || method === "getrawtransaction") {
+    return isVerbose(method, params) ? 20 : 31536000;
+  }
   // Height→hash is immutable once buried, but a recent height could still reorg.
   if (method === "getblockhash") return 60;
   // A block range anchored below the tip is settled history and caches hard; a
@@ -97,8 +122,15 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   }
 
   // Edge cache keyed on the exact query. A cache hit never reaches the node.
+  //
+  // The version segment exists to ABANDON poisoned entries. Entries written
+  // under the old year-long rule have frozen confirmation counts in them and
+  // would otherwise keep being served until 2027; bumping this walks away from
+  // every one of them at once. Bump it again after any change to what gets
+  // cached or for how long.
+  const CACHE_VERSION = "v2";
   const key = new Request(
-    `https://rpc.cache/${method}/${encodeURIComponent(JSON.stringify(params))}`,
+    `https://rpc.cache/${CACHE_VERSION}/${method}/${encodeURIComponent(JSON.stringify(params))}`,
     { method: "GET" },
   );
   // `caches.default` is a Cloudflare extension; the bundled DOM typings model
