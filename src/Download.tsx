@@ -175,12 +175,54 @@ export function DownloadButton() {
   );
 }
 
+/**
+ * Which platform to open on.
+ *
+ * Order of preference:
+ *   1. an explicit ?os= (or #mac) in the link, so other sites can send someone
+ *      straight to the right download instead of a page they must then read;
+ *   2. the visitor's own operating system;
+ *   3. Windows.
+ *
+ * The value from the URL is checked against the known platforms rather than
+ * trusted, so a hand-edited link cannot select something that does not exist.
+ */
+function initialPlatform(): string {
+  const known = PLATFORMS.map((p) => p.id);
+  if (typeof window !== "undefined") {
+    const url = new URL(window.location.href);
+    const raw = (url.searchParams.get("os") ?? url.hash.replace(/^#/, "")).toLowerCase().trim();
+    // Accept the words people actually write in a link.
+    const alias: Record<string, string> = {
+      mac: "mac", macos: "mac", osx: "mac", apple: "mac", darwin: "mac",
+      win: "windows", windows: "windows", pc: "windows",
+      linux: "linux", ubuntu: "linux", deb: "linux", debian: "linux",
+    };
+    const asked = alias[raw];
+    if (asked && known.includes(asked)) return asked;
+
+    // No instruction in the link: offer what they are actually using. The page
+    // used to start on Windows for everyone, so a Mac visitor was shown the
+    // wrong installer and the wrong instructions until they noticed.
+    const ua = `${navigator.userAgent} ${navigator.platform}`.toLowerCase();
+    if (/mac|iphone|ipad/.test(ua) && known.includes("mac")) return "mac";
+    if (/linux|x11|ubuntu/.test(ua) && !/android/.test(ua) && known.includes("linux")) return "linux";
+  }
+  return "windows";
+}
+
+/** Should the beginner walkthrough be open from the start? (?guide=1) */
+function initialGuide(): boolean {
+  if (typeof window === "undefined") return false;
+  const v = new URL(window.location.href).searchParams.get("guide");
+  return v === "1" || v === "true";
+}
+
 // The standalone download page, rendered at /downloads (and /download). Picking a
 // platform selects it (green highlight) and swaps the instructions below to that OS.
-// Defaults to Windows, the build currently under test.
 export function DownloadPage() {
-  const [selected, setSelected] = useState<string>("windows");
-  const [guide, setGuide] = useState(false);
+  const [selected, setSelected] = useState<string>(initialPlatform);
+  const [guide, setGuide] = useState<boolean>(initialGuide);
   const active = PLATFORMS.find((p) => p.id === selected && p.href);
 
   return (
