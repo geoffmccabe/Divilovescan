@@ -1,19 +1,19 @@
 {
-  "version": "69.11.5",
-  "notes": "Balances now say STILL SYNCING instead of showing a misleading zero while your node is still reading the chain. Coins already sent to you appear as it catches up.",
-  "pub_date": "2026-09-15T15:29:41Z",
+  "version": "69.12.0",
+  "notes": "Fixes a node that could not start at all on Windows, adds far better setup logging, a fast first-sync from the chain snapshot, and tells you whether the network can reach your node.",
+  "pub_date": "2026-09-17T23:55:26Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHFRd2dCUzBPRDdnNy9nV0hBREgrQVZoVDRVUWpNVGdLNEJxRktqVGV1MjcrUW1OdVUrT0dCZERnT25CRHgwWFZ2NHAwYlh3OS9pMFNPcDdKd0F0MHdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NDg2MDI3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKSXdPaEhJRnZ1RzdVNUFEZjBYMHkrZ1N2NWdYazczcGszeis5REdCbjlOQWhMV0NmZmluY1k0TmxuTmpQMFhMUFMwRDB6djBMZXhnVW5MWXQ4MVU0QkE9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.11.5-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGdrcVFuR0RYZ2hSY3RLNWk5L0JjOUFlQ2RpdW5VNHE0QVM5UDFNRzQrZ3BVWUpicG5EK2MvZTZ4eGtDME0rczhvbWNOWFZHY0RTVnZmUjJYZkJlM0FRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Njg5MTM3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKWGVyYVoveXRwcnkrR2M4d0wraVkwT09ZYjZqOThySnRQck1jaVlKTnNXdXZYS21Fd3BGMXVTS1JXbktRcEFxa0hBMkdnZlVUaDdmQnNBQzlobkNMRGc9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.0-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHFRd2dCUzBPRDdnNy9nV0hBREgrQVZoVDRVUWpNVGdLNEJxRktqVGV1MjcrUW1OdVUrT0dCZERnT25CRHgwWFZ2NHAwYlh3OS9pMFNPcDdKd0F0MHdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NDg2MDI3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKSXdPaEhJRnZ1RzdVNUFEZjBYMHkrZ1N2NWdYazczcGszeis5REdCbjlOQWhMV0NmZmluY1k0TmxuTmpQMFhMUFMwRDB6djBMZXhnVW5MWXQ4MVU0QkE9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.11.5-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGdrcVFuR0RYZ2hSY3RLNWk5L0JjOUFlQ2RpdW5VNHE0QVM5UDFNRzQrZ3BVWUpicG5EK2MvZTZ4eGtDME0rczhvbWNOWFZHY0RTVnZmUjJYZkJlM0FRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Njg5MTM3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKWGVyYVoveXRwcnkrR2M4d0wraVkwT09ZYjZqOThySnRQck1jaVlKTnNXdXZYS21Fd3BGMXVTS1JXbktRcEFxa0hBMkdnZlVUaDdmQnNBQzlobkNMRGc9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.0-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRONno1M3NBdnlyM3hDNlhVOHFIWE5MUGhRVlJEc2xidDF4ZWpscmpLN0RheVhQdDJTMmVMTFllRmg2a2daVzZFZ0E4b0xlekQ4YWdod0crSlE5R0FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NDg1OTc1CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjExLjVfeDY0LXNldHVwLmV4ZQpqeTZzTGcveVBrTUkxS0xhY2RSMnk0cnd1dzlNSFdKYkV3N1RoVkF0dDZnbnpSQThRVGtmaG5hdGpMWVpnVW8zWkI4cUhySUx4OW1VUnB1R0hBT01CQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.11.5-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGg2aWZDUWFvUDkveGFDUmFmWkdCQjVBcGxZOGszbWVNeWxsOURIRk1LRkgwaW5nMlVnbzR2ZE5XVDRVWTBTZnNQeGNIcndIRkdGUXU2Vm5wVkFoWlFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Njg5MTMwCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEyLjBfeDY0LXNldHVwLmV4ZQpQWVp1cURweThpNzB2bTZuM3YvZHFaR2w3dnNWdjMwSTJaZDJ5alJBYXlYSzNCKzFDTFJEdmRML0hLTXVDd0kwY3hUcEd6Zmt3ZnFXdUJnMG41VWlCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.0-Windows-x64-setup.exe"
     }
   }
 }
