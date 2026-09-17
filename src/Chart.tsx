@@ -97,7 +97,11 @@ export function Chart({ points, height = 260, mini = false, fmt, color }: Props)
   const padL = mini ? 0 : 62;
   const padR = mini ? 0 : 10;
   const padT = mini ? 4 : 10;
-  const padB = mini ? 4 : 30;
+  // 30 left the date labels nine pixels from the bottom edge, with the tick
+  // marks running into it and no axis line at all. Anything that shifts text
+  // metrics slightly — another browser, a zoom level, a fallback font — pushes
+  // them off. Reported as "the bottom is cut off".
+  const padB = mini ? 4 : 48;
   const innerW = W - padL - padR;
   const innerH = height - padT - padB;
 
@@ -159,7 +163,7 @@ export function Chart({ points, height = 260, mini = false, fmt, color }: Props)
               {t.label && (
                 <text
                   x={x(t.i)}
-                  y={axisY + 18}
+                  y={axisY + 24}
                   textAnchor="middle"
                   fontSize="11"
                   fill="hsl(var(--muted-foreground))"

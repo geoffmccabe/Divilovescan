@@ -299,6 +299,22 @@ export function ChartFullPage() {
           <span>Loading…</span>
         </div>
       )}
+
+      {/* Switch charts without going back to the grid and in again. Every chart
+          is one click from every other, and the current one is marked so the row
+          doubles as "where am I". */}
+      <nav className="ch-switch" aria-label="Other charts">
+        {CHARTS.map((c) => (
+          <Link
+            key={c.id}
+            to={`/charts/${c.id}`}
+            className={"ch-switch-btn" + (c.id === def.id ? " on" : "")}
+            aria-current={c.id === def.id ? "page" : undefined}
+          >
+            {c.title}
+          </Link>
+        ))}
+      </nav>
     </section>
   );
 }
