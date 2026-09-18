@@ -1,19 +1,19 @@
 {
-  "version": "69.12.2",
-  "notes": "The block count now flashes as each block arrives, so a syncing node no longer looks stuck.",
-  "pub_date": "2026-09-18T17:43:37Z",
+  "version": "69.12.3",
+  "notes": "When the node stops, the wallet now tells you why instead of only that it stopped.",
+  "pub_date": "2026-09-18T18:12:18Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHBCRWpnQmdHV1E3bjF0YmM2RzZPejllU0J3QXhyZEdpVGpMR21nSUJnT0hkdFg2eVpadmRkQnZySmdzb2VvYjJLZWF1ZWZTSXlONnNWS3NPTTlhOWdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NzUzMTU2CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKdVZWWkxxQXFmT3lXb3dEUVU3dkxkbGxjWDhjb3lKRm8xd1QvWS9PN0hVM2t1TlU4TURadXZsRVdWKzc4MkVORlBhVGhGZkMzZ0NRbWRxc0xEWWRuQnc9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.2-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpBUDNxMFE5cmZRaGhrQ0NnYm5DTkR1MlNZbWtiUHhodEFNNGdPQXVDTmJkT2dCSTUzV3RyNWZQLzhvdkNiaWRpRkp4WTBTSHNVRktjeXlZc3JCRXc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NzU0ODczCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKVEJuZUZBdjlwS2JtenRQRGhOVjFJblJ1ZFVwdENML0JuTEJ3Z0lKTXBhcG9PRVNJRGwyVEs1dndnT0NYWS8yOU5QanZ1M0lLWXJCbVR3ZUlRVWdPRGc9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.3-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHBCRWpnQmdHV1E3bjF0YmM2RzZPejllU0J3QXhyZEdpVGpMR21nSUJnT0hkdFg2eVpadmRkQnZySmdzb2VvYjJLZWF1ZWZTSXlONnNWS3NPTTlhOWdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NzUzMTU2CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKdVZWWkxxQXFmT3lXb3dEUVU3dkxkbGxjWDhjb3lKRm8xd1QvWS9PN0hVM2t1TlU4TURadXZsRVdWKzc4MkVORlBhVGhGZkMzZ0NRbWRxc0xEWWRuQnc9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.2-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpBUDNxMFE5cmZRaGhrQ0NnYm5DTkR1MlNZbWtiUHhodEFNNGdPQXVDTmJkT2dCSTUzV3RyNWZQLzhvdkNiaWRpRkp4WTBTSHNVRktjeXlZc3JCRXc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NzU0ODczCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKVEJuZUZBdjlwS2JtenRQRGhOVjFJblJ1ZFVwdENML0JuTEJ3Z0lKTXBhcG9PRVNJRGwyVEs1dndnT0NYWS8yOU5QanZ1M0lLWXJCbVR3ZUlRVWdPRGc9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.3-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG5zaFdYV0FwZkJSbHhkc3JGOEpodVU0ZFJUQlN5eGY4YW03Uk15WkdjdzZ2b2RUVDJLeVZZWkd5OGFoQW5HU3A5NW9WM3VNdytYQkpRN1hySk9aSGdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NzUzMjA3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEyLjJfeDY0LXNldHVwLmV4ZQpoQThMc3k1RURuSlBSdUVjVGdmaGUrMURTUHhZN0hjbTdPZVBKL3pBUW9BeWJxbE83NnB0T1laSGNXcWZaVTcrUzNwbWN0dVNGK3ZFYzVGNmYwcFpBQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.2-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHBmQlZCWnZCWDQrTHlRbTdvNDg0N3dFek1MMExLc0JTUEtuYlNjdi9STk52VHZwYXY4UlNwVmdlNE1tZUxQeW12YkVscysrcS90MTdlMFZDS3VjNVFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5NzU0OTMwCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEyLjNfeDY0LXNldHVwLmV4ZQovTUI0cFU0Z1J6WE9vbTBkVzRjZGFJdEN4M0dXdlYxV09YUzZvR3VTNk5JWEIrb0pwWWJkeHdudG8yRXB5Lzl3NG1iUVM0YWE5dU53MXdLeWc3NENCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.3-Windows-x64-setup.exe"
     }
   }
 }
