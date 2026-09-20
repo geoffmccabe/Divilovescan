@@ -1,19 +1,19 @@
 {
-  "version": "69.13.2",
-  "notes": "Stops the wallet restarting a healthy node (the cause of STILL SYNCING with nothing moving), says so when the map is frozen, fixes the price chart's missing bottom axis, fixes Copy Setup Log, and adds Copy List to Nodes by Country.",
-  "pub_date": "2026-09-20T21:54:11Z",
+  "version": "69.13.7",
+  "notes": "Send and Start Staking work again when the wallet is locked, with an Unlock button and the reason shown. Start Staking no longer blanks the Spendable balance. The price chart's bottom axis is back. Updates are noticed within minutes. Copy Setup Log works and is now short enough to paste. Windows: no more PowerShell windows, and a node that crashes is diagnosed instead of retried for three minutes.",
+  "pub_date": "2026-09-20T23:20:05Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRzNWFYbTV0eUZRWVVtMHJROFJoaWZ4K2hkTWJpRFZWNmlyc0pyTC95WTNGOCtEbDUvVE1WdXFiQ2RHZXVHYUhBZThsdUlWQjE2Sm1xV0dYUWw3SWdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTM5OTM4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yCkd0QjNIcE93eGRXQVU1ZUpyUEtNQ0krU2J1bENCOG1qSlBYdVRzalB5KzdKTlVOWHBuWG9CYlRKaFRJV2pEb3BJOXRBbzBzUGFOeC81S2JTcWFqYUNRPT0K",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.2-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpKNzBXMjZJQm1ZTTZPYm9CY1gybUQxQTVydm9udHJCdW9zdGlWWTZreU5SVitEVGZjQmtKUlZCQkhCaUZiQUk3Y1U4QTlQa3lmS2J1TFFsQ0QwcHdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTQ1Njg0CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy43ClpKTlFMYk03VFhXaFRWQVdMMVI1TTR1N00xKzRIRU54UUJ0K0daOVRpOE16VG4wZEYrY3lUMlp1WnhDNGdkdE05cUR3MC90YUw3L1BiSmFXMlhkNkN3PT0K",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.7-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRzNWFYbTV0eUZRWVVtMHJROFJoaWZ4K2hkTWJpRFZWNmlyc0pyTC95WTNGOCtEbDUvVE1WdXFiQ2RHZXVHYUhBZThsdUlWQjE2Sm1xV0dYUWw3SWdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTM5OTM4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yCkd0QjNIcE93eGRXQVU1ZUpyUEtNQ0krU2J1bENCOG1qSlBYdVRzalB5KzdKTlVOWHBuWG9CYlRKaFRJV2pEb3BJOXRBbzBzUGFOeC81S2JTcWFqYUNRPT0K",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.2-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpKNzBXMjZJQm1ZTTZPYm9CY1gybUQxQTVydm9udHJCdW9zdGlWWTZreU5SVitEVGZjQmtKUlZCQkhCaUZiQUk3Y1U4QTlQa3lmS2J1TFFsQ0QwcHdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTQ1Njg0CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy43ClpKTlFMYk03VFhXaFRWQVdMMVI1TTR1N00xKzRIRU54UUJ0K0daOVRpOE16VG4wZEYrY3lUMlp1WnhDNGdkdE05cUR3MC90YUw3L1BiSmFXMlhkNkN3PT0K",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.7-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGlHOFZiQ2N4R0c4UkJyTFVWN1l6SUxka0E1R1dnZHJKdXFDK282NDVBS0p0aEUxenh0QWs3RHVKZGtoV1ZrQk1MbWZMbWw0bmJyRGZ3VS9SMmRaUUFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTM5OTkzCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjJfeDY0LXNldHVwLmV4ZQl2ZXJzaW9uOjY5LjEzLjIKVDYwYWFlemJnNktkVFJ3QVZyRkYwaW5McFZRR29uSU9qSFhaMHpScDFUSFJCMXFFb1dqOEdLaS9hWkZXdVM5M2xZWDRCWU5PbmJ2aTVyRmZ3UURNQmc9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.2-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxNTERETG1ZcGhrRzdXNVNOMjZkUzJMZGFvYS9xTHl5K1hwTitaUDhsaFcvYmt3SnQ1YzVmUUZIK2M0cDJCV0NrTmNuWUlmUGRLRFVBMU05cnlUMWdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTQ1Njk0CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjdfeDY0LXNldHVwLmV4ZQl2ZXJzaW9uOjY5LjEzLjcKOGhCMlJmdTdnbEpSOG9mOFFmSDVSdWJjY1U2MDhwRWVnMXlMbGdCK0t1blgyak9od1VCUzAyRGc4MzdUTUFuNnE3RStDUE53RFhSUmNZdDhFa05pQnc9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.7-Windows-x64-setup.exe"
     }
   }
 }
