@@ -297,3 +297,4 @@ snapshot; one node means one vantage point, and its peer count is not a census.
   never call `getchaintips` on a request path.
 - **Need something not exposed?** Both allow-lists must be updated together, and
   anything wallet-adjacent must be scrubbed before it is published.
+public/downloads/*.dmg  — 9MB, in git for now; move to R2 when there are more platforms
