@@ -1,19 +1,19 @@
 {
-  "version": "69.12.6",
-  "notes": "Removes the phantom node in the Atlantic; outside services are now shown where they really are.",
-  "pub_date": "2026-09-19T15:56:18Z",
+  "version": "69.13.0",
+  "notes": "Recovers automatically if the node stops answering, shows which nodes run DD69, and no longer says 'connecting' while it is connected.",
+  "pub_date": "2026-09-20T18:53:40Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxkMG16bTdUUmVYSm9DeXlHS1p3R1dob0xZVHFzMFFhWXZvUmxKcUIvcTcwZnpoZUVoWFFQZkU3ZGlwWGVHR3loY3dhWjFSeE9KMU0wSFlWY21PUlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5ODMzMjEyCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKdjgwVVFWK3liK2hDT2VnUU1JYllseFQ4ZTZZdDg2MVJwb2ZjMEtSVzVRVHEyWUFsa093SmE3NEVDWVJtTG1aNzNURmlnc215WmpNTVZXTUVFRmtWQ0E9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.6-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGhxd29udjFnN3J2dHJGRXJ4SDlzTUlBVkR4MFJVTVdPSUtpVVF5MW12eXhJczFsbnpnYU9xdnhFUElvSFZVdG1tQlJUamtEV2tqNEd6R1k1NmdyTVFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTMwMzMwCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4wCm9aOS9uNENYaEtERiszMnBnMmxJendwKzB4Tnk1anJEVSs2L29aWlpSdnRkUGUwK01xbkhIU0xnVTZ6NkUrUy93d2tuTUl1S2k4V24rY3hHNUZxbkNnPT0K",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.0-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxkMG16bTdUUmVYSm9DeXlHS1p3R1dob0xZVHFzMFFhWXZvUmxKcUIvcTcwZnpoZUVoWFFQZkU3ZGlwWGVHR3loY3dhWjFSeE9KMU0wSFlWY21PUlFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5ODMzMjEyCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oKdjgwVVFWK3liK2hDT2VnUU1JYllseFQ4ZTZZdDg2MVJwb2ZjMEtSVzVRVHEyWUFsa093SmE3NEVDWVJtTG1aNzNURmlnc215WmpNTVZXTUVFRmtWQ0E9PQo=",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.6-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGhxd29udjFnN3J2dHJGRXJ4SDlzTUlBVkR4MFJVTVdPSUtpVVF5MW12eXhJczFsbnpnYU9xdnhFUElvSFZVdG1tQlJUamtEV2tqNEd6R1k1NmdyTVFFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTMwMzMwCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4wCm9aOS9uNENYaEtERiszMnBnMmxJendwKzB4Tnk1anJEVSs2L29aWlpSdnRkUGUwK01xbkhIU0xnVTZ6NkUrUy93d2tuTUl1S2k4V24rY3hHNUZxbkNnPT0K",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.0-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG84R0E3SFpvVlN1NGwvRjNnYVRCVHcwdFNJT1lKb2RLYk9tclp6YnBJNFozRFhYQ0hPbTk4NzJrUWIyS2ozd05WdDdIS29YYi9kRnUvUmRQNjFJeHdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5ODMzMTc2CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEyLjZfeDY0LXNldHVwLmV4ZQprYjVSKzRYYmRnOTdJelhlUjJqMVIwSDBWQWI4ZEpCSmxTbFRrRys3Y2hRUWFSZ3k3bTZZTU80VVZ5RHV4djZpOEFIOEdrc09VR1ZpU2puaHFGUXBDdz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.12.6-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpnL3hnWElwL1F6b2hreGQ5M3M2S1FYZU9tY0xwR1FaZ2FUYjRFTjVTd3d3eW9VVEQ2NTNLTEJ5SU96QmdqNVJNOXIweHV1SEkzMXI1enlYVXVBbkFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTMwMjQxCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjBfeDY0LXNldHVwLmV4ZQl2ZXJzaW9uOjY5LjEzLjAKRSt6MTd1V2hsOE5IdWxadlM3TXRiNTlnYjZoZnd4YkJsMVZUNlRlNzhhZXA1cW5JdFR1WkVBNW53NEpNaEZXNEpUTmE0QjVTT1lDaHM5eFJwS3RaQlE9PQo=",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.0-Windows-x64-setup.exe"
     }
   }
 }
