@@ -1,19 +1,19 @@
 {
-  "version": "69.13.13",
-  "notes": "The map no longer claims the node is frozen after the window has been in the background or the machine asleep. It now counts real failed checks rather than time passed.",
-  "pub_date": "2026-09-21T05:04:03Z",
+  "version": "69.13.14",
+  "notes": "The wallet can now notice a node that has stopped answering and restart it cleanly, instead of leaving it stuck for hours. The map's warning has a Copy button.",
+  "pub_date": "2026-09-21T14:03:25Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHU4ZEh6RGh3cjVNaWVkaFlJbTVqRkF5S1htREgwT0JveUlRc3dsMExGWGhxRjNFUmt0NVlqN0J2VEZwdVh5YnR1MmVKeDE4akxvTWRJeUhQM091ZFEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTY2OTMxCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xMwpEdXJFeVhyTjhjWW5scm1hR3VyK1d2a0xTMjFFVTRLR0o2Q2pYOWFJWml2RU5oNytzLzRBOE5CWXdka3k2Zk56Szh2Z2JCUHk0V1BPQmdKc0pmV0ZCUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.13-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHJ0QW5xYXd6S1ZGU05hWnRiN1ZPcXZaSjZ6U3pwZk93TGt0Qm9FRUJkZHIzSzVSMFV6RGpqcFA5aTI2WGpRQXFqTEFTby8zblB0VkEvKzBsTjVSZUFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTk5MTI4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xNAphbnVyWFNsN3NDaVdZNEtqWXJqR1pKUWFSZFRLMVN6N2J4Rjh6cXR2aFg5aWFMZGswNldpR2hNK25nZnh3UUgrUlpSUjM5S1JPeU1sRWVRN3FZelVEQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.14-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHU4ZEh6RGh3cjVNaWVkaFlJbTVqRkF5S1htREgwT0JveUlRc3dsMExGWGhxRjNFUmt0NVlqN0J2VEZwdVh5YnR1MmVKeDE4akxvTWRJeUhQM091ZFEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTY2OTMxCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xMwpEdXJFeVhyTjhjWW5scm1hR3VyK1d2a0xTMjFFVTRLR0o2Q2pYOWFJWml2RU5oNytzLzRBOE5CWXdka3k2Zk56Szh2Z2JCUHk0V1BPQmdKc0pmV0ZCUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.13-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHJ0QW5xYXd6S1ZGU05hWnRiN1ZPcXZaSjZ6U3pwZk93TGt0Qm9FRUJkZHIzSzVSMFV6RGpqcFA5aTI2WGpRQXFqTEFTby8zblB0VkEvKzBsTjVSZUFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTk5MTI4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xNAphbnVyWFNsN3NDaVdZNEtqWXJqR1pKUWFSZFRLMVN6N2J4Rjh6cXR2aFg5aWFMZGswNldpR2hNK25nZnh3UUgrUlpSUjM5S1JPeU1sRWVRN3FZelVEQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.14-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1Tdmp5OTNzblF1V3A3NzZXenI3TWFtZ0dBemlCMFJkM2owRkJjcUVsa0NTWktwUmxsVzNTcjJNMnQ4NzNCSnBReXZZaE1xU0JENE9wOVRJYitrR2dBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTY2OTU3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjEzX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4xMwo4NWszdGlzbDZVWVQ0MFMrOFUyUStsc3JNNHJRc2ZxYW5XcTdOYkNKSlVUTkJDOXdHSTZiTjlUWUpwVThaYUEwdzNTOFNvZllXNU83dFBCUytJbEtBZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.13-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHJ2eE9kUy83ZjBYTEN4UDNKWjhPTnM4WDBDa1FxYXJEbi83U2Y2TGwrcmxBZEdFN1pNMEgyNHBDdHM1TW4vMmpDZllnYjZJWEdNb3k5aFRJeUR0QUE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTk5MTg2CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjE0X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4xNApDampvODBIY3RuaWN4U2Z2TEpYUDgzMk1KaU5XSG80TStFN2VkZDJhQW4xeFdWRHNSQk12REx2YmpFSHNUOGdJbUFLYlh5U1ZPcXlmRWJucUFhMXpDdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.14-Windows-x64-setup.exe"
     }
   }
 }
