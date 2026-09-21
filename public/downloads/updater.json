@@ -1,19 +1,19 @@
 {
-  "version": "69.13.10",
-  "notes": "The blockchain snapshot is now hosted by us with a published checksum, so an interrupted or damaged download is detected and resumed instead of being unpacked as if it were fine. Includes the Windows node-start fix.",
-  "pub_date": "2026-09-21T00:45:20Z",
+  "version": "69.13.11",
+  "notes": "Windows: the wallet no longer reports a perfectly healthy node as failed because it did not leave a PID file, and a snapshot can never be unpacked on top of a running node.",
+  "pub_date": "2026-09-21T02:02:41Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpjNk4xeU1pdk12RytSeHZIUkI4d21Fc3R1QVhtdFhZRWdoRmpnclM0cGVieTltU284eXRoTXVpY0NxU2V1b3JmK1ZFOE1TdWYycDRaaTA5V2pOVXcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTUxMDQ1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xMApjRFlwQktDd2I3L0NkUlpBQ0Z2aTdmL2QvWkVqbFZKeE83WTNUUW5NSXRPL1pmZmI4cHRTU2xFUjY0UW1YdkxEaDRsaEVEUVl1YS9GN3ZiK1RCaU1CQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.10-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHZmZU8xQ25XcyttUWNHWnpVb2ExK0lCdDFmejJiNGFXb04yYlk4ZndlWWhDMDBaUWJyT05zdTB4alE0YTVNak93Y2RUWlFjUDJISEVDY1A1YWdFMVFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTU1OTY3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xMQo3S25OZHpheEduaXFFbjU4UWk5dXd4TGFJdmxTKzdlSUtGQlA0OE05cytQYU9LVVhvY29rcUswZlRiTnpSdGhvVlVDdFZ2WHJlOWFTcGc3S0QyUXVCUT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.11-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpjNk4xeU1pdk12RytSeHZIUkI4d21Fc3R1QVhtdFhZRWdoRmpnclM0cGVieTltU284eXRoTXVpY0NxU2V1b3JmK1ZFOE1TdWYycDRaaTA5V2pOVXcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTUxMDQ1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xMApjRFlwQktDd2I3L0NkUlpBQ0Z2aTdmL2QvWkVqbFZKeE83WTNUUW5NSXRPL1pmZmI4cHRTU2xFUjY0UW1YdkxEaDRsaEVEUVl1YS9GN3ZiK1RCaU1CQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.10-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHZmZU8xQ25XcyttUWNHWnpVb2ExK0lCdDFmejJiNGFXb04yYlk4ZndlWWhDMDBaUWJyT05zdTB4alE0YTVNak93Y2RUWlFjUDJISEVDY1A1YWdFMVFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTU1OTY3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4xMQo3S25OZHpheEduaXFFbjU4UWk5dXd4TGFJdmxTKzdlSUtGQlA0OE05cytQYU9LVVhvY29rcUswZlRiTnpSdGhvVlVDdFZ2WHJlOWFTcGc3S0QyUXVCUT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.11-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGo4aU5xbkdYTGJKRHZUVDNuVUl5cFlBUm54ajd3QXl6MHN5cWhPdmY4eHZvKzhETUZhZ29XUmlrYzdPZzZVN0ppUEFXTnlkSnBhNDdPRmZRSWNEZUFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTUxMDUyCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjEwX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4xMApmNGVTNFExQkE0UEpVcGRBNnBLK2tjWWw5T2E0TW9xcXlZYmUyS0NUeVh4aFhXT3dHNnBTenQ2ckFrU1hKWGhabEVwMlUxYUdwR1Y0dTNrSnFIM0dCQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.10-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHZxZ2tJaDVvbHh5K0l1M1BBM1FMVDg3bEFCbXhuN1NzbTVpeGpvYkxqQjlhOC9ZSzZoWHpiaEFRUkEwZlZIcUgyRDNpR1M5dU5zUStlTExGUkNCZHdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5OTU2MDQxCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjExX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4xMQp1WXBrV2pWWi9FbC9YUC9iWTY0bTdmckgzSUxVSFVHLzJCeG10bFZJUER2c0d4RjloQXY5QnJTeTdlR2ovZkpCMExkYmhSdi82ZFBZb3B5RFlXc2REUT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.11-Windows-x64-setup.exe"
     }
   }
 }
