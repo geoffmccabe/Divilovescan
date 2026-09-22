@@ -1,19 +1,19 @@
 {
-  "version": "69.13.21",
-  "notes": "The hearts view now finds nodes that have upgraded, and each of your nodes has its own name.",
-  "pub_date": "2026-09-22T17:22:33Z",
+  "version": "69.13.22",
+  "notes": "Restore a wallet from its seed phrase (into a second node, or replacing this one, with a double confirmation). Right-click any node on the map to ping it or add it as a peer. No more 'gone quiet' warnings while a node is starting.",
+  "pub_date": "2026-09-22T23:53:27Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGc1SzRaNmMrMUNVOElXYmg1dmVTZE9qV0JnVDAzdWdiN2tLWWZDa3VRSEptWXZOSERlSWI5blFzUjZrS3JFR3VrUndoNmlEcWJ1bmxSWmt3R09LemdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMDk3Njg2CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMQpGTVpkcE81anZIOEFTYWpaSEtpWklVZWNMZWFjK1VoanpjZCtYa0p0TGlLaXA2Mk1Jb2ROcWJSTFNvcVRDZERqcDF2TFpXVWRIT20xb3IrSkJlL0RDUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.21-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGs1U1VnVWVLMXpkS21tMkFJWUhkQmRaS1h0dkxIRkNsVmZjTnJGMnJpOEJvS2pqRFM0SHBUSHNBZ21mSDFtMHlKbGxIWVFDUERtZVlEb00wU3pIQlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTIxMTI3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMgpvWFlUR2RVTWFDUXErbE8xblI0aytRbDlsRnBLRldXVFBWUmRNa0EreDNoSXVQc1FPc3l1VmVidng5cnA3Q3d0c0E0RGZTMVdiQ1NITS9pKys5NEFDZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.22-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGc1SzRaNmMrMUNVOElXYmg1dmVTZE9qV0JnVDAzdWdiN2tLWWZDa3VRSEptWXZOSERlSWI5blFzUjZrS3JFR3VrUndoNmlEcWJ1bmxSWmt3R09LemdvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMDk3Njg2CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMQpGTVpkcE81anZIOEFTYWpaSEtpWklVZWNMZWFjK1VoanpjZCtYa0p0TGlLaXA2Mk1Jb2ROcWJSTFNvcVRDZERqcDF2TFpXVWRIT20xb3IrSkJlL0RDUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.21-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGs1U1VnVWVLMXpkS21tMkFJWUhkQmRaS1h0dkxIRkNsVmZjTnJGMnJpOEJvS2pqRFM0SHBUSHNBZ21mSDFtMHlKbGxIWVFDUERtZVlEb00wU3pIQlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTIxMTI3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMgpvWFlUR2RVTWFDUXErbE8xblI0aytRbDlsRnBLRldXVFBWUmRNa0EreDNoSXVQc1FPc3l1VmVidng5cnA3Q3d0c0E0RGZTMVdiQ1NITS9pKys5NEFDZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.22-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGoraGc0NXhFQTFvQVZQdHBLQ2tzem5WN3NEeTRwL0FXVzJTS3F4WnNDbjhOR1FtcVhEMElGSFR0a3lNOTZSd0tDTnZOUGg1cFdiWm1aN1RqOTZaVVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMDk3NjE0CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjIxX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yMQpDQ3k1c2hzYytYQ2Z1M0FEQmJTMGFQWWlNVTMzeGJ2T0lrLy9rbVhEUWtKYWdHejBIRS9tK081T3ZONGRjajFLQ3prY3NHdHAwdlAvQzJyeWNDdmlBdz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.21-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHA5ZGgwSmVDbGkvbTJseXFUZHNiMEI4TXNOOEZtaFBhOFc2N1YvcUw0YTZXQVhjV1o0YVFtTjBBOUlXZlZZaWZnVGx2elo4Z2FONmtpZHdhUEdRRndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTIxMDQ4CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjIyX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yMgpMQlZCRkZaUUxZK1Q3ZDNZTGc0dXdtbVVJb3VFR3FYYituUHB3c2dDcmphUG9YMVlVbTdNeG0wWnZOb3JEM3R0RCtuMXpHK24wMnVTaGtKTktDcTVCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.22-Windows-x64-setup.exe"
     }
   }
 }
