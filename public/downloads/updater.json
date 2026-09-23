@@ -1,19 +1,19 @@
 {
-  "version": "69.13.22",
-  "notes": "Restore a wallet from its seed phrase (into a second node, or replacing this one, with a double confirmation). Right-click any node on the map to ping it or add it as a peer. No more 'gone quiet' warnings while a node is starting.",
-  "pub_date": "2026-09-22T23:53:27Z",
+  "version": "69.13.23",
+  "notes": "Divi Rebels: a Test sound button that shows what the sound engine is doing, enemies when the game is offline, no map popups over the cockpit, the heart's million on screen, and torpedoes that say why when they cannot fire.",
+  "pub_date": "2026-09-23T01:16:38Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGs1U1VnVWVLMXpkS21tMkFJWUhkQmRaS1h0dkxIRkNsVmZjTnJGMnJpOEJvS2pqRFM0SHBUSHNBZ21mSDFtMHlKbGxIWVFDUERtZVlEb00wU3pIQlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTIxMTI3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMgpvWFlUR2RVTWFDUXErbE8xblI0aytRbDlsRnBLRldXVFBWUmRNa0EreDNoSXVQc1FPc3l1VmVidng5cnA3Q3d0c0E0RGZTMVdiQ1NITS9pKys5NEFDZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.22-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxUT2ZxYW5JT1BGMUxHYkorQm0rY2hXWGFLNElLa1NkdjVmNW5yY3NmbFZtTGNCbVhQaUdqNlhhdVlDM1IrdHJjMzd1L2xWTlNwSUx6Qlc3YTBra2dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTI2MTExCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMwpSZVRhbzkvWVV4amJTdm5MaldJVjl2Unk2Z3U4ckNMa2JUWlFwVXJVZFphU2V1R0JmaFhldXY5VC9mL1orTjZwcElnNkY1alR6ZEpvZjF1STVBSVlBQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.23-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGs1U1VnVWVLMXpkS21tMkFJWUhkQmRaS1h0dkxIRkNsVmZjTnJGMnJpOEJvS2pqRFM0SHBUSHNBZ21mSDFtMHlKbGxIWVFDUERtZVlEb00wU3pIQlFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTIxMTI3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMgpvWFlUR2RVTWFDUXErbE8xblI0aytRbDlsRnBLRldXVFBWUmRNa0EreDNoSXVQc1FPc3l1VmVidng5cnA3Q3d0c0E0RGZTMVdiQ1NITS9pKys5NEFDZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.22-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxUT2ZxYW5JT1BGMUxHYkorQm0rY2hXWGFLNElLa1NkdjVmNW5yY3NmbFZtTGNCbVhQaUdqNlhhdVlDM1IrdHJjMzd1L2xWTlNwSUx6Qlc3YTBra2dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTI2MTExCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yMwpSZVRhbzkvWVV4amJTdm5MaldJVjl2Unk2Z3U4ckNMa2JUWlFwVXJVZFphU2V1R0JmaFhldXY5VC9mL1orTjZwcElnNkY1alR6ZEpvZjF1STVBSVlBQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.23-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHA5ZGgwSmVDbGkvbTJseXFUZHNiMEI4TXNOOEZtaFBhOFc2N1YvcUw0YTZXQVhjV1o0YVFtTjBBOUlXZlZZaWZnVGx2elo4Z2FONmtpZHdhUEdRRndzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTIxMDQ4CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjIyX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yMgpMQlZCRkZaUUxZK1Q3ZDNZTGc0dXdtbVVJb3VFR3FYYituUHB3c2dDcmphUG9YMVlVbTdNeG0wWnZOb3JEM3R0RCtuMXpHK24wMnVTaGtKTktDcTVCZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.22-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGlUY2Q3dTdBUkQzVmQ3VTJmaDdQcDNNT08wM1gxV3ptT3FpYndJNk12Rysweld0NFI5czIxNWw5aHNSWDFHT1FlWCtiVVZOY1pSNEFTcEEwdnJiOEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTI2MTM1CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjIzX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yMwo1VUVQdEltdmNlTmlmS3FXaXpoWDdqWUo2V3hrNWFLek5FaExsenRlZEF4cmszNGMwK3JRRjdub2U0eUVzeFMydW9kNlc1NjZ5ajh6ZXhka1luSUNCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.23-Windows-x64-setup.exe"
     }
   }
 }
