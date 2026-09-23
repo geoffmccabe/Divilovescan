@@ -1,19 +1,19 @@
 {
-  "version": "69.13.24",
-  "notes": "Divi Rebels: the multiplayer room is the game again. Test sound button, no map popups over the cockpit, the heart's million on screen, torpedoes that say why.",
-  "pub_date": "2026-09-23T01:40:05Z",
+  "version": "69.13.25",
+  "notes": "Node: a wedged node is now stopped and restarted by the app within minutes, and the request that wedged it is named in the setup log. Game: the Test sound button takes clicks.",
+  "pub_date": "2026-09-23T02:49:51Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGhvam1xSHF5cElWbFFvd0doVW1jckI3WTYzRlpaMHB3eW9qZW1vQlZwWEQ2MHZtMmEwcmI5bFphWUswcWt0eis3UnNXS3g1eXZsMk1UVTEzdkt0NWdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTI3NTM3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yNApxYkpCTEJIRkxQeXdDRDJHcXFySVVtU1dMS21rL3M1RHZpdG0rdkUxM0w3dVpGNlVzaTdjZUI0S2RzUW1ubXpSODN5L3VIeEdwK2h4OXhvaGg0QVZEdz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.24-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRPSndmZzM0UVRjK2tMQXlremJweUZ3Y0ZPTEwxc05lYWlXWFN0RC8xeVk5ejRLd2ttU0FtK2VDcTlNZ1N4YWFRS2lHQ29kMS9QTEhLYjNDQS8wandNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTMxNzE4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yNQpaSmxrc1F4Y05UY2NQUzhPaE5BSzFxUUZWdWhFWk5scS9vVFBFRko4eTVvaXZsSEwvNmFlY0lHUnJhcWJFOTVtV1RQK3piK3M2RDIxblZ5eGRVZ2lDdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.25-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGhvam1xSHF5cElWbFFvd0doVW1jckI3WTYzRlpaMHB3eW9qZW1vQlZwWEQ2MHZtMmEwcmI5bFphWUswcWt0eis3UnNXS3g1eXZsMk1UVTEzdkt0NWdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTI3NTM3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yNApxYkpCTEJIRkxQeXdDRDJHcXFySVVtU1dMS21rL3M1RHZpdG0rdkUxM0w3dVpGNlVzaTdjZUI0S2RzUW1ubXpSODN5L3VIeEdwK2h4OXhvaGg0QVZEdz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.24-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRPSndmZzM0UVRjK2tMQXlremJweUZ3Y0ZPTEwxc05lYWlXWFN0RC8xeVk5ejRLd2ttU0FtK2VDcTlNZ1N4YWFRS2lHQ29kMS9QTEhLYjNDQS8wandNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTMxNzE4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yNQpaSmxrc1F4Y05UY2NQUzhPaE5BSzFxUUZWdWhFWk5scS9vVFBFRko4eTVvaXZsSEwvNmFlY0lHUnJhcWJFOTVtV1RQK3piK3M2RDIxblZ5eGRVZ2lDdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.25-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHBVcnFoMktXWEpJbnkzeWM5TS9kY3VzeTNQQmVBR0VKNVk4ZFl4T2oyNlduVnJBQU5aTXdDZVUzcnlyM01Fdi9ZK2J3eVc2UlV5eFFKeVQxK1lMSlFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTI3NDc3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjI0X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yNAprdDVXc1pCOE9UYkZpTE5LcHNaOWxib1padjFDbGEvYTl3aXY4ME9ZTlIyV1RENHdPNG1FWHB2VlF4b3o0OUlPcndhUEVzMTJ6bi82MmdLUk4wc1hBUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.24-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRiOHNOVmpqVWEvMmxuVEF2T0kvYjUvM1RrbVZIeTJaWmxEOGg3ZzFIeUxXOWs1Mjl6djJFVk9JeWxjUWRRaFZFSTZYMkpRSGR2NjFrMnp0V3ZnTUFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMTMxNjU3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjI1X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yNQpFQTlXbGlaaithOGZTRjFUZ09nTkVQRG5UbFM3ZTFjQTBTR21FdXZkY2YrZ1ZJb0Vjc3hMWW5pWmFoOWhxeWk4cEtvSEtLSzd6M0hCVmZ5K255cGpEdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.25-Windows-x64-setup.exe"
     }
   }
 }
