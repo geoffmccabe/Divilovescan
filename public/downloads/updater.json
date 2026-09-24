@@ -1,19 +1,19 @@
 {
-  "version": "69.13.28",
-  "notes": "Map: reconnects from memory. Nodes seen alive in the last day are drawn and counted at once, last session's peers are asked first, probe answers show as they arrive, and dead-address rechecks run in their own slow lane. A reconnect stopwatch line is written to the setup log each time the map opens.",
-  "pub_date": "2026-09-24T00:25:07Z",
+  "version": "69.13.29",
+  "notes": "Map: right-click Add as peer / Connect once now try at once and report Connected or not within 45 s; the menu fits inside the map; spirals reset, and from now on only a node verified alive can be new.",
+  "pub_date": "2026-09-24T00:58:17Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHJOZE5uRFUzTDR4cVRaOXIwOU1UY3lwbkJ0a3I3UXdPS1pVaHdtRXZMc1RJSG85d2ZLQ0wrU1RwRitRNVdiakJmYVZWT3ZKSmFpU0hwYjE3VDNvd3dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjA5Mzc2CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yOApETHdoMTZRa2FoTUNZbHZEOU5VTm5BbDdzdGFtZkR6Q0xwUTlacDJRSUE2VFBac0RITXlQSEJuTUxJNTR2a3pQM0RqVy9kZHdSQWE0am5DTEZkRm5EQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.28-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpNNU9oTHB5YjNNY29YbGEzYUwyL2JmMEM3aE9BVUlmQk1OZ3ZaU2RRbkpzSHhNUTI5N2g1eDdGeVlYMWo2RXFDQzdjTm5ZY1hMYmdTUUFXT2xNV3dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjExNDQyCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yOQp2MkhIQ3ZJVW9RMlRiNmY2aUpxSWsyNm94TUhBQm5IRWFrRGY4N1dFV1QvbkdjMGdIOUkrb3VqMzZsMnpqRGxUUkRzMVd0cFJGbnFPOGtxVjBGV1lDZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.29-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHJOZE5uRFUzTDR4cVRaOXIwOU1UY3lwbkJ0a3I3UXdPS1pVaHdtRXZMc1RJSG85d2ZLQ0wrU1RwRitRNVdiakJmYVZWT3ZKSmFpU0hwYjE3VDNvd3dVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjA5Mzc2CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yOApETHdoMTZRa2FoTUNZbHZEOU5VTm5BbDdzdGFtZkR6Q0xwUTlacDJRSUE2VFBac0RITXlQSEJuTUxJNTR2a3pQM0RqVy9kZHdSQWE0am5DTEZkRm5EQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.28-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGpNNU9oTHB5YjNNY29YbGEzYUwyL2JmMEM3aE9BVUlmQk1OZ3ZaU2RRbkpzSHhNUTI5N2g1eDdGeVlYMWo2RXFDQzdjTm5ZY1hMYmdTUUFXT2xNV3dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjExNDQyCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4yOQp2MkhIQ3ZJVW9RMlRiNmY2aUpxSWsyNm94TUhBQm5IRWFrRGY4N1dFV1QvbkdjMGdIOUkrb3VqMzZsMnpqRGxUUkRzMVd0cFJGbnFPOGtxVjBGV1lDZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.29-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGlxV3FENnVtM3B5S3Y5bzQybkFWa3FtZW5RTTEvNUtKVkZQZ0wrejNvbUI3MGNhQ29tVVd0cythVldxeTRiUEZzcThUOWVsVXduenVjWmZJcEZPZlE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjA5NDQ0CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjI4X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yOAp4eWFUMGVZYVdCZXRqNTdFa2pNNVVnL3lZNFgvQ1lWUFdwMlo5QTJYRHFHSzg5Y0FIbEttRVA2a05qdnp5cE95SkJDTnNMTDY3UVdZbTdXb0Q5Um9DQT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.28-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGhiWEN0akhMK0NneFZRQmU5YW9nZDJRWitQNndpTjMwQmJzR0IvbGgyajdodDViLzltT0pSNVpyZXQ1a0hvcE02Q0VFVkt2TTdUUkZIdlVJdjRGR3dFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjExNDEyCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjI5X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4yOQpPZ2hzZ0k3TmZXTDVqRnVScm9KUVFML1poZHJsRkRGYlhkTW5wV2JoSFNyRlppQ3E5TTVJNEQ5eUNSMkZrSVVibDh1UG5UajVGOWdRMENzaWh1VUlCQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.29-Windows-x64-setup.exe"
     }
   }
 }
