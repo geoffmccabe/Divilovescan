@@ -1,19 +1,19 @@
 {
-  "version": "69.13.30",
-  "notes": "Node settings: room for incoming connections (eight seed addresses instead of 26, connection ceiling 64), so reachable DD69 nodes can accept peers. Applies when the node next restarts.",
-  "pub_date": "2026-09-24T01:30:41Z",
+  "version": "69.13.31",
+  "notes": "Node 69.0.5: the peer relay. A node behind a router that blocks incoming connections is now reached through reachable nodes that help it; reachable nodes help up to eight. Settings > Network shows both. Applies when the node is upgraded on next start.",
+  "pub_date": "2026-09-24T04:22:48Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG8vc1JzNDlOTVlYU29MRkZudVRzZG9VejJaVEZlejNwRFFPWlMrcU9XSHM5LzdTb3ZFMHRQNTJtNElFeDJDc04wTzUwVFY5STY4QjFURnBiUkRtT3dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjEzMzYwCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zMApvTDhxZWtnTnRQUlFac3Z2Q1BmNGpHektuVU40MmVRRW9TNy8vL0txanVZWmNMTmZ1MUVQZXg3MklKTURkcU1LVFdicEc2MkRMSkRkbjRnWnNtVENBZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.30-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGtQenMwVzV5TElUNmU0S21JU280UWlOaG5HVG5pbmo4eThUZWRvdEJWWTVmVGNQdnFmVjVwSlJMVFZUMVRXNURRc2RQRkUydEI4YktHVkw5OStOdkFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjIzNjc1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zMQp2UmU2emozOEU3TnJmRGpQdXhVQy9NZzJpa0Z3TW8xK21sMS9WNE0weTVwaEt5aDk1dGg3bkJRa3lTaUVoSi94NVB2MUh2OWVySjhGdUNsSFRtRjJEdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.31-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG8vc1JzNDlOTVlYU29MRkZudVRzZG9VejJaVEZlejNwRFFPWlMrcU9XSHM5LzdTb3ZFMHRQNTJtNElFeDJDc04wTzUwVFY5STY4QjFURnBiUkRtT3dnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjEzMzYwCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zMApvTDhxZWtnTnRQUlFac3Z2Q1BmNGpHektuVU40MmVRRW9TNy8vL0txanVZWmNMTmZ1MUVQZXg3MklKTURkcU1LVFdicEc2MkRMSkRkbjRnWnNtVENBZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.30-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGtQenMwVzV5TElUNmU0S21JU280UWlOaG5HVG5pbmo4eThUZWRvdEJWWTVmVGNQdnFmVjVwSlJMVFZUMVRXNURRc2RQRkUydEI4YktHVkw5OStOdkFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjIzNjc1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zMQp2UmU2emozOEU3TnJmRGpQdXhVQy9NZzJpa0Z3TW8xK21sMS9WNE0weTVwaEt5aDk1dGg3bkJRa3lTaUVoSi94NVB2MUh2OWVySjhGdUNsSFRtRjJEdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.31-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHRSbEg0SllydDdMNFppYUx1NmpldWdIMVYyMkhNN1RJZWkzU0VRN0VaSHcrSGNkQzlieG80TmVBR1VyMklYcnI3Yjh0U25JQXVHdTVxN2d4NWRKYkFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjEzMzgzCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjMwX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4zMApkWHBYZjJrUDJhV1k5bXMya3ZOU2UzN2Q3d0ZndURSWGU4dFFHZktQSlRydW44MXBxNG5VYklHdm51NFZYZWdCZ1hzRmg3c3A0OFpBYzVZMVd2Sm5Bdz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.30-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGtrWnVIdU5WQVdEUWdwQ1prTTlrWGJiRUVBaUlQcTVyZ09zYnN0d01EdVU2UjNnN0c1UE5ISlIvY0o4VHVkSVFYbXJFTkZweVRIdXh3NUhMSmJhN3dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwMjIzNTUzCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjMxX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4zMQpzdGFpK1cwNjVFL1JGZW1RMk9xbE9ibEh3dUVwMW43Y2IvTGt1ckpaU0FXdVdCbTBPWmR1WXVlYll3UUo2ZVNPNjdpRHhXM3RTNTFXODZ3Z2ZBQXZEZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.31-Windows-x64-setup.exe"
     }
   }
 }
