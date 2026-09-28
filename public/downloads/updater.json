@@ -1,19 +1,19 @@
 {
-  "version": "69.13.37",
-  "notes": "Vault staking for extra wallets: coins at a ticked address stake through your node while you keep the keys; merged Vaults panel.",
-  "pub_date": "2026-09-28T04:41:52Z",
+  "version": "69.13.38",
+  "notes": "Names for wallets: Get HRA on a wallet address buys a name that pays to that wallet; in-app confirm boxes.",
+  "pub_date": "2026-09-28T15:16:33Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1LcVdQSzlKNk14enRVbWpjRmZueEpxTjl4aEVhTk0zUEtySnpCZmZKUUdxQ0p3aEtiKzBZRmU3amVBNTJyT25UaVlObEl3Rm1IZzZzWmJ2VkRGdGd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNTcwMzI1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zNwpMVFBWc3RaMElqTnBIcHVIZGdFYWRaZkNmcnBWcWdwK0cwbmc0NGd3RWRhWHpyS2Q1Y0tMQkRDMnd2UHNYbUhUVlBZaTJ6VTIwWVN4QVJKM1dnS0pEUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.37-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHVuMUl2Vnd1TUphZEYydjNxNnVFZHhodGo0aWYwdWVZY0Q2RXd1ZnJKbStQMkthN0JDNEh1Y0p0eEU1U0VKa28yMTYyM0pPeTlPY1FhTWdvWVZNS2dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNjA4MzU0CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zOApHZndvZmVuK2x5UWpCSjMzZDBjaDJOMTJpQUlubkt1SWRsOUtSZkNGSXZjcERuRXc5MGR0ekpOVWNlVU9BeWFlNDVpNE4vckFPQVh1S3lzemR1YzFCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.38-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1LcVdQSzlKNk14enRVbWpjRmZueEpxTjl4aEVhTk0zUEtySnpCZmZKUUdxQ0p3aEtiKzBZRmU3amVBNTJyT25UaVlObEl3Rm1IZzZzWmJ2VkRGdGd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNTcwMzI1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zNwpMVFBWc3RaMElqTnBIcHVIZGdFYWRaZkNmcnBWcWdwK0cwbmc0NGd3RWRhWHpyS2Q1Y0tMQkRDMnd2UHNYbUhUVlBZaTJ6VTIwWVN4QVJKM1dnS0pEUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.37-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHVuMUl2Vnd1TUphZEYydjNxNnVFZHhodGo0aWYwdWVZY0Q2RXd1ZnJKbStQMkthN0JDNEh1Y0p0eEU1U0VKa28yMTYyM0pPeTlPY1FhTWdvWVZNS2dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNjA4MzU0CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy4zOApHZndvZmVuK2x5UWpCSjMzZDBjaDJOMTJpQUlubkt1SWRsOUtSZkNGSXZjcERuRXc5MGR0ekpOVWNlVU9BeWFlNDVpNE4vckFPQVh1S3lzemR1YzFCZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.38-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHFpL25xSGhUa0dVcUVJa2x0d1V6UURmSmlyYjJ6LzUzMjZUWEg5Zzd6VWo2R0VYU2lKK0xmbFBINU1xb1RPbXpaZWRCZW5LS0VIZFVYbzhXQm1GdmdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNTcwMjYzCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjM3X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4zNwpRWWpJQ2JTYmUvUzMwbVFVWHdINWg0V3FtSzJyVEoyU0x1aWlsZ1lSbHByZTR2UW1YUjRYSnFKWG5wa2UycHRzazBvZk1CTlNSd1ZQdXlqWFdmZ1JBdz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.37-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHJTdG5EWWJUc0g1UmNJb3QxYkErd1BPY1JZaXcyWmo2b3ptVnl4eTFpSElsK29LZTNHUTRUNEFMcVlWWjYreWVQU1VPRTJLcjltc3ZyKzIrOFBKWmdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNjA4MTc3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjM4X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy4zOApsWmFhTHROZE92T0pWUG5TRXpUcDZnZ2x0d2h6ZUN2cjBQbkVWTEhwdEcwd3c4UDJpN2p2VWlVVFZiblJPckdJdVJ3YlRyNHp4TExPdm5pYlgvaDFBZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.38-Windows-x64-setup.exe"
     }
   }
 }
