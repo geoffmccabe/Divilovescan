@@ -1,19 +1,19 @@
 {
-  "version": "69.13.42",
-  "notes": "Bring in a 24-word phrase as a secondary wallet too; restore screens say 12 or 24.",
-  "pub_date": "2026-09-29T00:21:18Z",
+  "version": "69.13.43",
+  "notes": "The copied setup log now includes a wallet snapshot: wallet file, chain height, balance and the last transactions.",
+  "pub_date": "2026-09-29T17:11:48Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGlQM3IyQ2VqeVFFSDYrd2toQnJLSVFqbmR3b091N1Nody9EVVpubXFHU0VUNHlIWUhVNjlrMkYyR09tbml4KzZBV2NxMDJkY2NOT2xXZlVCMnAweHdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNjQwOTE3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40Mgo4S212UGg1cy8yeTVXNEFHUzhCbkk5RndMQVAvNXZWQUVZOWZhVXowcHEvMzZDeGlXZ1huMkovd00zVFJrd3RCLy9Mb25kcDBhZmVtWFFoMktWZ0VCZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.42-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHIrMTlFdVM0NFE1RFNFTndaaklWL1NGWlFlTUtQT2d4bGVvYUNSNzd5UG5UYlFPWXJ1SXVzS1JjMnlEd2NyOFU4MzhWVHJXU2oyMndNbHA5ZmZHTlFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNzAxNDc1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40MwpBY0dYM2J6STJ4STIyelpwajVUM3VJcm43NGJIQnMzNitnaUpGOXFmUlJLNWEzN0lFTElkd1Fzd1QrV1JtdXB2RW9QRFVKWHo5L3NyclJ3UDhhcVpBZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.43-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGlQM3IyQ2VqeVFFSDYrd2toQnJLSVFqbmR3b091N1Nody9EVVpubXFHU0VUNHlIWUhVNjlrMkYyR09tbml4KzZBV2NxMDJkY2NOT2xXZlVCMnAweHdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNjQwOTE3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40Mgo4S212UGg1cy8yeTVXNEFHUzhCbkk5RndMQVAvNXZWQUVZOWZhVXowcHEvMzZDeGlXZ1huMkovd00zVFJrd3RCLy9Mb25kcDBhZmVtWFFoMktWZ0VCZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.42-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHIrMTlFdVM0NFE1RFNFTndaaklWL1NGWlFlTUtQT2d4bGVvYUNSNzd5UG5UYlFPWXJ1SXVzS1JjMnlEd2NyOFU4MzhWVHJXU2oyMndNbHA5ZmZHTlFnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNzAxNDc1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40MwpBY0dYM2J6STJ4STIyelpwajVUM3VJcm43NGJIQnMzNitnaUpGOXFmUlJLNWEzN0lFTElkd1Fzd1QrV1JtdXB2RW9QRFVKWHo5L3NyclJ3UDhhcVpBZz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.43-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1wb0dpWm9rNTlBRzBIOHRIWjRTMk1Ebk9WUWFGME83WDFJRUFUWEM5S2lIaTBQbDczNGV1M3ZOSE84Yy9JWFNKWnBXUXR3N1ovUEhjdUxLNjZESUFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNjQwODk5CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjQyX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy40MgovZ1pCNjZmbGhVSE1KeVBmSUdIZEpiUmJPOGMwa0tWSTFEUDR6VzcwczUyUTJHcWpFQk5tL3NtMUc1dHJNRVRWWTQrbEoybmQxVmpXT1V4R1lNMHZDZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.42-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1hNENDR25ValoxRnd3R2RaSlNzSTMzNFV5ckRSc2grTEVMTnc4ZDN5cDlRanNsaEtBRnI2SDY0bVRaR2dlb3JIeFBxWHlxWFUwWi9OaW4yY1pjWmdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNzAxNjQxCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjQzX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy40Mwo2b0FOZVRhZkNEd2NYK3M2Y0Z6YU5teE9kTm5nb1RDOXc0bzZjclYwUmR1bHRHOHRhOW5UYU5wekw2czVhL1B1SkE3QmduTlNlU0lmVWVZWHgwV2JEQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.43-Windows-x64-setup.exe"
     }
   }
 }
