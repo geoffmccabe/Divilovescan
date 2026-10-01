@@ -1,19 +1,19 @@
 {
-  "version": "69.13.44",
-  "notes": "Fixes the blank Spendable balance (69.13.41 to 43) and the wallet flipping back to Syncing every few minutes.",
-  "pub_date": "2026-09-30T17:20:40Z",
+  "version": "69.13.45",
+  "notes": "Map: dead nodes now retire after 30 days as intended; Historical Network keeps every node ever seen.",
+  "pub_date": "2026-10-01T01:47:57Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGtXZXl4cDNaTUFqbVJuSWRsTjlFNUJpTWFpU3pJREwvRlVmRTVXTWgyaWJQcDZna3hLRFg1TlhjejUvWnd1RTFzb24zQ1lKQWRBSnpIWVk3ODdLUEF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNzg4Mzg1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40NApDZ3F2ditoM0poRzQzUG01RGR5M1Qyd3Y1TVQzVnhzSnliOXREZFd6SGZaci9LZk9hdmJlbWJZSFZsYWFzU1U3Z2dod1BuM0JWRms3eGVPVTdjT3hBUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.44-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxnZ1c3c0p4N2U5VC9XSW0zUU5SSzd5QXU3aGx4VWxHVG9yeXlBTjNzckwvcmlKOVplbXNSZUh5MU9Idm1SOTduNmthdUFWV3VUOVRzUnB2SE12Y1E4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODE1MDkyCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40NQpUM2w5ek1GaEhCYkNSYWx3OWVhdTFZdEcyS05NbFVkV3FnOVgwelJRbDh0VWwwMitPaDJKMThCUnk3QmxjNldvdEJmeVB0dzN2Qm16UmVtSWxBUENCdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.45-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGtXZXl4cDNaTUFqbVJuSWRsTjlFNUJpTWFpU3pJREwvRlVmRTVXTWgyaWJQcDZna3hLRFg1TlhjejUvWnd1RTFzb24zQ1lKQWRBSnpIWVk3ODdLUEF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNzg4Mzg1CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40NApDZ3F2ditoM0poRzQzUG01RGR5M1Qyd3Y1TVQzVnhzSnliOXREZFd6SGZaci9LZk9hdmJlbWJZSFZsYWFzU1U3Z2dod1BuM0JWRms3eGVPVTdjT3hBUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.44-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGxnZ1c3c0p4N2U5VC9XSW0zUU5SSzd5QXU3aGx4VWxHVG9yeXlBTjNzckwvcmlKOVplbXNSZUh5MU9Idm1SOTduNmthdUFWV3VUOVRzUnB2SE12Y1E4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODE1MDkyCWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40NQpUM2w5ek1GaEhCYkNSYWx3OWVhdTFZdEcyS05NbFVkV3FnOVgwelJRbDh0VWwwMitPaDJKMThCUnk3QmxjNldvdEJmeVB0dzN2Qm16UmVtSWxBUENCdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.45-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscGoyWVEwMHA2bzJ0OXc4dVpUZ3FyNE9iN2J5Mml2TUl5aTVNTCtLVm9RQmdkWlNTSmZsbzFUN0VQSytiY25UcHJFR0V2VUtxdUpLL2hIU2dIK1U0R1FnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwNzg4NTQ3CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjQ0X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy40NApKOGw0VmdpQVFKa3RWUFl0bTZKekRBdTY1b3ZoK2NKTjR4a3pVK29yT2grT0tHc0tRajQvOVFTTnVYRUVUY2JKL0c4WnljalROWEFzSlk4NC9FRGZEZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.44-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG1KQ1RwTjQ4aFRZblNERmhZZzlxWFRaNjRDVmJpaHNzMytPY1h1d2l0NVZ0ejBibmw1ZVk5N1M2WWdYRzM3WXFMKzRYQTJTK1pnMEZGNytMQUU2dUFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkwODE1MDcwCWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjQ1X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy40NQpXZ2ltdDMyWE1JTHpqQzNYaitjdWhuSEgrc3JtUkNjTkdXMHBScUhvam9xcXhWdFZjdGxTNkVRYkdSNGZLcFRQSVpkNTdET1pFYjNCY0VBdU9xTGVBUT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.45-Windows-x64-setup.exe"
     }
   }
 }
