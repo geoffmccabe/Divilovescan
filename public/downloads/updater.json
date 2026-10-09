@@ -1,19 +1,19 @@
 {
-  "version": "69.13.49",
-  "notes": "Chain snapshot now comes from two servers (UK and Europe), both with the address index.",
-  "pub_date": "2026-10-06T13:08:10Z",
+  "version": "69.13.50",
+  "notes": "After an unclean shutdown the node gets one more plain start before any repair is offered; the repair question now finds you on any screen.",
+  "pub_date": "2026-10-09T19:19:05Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHZTMFlpNmE0T2NrT3JwVGZOdDFGdE8yOFFXMjVsTFcyZlJiL0NsV0ZVZVU5SmF6bkw3cnp6cDZxS3FxYjBvd3JsUGlaSzhWcThSUTlxQiszZ2ltK2dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMjkxODM4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40OQpWU2I4VGhYTDdIdlhMV05nT3BIZmt4UlUxK1ViY1czaSs3RDgwU25NKzdNVnU0ejhqTnpRbUI4NjdRNVZXdTQ1eFYycEw0dEtGWGl0VWMrOHVrMnZDZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.49-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG43aVVMV2tUTHpHZm5PM0xqTnJxUXJqSDMrNFBkaHFIcTBxaHo1SjI1MDJFUk9KT3crZlhJMDZLMERDU3JvMkxBQXdhYUxDendCMjNnTnl2RVN2M2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNTczMzc3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy41MApNaVVPWU1iNFVLQlFCTUhyNnkwcFhBempFUGZWTjZhNFNPWjJDTVZEdTJoeGpNN1p3QUdNZ3hQZ2Y5YXpxYUhQU2I2Rk90RTFMSDhlTVZEWHIwQUlDQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.50-macos-update.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHZTMFlpNmE0T2NrT3JwVGZOdDFGdE8yOFFXMjVsTFcyZlJiL0NsV0ZVZVU5SmF6bkw3cnp6cDZxS3FxYjBvd3JsUGlaSzhWcThSUTlxQiszZ2ltK2dzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMjkxODM4CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy40OQpWU2I4VGhYTDdIdlhMV05nT3BIZmt4UlUxK1ViY1czaSs3RDgwU25NKzdNVnU0ejhqTnpRbUI4NjdRNVZXdTQ1eFYycEw0dEtGWGl0VWMrOHVrMnZDZz09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.49-macos-update.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG43aVVMV2tUTHpHZm5PM0xqTnJxUXJqSDMrNFBkaHFIcTBxaHo1SjI1MDJFUk9KT3crZlhJMDZLMERDU3JvMkxBQXdhYUxDendCMjNnTnl2RVN2M2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNTczMzc3CWZpbGU6RGl2aSBEZXNrdG9wIDY5LmFwcC50YXIuZ3oJdmVyc2lvbjo2OS4xMy41MApNaVVPWU1iNFVLQlFCTUhyNnkwcFhBempFUGZWTjZhNFNPWjJDTVZEdTJoeGpNN1p3QUdNZ3hQZ2Y5YXpxYUhQU2I2Rk90RTFMSDhlTVZEWHIwQUlDQT09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.50-macos-update.app.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscHZndkFaazY1eXFpZUZzc0xJOFdlcFcvYWNFMzA3WCtXSDU5WW1CQWlDdDY1NWJET2ZIS1pLUHVDbFZyOVY3OXhva05IMUkyNFB1WnVqR0IzMDJoclFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMjkxNjU2CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjQ5X3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy40OQpPWjdZSmk0YmlVT016V3JhN0Q5aThkUG1iS3RJaFpQY3VlZCtmNDRXRUFXUDh1ZzJKalVvRElFdHh1dG1mcmZrZEJMd2hyMGltZ3lzM3hZNm1aTVFBUT09Cg==",
-      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.49-Windows-x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcTZ0ZnY3Q2hscG9Ub2NtOUwxdjJQMTE5bXMvNHdrb05ZNzNNaG5Ra0x4R1U5TVoxNVVFMG5CTGhXKzBiL3NSVEFlM2JTNGRnOWFNc1d0YTJPZHE2T2oxeDNRcGRGaUFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNTczMzU4CWZpbGU6RGl2aSBEZXNrdG9wIDY5XzY5LjEzLjUwX3g2NC1zZXR1cC5leGUJdmVyc2lvbjo2OS4xMy41MAo1NW9mWTNpai9FSzZuNzVlSU1FTndmZURKbHNyS0w1WEFoOUFjYVpYc2NrdVViQkZWcHZOR29mQVRvR0NmQ1luZXFqZHMwK01jMXdJMXRnblg2WHVBdz09Cg==",
+      "url": "https://scan.divi.love/downloads/Divi-Desktop-69.13.50-Windows-x64-setup.exe"
     }
   }
 }
